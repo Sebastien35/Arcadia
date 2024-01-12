@@ -1,0 +1,33 @@
+.bg-dark-box{
+    background-color:var(--bg-dark);
+    width:100%;
+}
+
+.text-wrapper{
+    position: relative;
+    top: 10vh;
+}
+
+.col-in-box{
+    position:relative;
+    top:0vh
+}
+
+.container{
+    width: 100% !important;
+    
+}
+
+form{
+    position:relative;
+    top: 3vh;
+}
+.card{
+    border-radius:px !important;
+    border-color:var(--secondary);
+}
+
+.card .btn {
+    border:1px;
+    border-color:var(--secondary);
+}

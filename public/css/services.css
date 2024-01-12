@@ -1,0 +1,11 @@
+/* Card */
+
+.card-service{
+    height:20vh !important;
+    border-radius:0px;
+    border: 1px solid var(--dark);
+}
+
+.btn-primary{
+    border-radius: 0px;
+}

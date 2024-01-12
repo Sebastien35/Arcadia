@@ -1,0 +1,79 @@
+/* Fichier CSS consacré à la gestion des style des text wrapper du template acceuil */
+
+.big-text-wrapper{
+    color:var(--white);
+    font-size:18px;
+    position:relative;
+    left:50vw;;
+    top:5rem;
+    text-align:center;
+    width:40vw;
+  
+  }
+  .center-text-wrapper{
+    color:var(--white);
+    font-size:18px;
+    position:relative;
+    left:30%;
+    top:30%;
+    text-align:center;
+    width:600px
+  }
+
+.box-left-image .left-text-wrapper{
+    position:relative;
+    margin-top:  0px;
+    margin-bottom:0px;
+    margin-left:1vw;
+    left:30vw;
+    top:1rem;
+    width: 600px;
+    font-size:18px;
+    color:var(--white)
+}
+
+.box-right-image .right-text-wrapper{
+    position:relative;
+    margin-top:0px;
+    margin-bottom: 0px;
+    margin-left:0px;
+    height:fit-content;
+    left:1vw;
+    top:3%;
+    width:40vw;
+    font-size:18px;
+    color:var(--secondary);
+}
+
+
+@media(max-width:1280px){
+    .left-text-wrapper{
+        position:relative !important;
+        left: 40vw !important;
+        top: 10vh !important;
+        width:40vw !important;
+        font-size: 2vh !important;
+    }
+    .box-right-image .right-text-wrapper{
+        position:relative !important;
+        left: 5vw !important;
+        top: 10vh !important;
+        width:40vw !important;
+        font-size:2vh !important;
+    }
+    .center-text-wrapper{
+        width: 90vw !important;
+        font-size: 2vh !important;
+        left: 5vw !important;
+    }
+    .center-text-container{
+        left:2vw !important;
+    }
+    .center-text-p{
+        font-size:2vh;
+    }
+    .big-text-wrapper{
+        width: 70vw;
+        left: 20vw;
+    }
+}

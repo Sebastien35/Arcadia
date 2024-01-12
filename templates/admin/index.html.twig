@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block body %}
+
+<link rel="stylesheet" href="{{asset('css/admin.css')}}"/>
+
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">Créer un nouveau service</h1>
+
+                    <form action="/services/create" method="post">
+                        <input type="hidden" name="_method" value="POST" />
+                        <label for="nom">Service Name:</label>
+                        <input type="text" id="nom" name="nom" required class="form-control mb-2">
+                        
+                        <label for="description">Description:</label>
+                        <textarea id="description" name="description" required class="form-control mb-2"></textarea>
+                        
+                        <label for="prix">Price:</label>
+                        <input type="number" id="prix" name="prix" class="form-control mb-3">
+                        
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary">Add Service</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid mt-5 bg-dark-box">
+    <div class="row">
+        {% for service in services %}
+        <div class="col-md-2 col-sm-4 mb-4 mt-4 service" data-service="{{ service.nom }}" data-service-id="{{ service.id }}">
+            <div class="card card-service">
+                <H5 class="card-title">{{ service.nom }}</H5>
+                {% if service.prix is not null %}
+                <p class="card-subtitle">{{ service.prix }}</p>
+                {% endif %}
+                <p class="card-text">{{ service.description }}</p>
+                <div class="row">
+                    <div class="col-md-2">
+                        <form action="/services/update/{{ service.id }}" method="post">
+                            <input type="hidden" name="_method" value="PUT" />
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-danger delServ-btn">Delete</button>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.delServ-btn').click(function() {
+        var serviceId = $(this).closest('.service').data('service-id');
+        var url = "/services/delete/" + serviceId;
+
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            success: function(response) {
+                // Handle success response
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}

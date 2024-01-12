@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{service.nom}}{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="{{asset('css/services.css')}}">
+
+<div class="container service-list">
+    <h1 class=""> Les services proposés au zoo:</h1>
+    <div class="row">
+        <div class="col-md-12 col-sm-4 mb-4 service mx-auto" data-service="{{service.nom}}">
+            <div class="card card-service">
+                <H5 class="card-title">{{service.nom}}</H5>
+                {% if service.prix is not null %}
+                <p class="card-subtitle">{{service.prix}}</p>
+                {% endif %}
+                <p class="card-text">{{service.description}}</p>
+                <a href="/services" class="btn btn-primary">Retour</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+{% endblock %}
