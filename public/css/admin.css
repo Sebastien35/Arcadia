@@ -31,3 +31,11 @@ form{
     border:1px;
     border-color:var(--secondary);
 }
+
+.white-container{
+    background-color: var(--white);
+}
+
+.container{
+    min-height:40vw;
+}

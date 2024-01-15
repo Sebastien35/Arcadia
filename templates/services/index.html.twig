@@ -15,8 +15,7 @@
                 {% if service.prix is not null %}
                 <p class="card-subtitle">{{service.prix}}</p>
                 {% endif %}
-                <p class="card-text">{{service.description}}</p>
-                <a href="/services/{{service.id}}" class="btn btn-primary">Voir</a>
+                <a href="/services/show/{{service.id}}" class="btn btn-primary">Voir</a>
             </div>
         </div>
         {% endfor %}
