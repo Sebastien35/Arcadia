@@ -75,7 +75,7 @@ class ServicesController extends AbstractController
         if (!$service){
             throw $this->createNotFoundException("No service found for {$id} id");
         }
-        // dd($id);
+        
         $service->setNom($request->request->get('nom'));
         $service->setDescription($request->request->get('description'));
         $service->setPrix($request->request->get('prix'));
