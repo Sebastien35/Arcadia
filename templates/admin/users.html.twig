@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block body %}
+
+<link rel="stylesheet" href="{{asset('css/admin.css')}}"/>
+
+<div class="container-fluid mt-5 white-container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card p-4" style="text-align:center">
+                <h1>Créer un nouvel utilisateur:</h1>
+                <form action="/register" method="POST">
+                    <label for="email">Adresse mail:</label></br>
+                        <input type="email" name="email" id="email" required></br>
+                    <label for="Roles">Rôle:</label></br>
+                        <select name="Roles" id="Roles" required>
+                            <option value="ROLE_EMPLOYE">Employé</option>
+                            <option value="ROLE_VET">Vétérinaire</option>
+                        </select></br></br>
+                    <label for="zoo">Lieu de l'emploi</label></br>
+                    <select name="worksAt" id="worksAt" required>
+                        {% for zoo in zoos%}
+                            <option value="{{zoo.id}}">{{zoo.nom}}</option>
+                        {% endfor %}
+                    </select></br>
+
+
+                    <label for="plainPassword">Mot de passe:</label></br>
+                    <input type="password" Placeholder="Password" name="plainPassword" id="password" required></br>
+                    <label for="plainPassword">Confirmation mot de passe:</label></br>
+                    <input type="password" placeholder="Confirm password" name="plainPassword" id="password" required></br></br>
+                    <input type="submit" value="Créer" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{asset('js/admin.js')}}"></script>
+
+    
+
+
+{% endblock %}

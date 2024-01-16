@@ -10,9 +10,9 @@
     <div class="row">
         {% for service in services %}
         <div class="col-md-2 col-sm-4 mb-4 service" data-service="{{service.nom}}">
-            <div class="card card-service">
+            <div class="card card-service" style="text-align: center;">
                 <H5 class="card-title">{{service.nom}}</H5>
-                {% if service.prix is not null %}
+                {% if service.prix > 0 %}
                 <p class="card-subtitle">{{service.prix}}</p>
                 {% endif %}
                 <a href="/services/show/{{service.id}}" class="btn btn-primary">Voir</a>
