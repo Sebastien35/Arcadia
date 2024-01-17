@@ -27,18 +27,24 @@
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-custom" id ="navbar-custom">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-custom" id="navbar-custom">
             <a class="navbar-brand mr-lg-5" href="/">Arcadia</a>
+         
             <!-- Contenu navbar sur pc -->
-            <a class="nav-item d-none d-lg-block mr-lg-3" href="/services">Services</a>
-            <a class="nav-item d-none d-lg-block mr-lg-3" href="/Habitats">Habitats</a>
-            <a class="nav-item d-none d-lg-block mr-lg-3" href="/connexion">Connexion</a>
-            <a class="nav-item d-none d-lg-block mr-lg-3" href="/contact">Contact</a>
-            
-            <!--Contenu navbar sur téléphone / tablette -->
-            
-    
-        </nav>  
+            <div class="navbar-nav ml-auto">
+                <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/services">Services</a>
+                <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/Habitats">Habitats</a>
+                {% if app.user %}
+                    <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/logout">Déconnexion</a>
+                {% else %}
+                    <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/login">Connexion</a>
+                {% endif %}
+                <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/contact">Contact</a>
+            </div>
+        
+            <!-- Contenu navbar sur téléphone / tablette -->
+        </nav>
+        
         {% block body %}
         {% endblock %}
         <footer>
