@@ -31,9 +31,13 @@ class Zoo
     #[ORM\OneToMany(mappedBy: 'zoo', targetEntity: Service::class)]
     private Collection $services;
 
+    #[ORM\OneToMany(mappedBy: 'worksAt', targetEntity: User::class)]
+    private Collection $users;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -113,6 +117,36 @@ class Zoo
             // set the owning side to null (unless already changed)
             if ($service->getZoo() === $this) {
                 $service->setZoo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setWorksAt($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getWorksAt() === $this) {
+                $user->setWorksAt(null);
             }
         }
 
