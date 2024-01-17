@@ -34,10 +34,14 @@ class Zoo
     #[ORM\OneToMany(mappedBy: 'worksAt', targetEntity: User::class)]
     private Collection $users;
 
+    #[ORM\OneToMany(mappedBy: 'Zoo', targetEntity: Avis::class)]
+    private Collection $avis;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->avis = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -147,6 +151,36 @@ class Zoo
             // set the owning side to null (unless already changed)
             if ($user->getWorksAt() === $this) {
                 $user->setWorksAt(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
+    }
+
+    public function addAvi(Avis $avi): static
+    {
+        if (!$this->avis->contains($avi)) {
+            $this->avis->add($avi);
+            $avi->setZoo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvi(Avis $avi): static
+    {
+        if ($this->avis->removeElement($avi)) {
+            // set the owning side to null (unless already changed)
+            if ($avi->getZoo() === $this) {
+                $avi->setZoo(null);
             }
         }
 
