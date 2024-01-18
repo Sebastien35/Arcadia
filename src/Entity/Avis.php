@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AvisRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AvisRepository::class)]
 class Avis
@@ -20,6 +21,7 @@ class Avis
     private ?string $Avis_content = null;
 
     #[ORM\Column]
+    #[Assert\Range(min: 0, max: 5)]
     private ?int $note = null;
 
     #[ORM\Column]

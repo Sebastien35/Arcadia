@@ -42,6 +42,9 @@
                     {% if is_granted ('ROLE_VET') %}
                     <a class="nav-item" nav-link d-none d-lg-block mr-lg-3 href="/veterinaire">Mon espace</a>
                     {% endif %}
+                    {% if is_granted ('ROLE_ADMIN') %}
+                    <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/admin">Mon espace</a>
+                    {% endif %}
                 {% else %}
                     <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/login">Connexion</a>
                 {% endif %}

@@ -44,8 +44,11 @@
                 url: '/avis/update/' + avisID,
                 type: 'PUT', // Make sure your server is configured to handle PUT requests
                 success: function() {
-                    alert('Avis validé');
+                    
                     location.reload();
+                },
+                error: function() {
+                    alert('Error updating avis');
                 }
             });
         });
