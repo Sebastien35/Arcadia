@@ -143,9 +143,9 @@
 /* ------------------------------------------------------------------ */
 /* -------------------- Texte au centre d'une div  -------------------*/
 .center-text-container{
-  width: 800px;
+  width: 50vw;
   position:relative;
-  left:20%;
+  left:27vw;
   color:var(--secondary);
 
 }

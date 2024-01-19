@@ -62,7 +62,7 @@ class ServicesController extends AbstractController
         }
         return $this->render('services/show.html.twig', [
             'controller_name' => 'ServicesController',
-            'service'=>$service // Passer la variables services qui contient tous les services
+            'service'=>$service // Passer la variable qui contient le service correspondant à l'ID recherché
         ]);
     }
     
