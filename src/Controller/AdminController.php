@@ -12,10 +12,17 @@ use App\Repository\UserRepository;
 use App\Form\RegistrationFormType;
 use App\Entity\Zoo;
 use App\Repository\ZooRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
 {
+
+    private EntityManagerInterface $entityManager;
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager=$entityManager;
+    }
     #[Route('/', name: 'index', methods: ['GET'])]
     public function index(): Response
     {
@@ -45,5 +52,17 @@ class AdminController extends AbstractController
             'zoos'=>$zoos
             ,
         ]);
+    }
+
+    #[Route('/users/delete/{id}', name: 'deleteUser', methods: ['delete'])]
+    public function deleteUser(int $id): Response
+    {   
+        $user=$this->entityManager->getRepository(User::class)->find($id);
+        if(!$user){
+            throw $this->createNotFoundException('No user found for id '.$id);
+        }
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+        return $this->redirectToRoute('app_admin_userAdmin');
     }
 }
