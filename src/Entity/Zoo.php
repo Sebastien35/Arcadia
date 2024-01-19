@@ -37,11 +37,15 @@ class Zoo
     #[ORM\OneToMany(mappedBy: 'Zoo', targetEntity: Avis::class)]
     private Collection $avis;
 
+    #[ORM\OneToMany(mappedBy: 'zoo', targetEntity: Animal::class)]
+    private Collection $animals;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->avis = new ArrayCollection();
+        $this->animals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,6 +185,36 @@ class Zoo
             // set the owning side to null (unless already changed)
             if ($avi->getZoo() === $this) {
                 $avi->setZoo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Animal>
+     */
+    public function getAnimals(): Collection
+    {
+        return $this->animals;
+    }
+
+    public function addAnimal(Animal $animal): static
+    {
+        if (!$this->animals->contains($animal)) {
+            $this->animals->add($animal);
+            $animal->setZoo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnimal(Animal $animal): static
+    {
+        if ($this->animals->removeElement($animal)) {
+            // set the owning side to null (unless already changed)
+            if ($animal->getZoo() === $this) {
+                $animal->setZoo(null);
             }
         }
 
