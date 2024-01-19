@@ -79,4 +79,17 @@ class Horaire
 
         return $this;
     }
+
+    public function __construct(
+        ?zoo $id_etablissement = null,
+        ?int $id_jour = null,
+        ?\DateTimeInterface $h_ouverture = null,
+        ?\DateTimeInterface $h_fermeture = null
+    ) {
+        $this->id_etablissement = $id_etablissement;
+        $this->id_jour = $id_jour;
+        $this->h_ouverture = $h_ouverture;
+        $this->h_fermeture = $h_fermeture;
+    }
+    
 }
