@@ -30,7 +30,7 @@ class Animal
     private $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
-    private ?habitat $habitat = null;
+    private ?Habitat $Habitat = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -121,14 +121,14 @@ class Animal
         return $this;
     }
 
-    public function getHabitat(): ?habitat
+    public function getHabitat(): ?Habitat
     {
-        return $this->habitat;
+        return $this->Habitat;
     }
 
-    public function setHabitat(?habitat $habitat): static
+    public function setHabitat(?Habitat $Habitat): static
     {
-        $this->habitat = $habitat;
+        $this->Habitat = $Habitat;
 
         return $this;
     }
@@ -234,16 +234,27 @@ class Animal
         string $nom,
         array $race,
         $image,
-        habitat $habitat,
+        Habitat $Habitat,
         array $etat,
         array $nourriture,
         int $grammage,
         \DateTimeInterface $dateDePassage,
         \DateTimeInterface $detailEtatAnimal,
         zoo $zoo
-
     )
     {
+        $this->prenom = $prenom;
+        $this->nom = $nom;
+        $this->race = $race;
+        $this->image = $image;
+        $this->Habitat = $Habitat;
+        $this->etat = $etat;
+        $this->nourriture = $nourriture;
+        $this->grammage = $grammage;
+        $this->dateDePassage = $dateDePassage;
+        $this->detailEtatAnimal = $detailEtatAnimal;
+        $this->zoo = $zoo;
+        $this->createdAt = new \DateTimeImmutable();
         
     }
 
