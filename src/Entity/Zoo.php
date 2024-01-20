@@ -22,13 +22,9 @@ class Zoo
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $hOuverture = null;
+   
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $hFermeture = null;
-
-    #[ORM\OneToMany(mappedBy: 'zoo', targetEntity: Service::class)]
+    #[ORM\OneToMany(mappedBy: 'Zoo', targetEntity: Service::class)]
     private Collection $services;
 
     #[ORM\OneToMany(mappedBy: 'worksAt', targetEntity: User::class)]
@@ -37,7 +33,7 @@ class Zoo
     #[ORM\OneToMany(mappedBy: 'Zoo', targetEntity: Avis::class)]
     private Collection $avis;
 
-    #[ORM\OneToMany(mappedBy: 'zoo', targetEntity: Animal::class)]
+    #[ORM\OneToMany(mappedBy: 'Zoo', targetEntity: Animal::class)]
     private Collection $animals;
 
     public function __construct()
@@ -77,30 +73,7 @@ class Zoo
         return $this;
     }
 
-    public function getHOuverture(): ?\DateTimeInterface
-    {
-        return $this->hOuverture;
-    }
-
-    public function setHOuverture(\DateTimeInterface $hOuverture): static
-    {
-        $this->hOuverture = $hOuverture;
-
-        return $this;
-    }
-
-    public function getHFermeture(): ?\DateTimeInterface
-    {
-        return $this->hFermeture;
-    }
-
-    public function setHFermeture(\DateTimeInterface $hFermeture): static
-    {
-        $this->hFermeture = $hFermeture;
-
-        return $this;
-    }
-
+    
     /**
      * @return Collection<int, Service>
      */
