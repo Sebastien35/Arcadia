@@ -79,7 +79,22 @@ class AdminController extends AbstractController
             'horaires'=>$horaires
         ]);
     }
+    
+    #[Route('/horaires/new', name: 'newHoraire', methods: ['POST'])]
+    public function newHoraire(Request $request): Response
+    {
+        $horaire = new Horaire();
+        $houverture = new \DateTime($request->request->get('h_ouverture'));
+        $fermeture = new \DateTime($request->request->get('h_fermeture'));
+        $horaire->setIdJour($request->request->get('id_jour'));
+        $horaire->setHOuverture($houverture);
+        $horaire->setHFermeture($fermeture);
 
+        $this->entityManager->persist($horaire);
+        $this->entityManager->flush();
+        return $this->redirectToRoute('app_admin_horairesAdmin');
+    }
+   
     #[Route('/horaires/edit/{id}', name: 'editHoraire', methods: ['PUT'])]
     public function editHoraire(int $id_jour, Request $request): Response
     {
@@ -108,4 +123,8 @@ class AdminController extends AbstractController
             'horaire'=>$horaire // 
         ]);
     }
+
+    
+
+    
 }

@@ -14,9 +14,9 @@ class Horaire
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Zoo $id_etablissement = null;
+    // #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?Zoo $id_etablissement = null;
 
     #[ORM\Column]
     private ?int $id_jour = null;
@@ -32,17 +32,17 @@ class Horaire
         return $this->id;
     }
 
-    public function getIdEtablissement(): ?Zoo
-    {
-        return $this->id_etablissement;
-    }
+    // public function getIdEtablissement(): ?Zoo
+    //{
+    //    return $this->id_etablissement;
+    //}
 
-    public function setIdEtablissement(Zoo $id_etablissement): static
-    {
-        $this->id_etablissement = $id_etablissement;
-
-        return $this;
-    }
+     //public function setIdEtablissement(Zoo $id_etablissement): static
+     //{
+     //    $this->id_etablissement = $id_etablissement;
+      //   
+       // return $this;
+     //}
 
     public function getIdJour(): ?int
     {
@@ -81,12 +81,12 @@ class Horaire
     }
 
     public function __construct(
-        ?Zoo $id_etablissement = null,
+        
         ?int $id_jour = null,
         ?\DateTimeInterface $h_ouverture = null,
         ?\DateTimeInterface $h_fermeture = null
     ) {
-        $this->id_etablissement = $id_etablissement;
+         // $this->id_etablissement = $id_etablissement;
         $this->id_jour = $id_jour;
         $this->h_ouverture = $h_ouverture;
         $this->h_fermeture = $h_fermeture;
