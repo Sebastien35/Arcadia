@@ -25,7 +25,7 @@ class Habitat
     #[ORM\Column(length: 4096)]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'habitat', targetEntity: Animal::class)]
+    #[ORM\OneToMany(mappedBy: 'Habitat', targetEntity: Animal::class)]
     private Collection $animals;
 
     public function __construct()

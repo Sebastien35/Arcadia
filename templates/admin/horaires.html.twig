@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block body %}
+
+<link rel="stylesheet" href="{{asset('css/admin.css')}}"/>
+
+<div class="container tableau-horaires mt-5">
+    <h5>Horaires d'ouverture</h1>
+    <div class="row">
+        <table>
+            <tr>
+                <th>Jour</th>
+                <th>Heure d'ouverture</th>
+                <th>Heure de fermeture</th>
+            </tr>
+            {% for horaire in horaires %}
+            <tr>
+                {% set jours = ["", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"] %}
+                <td>{{ jours[horaire.getIdJour] }}</td>
+                <td>{{ horaire.GetHOuverture|date ('H:i:s') }}</td>
+                <td>{{ horaire.getHFermeture|date ('H:i:s') }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock %}
