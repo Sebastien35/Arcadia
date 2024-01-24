@@ -64,7 +64,7 @@
                         // Récupère les valeurs des champs
                         var HOuverture = $('#HOuverture').val();
                         var HFermeture = $('#HFermeture').val();
-                        var isOuvert = $('#isOuvert').prop('checked'); // prop('checked') la case est coché ou non 
+                        var isOuvert = $('#isOuvert').prop('checked') ? 1:0; // prop('checked') la case est coché ou non '? 1:0' si oui 1 sinon 0
                         // Requête AJAX
                         console.log("Heure d'ouverture: "+HOuverture+" Heure fermeture: "+ HFermeture,"Ouvert : "+ isOuvert,"id : "+  id,"url : "+ url);
                         $.ajax({

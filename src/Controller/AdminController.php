@@ -134,6 +134,7 @@ class AdminController extends AbstractController
         }
         $horaire->setHOuverture($houverture);
         $horaire->setHFermeture($fermeture);
+        $horaire->setOuvert($request->request->get('isOuvert'));
         // Validation des données avant la persistance (ajoutez des validations supplémentaires si nécessaire)
         // Persistance et flush avec gestion des exceptions
         $this->entityManager->persist($horaire);
