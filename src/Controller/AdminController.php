@@ -17,6 +17,7 @@ use App\Entity\Zoo;
 use App\Repository\ZooRepository;
 use App\Entity\Horaire;
 use App\Repository\HoraireRepository;
+use DateTime;
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
@@ -83,46 +84,83 @@ class AdminController extends AbstractController
     #[Route('/horaires/new', name: 'newHoraire', methods: ['POST'])]
     public function newHoraire(Request $request): Response
     {
-        $horaire = new Horaire();
-        $houverture = new \DateTime($request->request->get('h_ouverture'));
-        $fermeture = new \DateTime($request->request->get('h_fermeture'));
-        $horaire->setIdJour($request->request->get('id_jour'));
+    try {
+        $id_jour = $request->request->get('id__jour');
+        $horaire = $this->entityManager->getRepository(Horaire::class)->find($id_jour);
+
+        if (!$horaire) {
+            // Si l'entité n'existe pas, créez une nouvelle instance
+            $horaire = new Horaire();
+        }
+
+        // Conversion des chaînes de date en objets DateTime
+        $houverture = new \DateTime($request->request->get('HOuverture'));
+        $fermeture = new \DateTime($request->request->get('HFermeture'));
+
+        // Attribution des valeurs aux propriétés de l'objet Horaire
+        $horaire->setIdJour($id_jour);
         $horaire->setHOuverture($houverture);
         $horaire->setHFermeture($fermeture);
 
+        // Validation des données avant la persistance (ajoutez des validations supplémentaires si nécessaire)
+
+        // Persistance et flush avec gestion des exceptions
         $this->entityManager->persist($horaire);
         $this->entityManager->flush();
-        return $this->redirectToRoute('app_admin_horairesAdmin');
-    }
-   
-    #[Route('/horaires/edit/{id}', name: 'editHoraire', methods: ['PUT'])]
-    public function editHoraire(int $id_jour, Request $request): Response
-    {
-        $horaire=$this->entityManager->getRepository(Horaire::class)->find($id_jour);
-        if(!$horaire){
-            throw $this->createNotFoundException('No horaire found for  '.$id_jour);
-        }
-        $horaire->setHOuverture($request->request->get('h_ouverture'));
-        $horaire->setHFermeture($request->request->get('h_fermeture'));
-        return $this->redirectToRoute('app_admin_horairesAdmin');
-    }
 
-    #[Route('/horaires/show/{id}',name: 'showHoraire', methods: ['GET'])]
-    public function showHoraire(int $id):Response
-    {   
+        return $this->redirectToRoute('app_admin_horairesAdmin');
+            } catch (\Exception $e) {
+        // Gestion des exceptions (log, affichage d'un message d'erreur, etc.)
+        return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
+        }
+        }
+
+        #[Route('/horaires/edit/{id}', name: 'app_admin_editHoraire', methods: ['PUT'])]
+        public function editHoraire(int $id, Request $request): Response
+        {
+        try {
+
         
         $horaire = $this->entityManager->getRepository(Horaire::class)->find($id);
-        dd($id, $horaire);
-        if (!$horaire){
-            throw $this->createNotFoundException(
-                'No horaire found for id '.$id
-            );
+        if (!$horaire) {
+            throw $this->createNotFoundException('No horaire found for ' . $id);
         }
-        return $this->render('admin/showHoraire.html.twig', [
-            'controller_name' => 'AdminController',
-            'horaire'=>$horaire // 
-        ]);
+        // Modification des propriétés de l'objet Horaire
+        
+        $houverture = DateTime::createFromFormat('H:i', $request->request->get('HOuverture'));
+        $fermeture = DateTime::createFromFormat('H:i', $request->request->get('HFermeture'));
+        if (!$houverture || !$fermeture) {
+            throw new \InvalidArgumentException('Invalid date format provided.');
+        }
+        $horaire->setHOuverture($houverture);
+        $horaire->setHFermeture($fermeture);
+        // Validation des données avant la persistance (ajoutez des validations supplémentaires si nécessaire)
+        // Persistance et flush avec gestion des exceptions
+        $this->entityManager->persist($horaire);
+        $this->entityManager->flush();
+        return new Response('Horaire modifié avec succès !', 200);
+        } catch (\Exception $e) {
+        // Gestion des exceptions (log, affichage d'un message d'erreur, etc.)
+        return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
+        }
     }
+    // Pour tester
+    //#[Route('/horaires/show/{id}',name: 'showHoraire', methods: ['GET'])]
+    //public function showHoraire(int $id):Response
+    //{   
+    //    
+    //    $horaire = $this->entityManager->getRepository(Horaire::class)->find($id);
+    //    dd($id, $horaire);
+    //    if (!$horaire){
+    //        throw $this->createNotFoundException(
+    //            'No horaire found for id '.$id
+    //        ); 
+     //   }
+    //    return $this->render('admin/showHoraire.html.twig', [
+    //        'controller_name' => 'AdminController',
+    //        'horaire'=>$horaire // 
+    //  ]);
+    // }
 
     
 
