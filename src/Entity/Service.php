@@ -102,16 +102,16 @@ class Service
     public function __construct(
         string $nom,
         string $description,
-        \DateTimeImmutable $createdAt,
-        ?\DateTimeImmutable $updatedAt,
+        \DateTimeImmutable $createdAt = null,
+        ?\DateTimeImmutable $updatedAt =null
         )
     {
         
         $this->nom = $nom;
         $this->description = $description;
         
-        $this->createdAt=$createdAt;
-        $this->updatedAt=$updatedAt;
+        $this->createdAt=$createdAt?: new \DateTimeImmutable();
+        $this->updatedAt=$updatedAt?: new \DateTimeImmutable();
         
     }
 }

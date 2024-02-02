@@ -9,7 +9,7 @@
     <h1 class=""> Les services proposés au zoo:</h1>
     <div class="row">
         {% for service in services %}
-        <div class="col-md-2 col-sm-4 mb-4 service" data-service="{{service.nom}}">
+        <div class="col-md-4 col-sm-6 mb-4 service" data-service="{{service.nom}}">
             <div class="card card-service" style="text-align: center;">
                 <H5 class="card-title">{{service.nom}}</H5>
                 <a href="/services/show/{{service.id}}" class="btn btn-primary">Voir</a>

@@ -173,20 +173,24 @@ class AdminController extends AbstractController
     //  ]);
     // }
 
-    #[Route('/service/create', name: 'createService', methods: 'POST')]
-    public function new(Request $request): Response
+    #[Route('/services/create', name: 'createService', methods: 'POST')]
+    public function createService(Request $request): JsonResponse
     {
-        $service = new Service(
-            $request->request->get('nom'),
-            $request->request->get('description'),
-            new \DateTimeImmutable(),
-            null // Assuming updatedAt can be null initially, adjust if needed
-        );
+        try{
+            $service = $this->serializer->deserialize($request->getContent(), Service::class, 'json');
+            $service->setCreatedAt(new DateTimeImmutable());
 
-        $this->entityManager->persist($service);
-        $this->entityManager->flush();
-        return $this->redirectToRoute('app_services_index_');
+            $this->entityManager->persist($service);
+            $this->entityManager->flush();
+            return new JsonResponse(['message' => 'Service created successfully'], Response::HTTP_CREATED);
+
+        }
+        catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
+
+        
 
     
     

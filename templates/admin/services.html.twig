@@ -12,19 +12,15 @@
             <div class="card">
                 <div class="card-body">
                     <h1 class="card-title">Créer un nouveau service</h1>
-                    <form action="/admin/service/create" method="post">
-                        <input type="hidden" name="_method" value="POST" />
+                    <form id="createServiceForm">
                         <label for="nom">Service Name:</label>
-                        <input type="text" id="nom" name="nom" required class="form-control mb-2">
-                        
+                        <input type="text" id="create_inputNom" name="nom" required class="form-control mb-2">
                         <label for="description">Description:</label>
-                        <textarea id="description" name="description" required class="form-control mb-2"></textarea>
-
-                        
-                        <div class="d-flex justify-content-center mt-2 mb-2">
-                            <button type="submit" class="btn btn-primary">Add Service</button>
-                        </div>
+                        <textarea id="create_inputDescription" name="description" required class="form-control mb-2"></textarea>
                     </form>
+                    <div class="d-flex justify-content-center mt-5 mb-2">
+                        <button type="button" class="btn btn-primary" id="Btncreate">Add Service</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -47,7 +43,6 @@
                         
                         <label for="description">Description:</label>
                         <textarea id="inputDescription" name="description" required class="form-control mb-2" placeholder=""></textarea>
-
                     </form>
                     <div class="d-flex justify-content-center mt-5">
                         <div class="row">
@@ -58,31 +53,13 @@
                                 <button class="btn btn-danger" id="Btndelete">Delete</button>
                             </div>    
                         </div>
-                    </div>
-                        
-                   
+                    </div> 
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!--
-<div class="container-fluid  white-container">
-    <H1> Supprimer un service</H1>
-    <div class="row mb-4">
-        {% for service in services %}
-        <div class="col-md-2 col-sm-4 mb-4 mt-4 service" data-service="{{ service.nom }}" data-service-id="{{ service.id }}">
-            <div class="card card-service">
-                <H5 class="card-title">{{ service.nom }}</H5>
-                <btn class="button btn btn-danger delServ-btn"id="Btndelete">Delete</btn>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
--->
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
 <script src="{{asset('js/service.js')}}"> </script>
 {% endblock %}
