@@ -4,10 +4,10 @@
 
 {% block body %}
     <link rel="stylesheet" href="{{asset('css/admin.css')}}">
-    <div class="container bg-dark-box mt-5">
+    <div class="container center-vertically">
         
-            <div class="card">
-                <form method="post">
+            <div class="card" id="login-card">
+                <form method="post" id="loginForm">
                     {% if error %}
                         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                     {% endif %}
@@ -29,7 +29,7 @@
                     >
 
                     <div class="text-center mt-3">
-                        <button class="btn btn-lg btn-primary" type="submit">
+                        <button class="btn btn-lg btn-primary" type="submit" id="signinBtn">
                             Sign in
                         </button>
                     </div>
@@ -37,4 +37,5 @@
             </div>
            
     </div>
+    <script src="{{asset('js/login.js')}}"> </script>
 {% endblock %}
