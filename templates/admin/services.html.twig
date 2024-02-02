@@ -36,69 +36,23 @@
             <div class="card">
                 <div class="card-body">
                     <h1 class="card-title">Modifier un service:</h1>
-                    <form>
-                        <select name="service" id="service" class="form-control mb-2">
+                    <form id="serviceUpdateForm">
+                        <select name="service" id="serviceId" class="form-control mb-2">
                             {% for service in services %}
                                 <option value="{{ service.id }}">{{ service.nom }}</option>
                             {% endfor %}
                         </select>
                         <label for="nom">Nouveau nom du service:</label>
-                        <input type="text" id="Edit_nom" name="nom" required class="form-control mb-2" placeholder="">
+                        <input type="text" id="inputNom" name="nom" required class="form-control mb-2" placeholder="">
                         
                         <label for="description">Description:</label>
-                        <textarea id="Edit_description" name="Edit_description" required class="form-control mb-2" placeholder=""></textarea>
+                        <textarea id="inputDescription" name="description" required class="form-control mb-2" placeholder=""></textarea>
 
                         
                         <div class="d-flex justify-content-center">
-                            <button class="btn btn-primary UpdateBtn">Update Service</button>
+                            <button class="btn btn-primary UpdateBtn" id="Btnedit">Update Service</button>
                         </div>
-                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                        <script>
-                            $(document).ready(function() {
-                                // Event listener for change in the select element
-                                $('#service').change(function() {
-                                    // Get the selected option's text and values
-                                    var selectedOptionText = $(this).find('option:selected').text();
-                                    var selectedOptionValue = $(this).val();
-                    
-                                    // Update the placeholders of input fields with the selected service information
-                                    $('#Edit_nom').attr('placeholder', selectedOptionText);
-                                    $('#Edit_description').attr('placeholder', 'Description for ' + selectedOptionText);
-
-                                });
-                    
-                                // Event listener for click on the "Update Service" button
-                                $('.UpdateBtn').click(function() {
-                                    var serviceId = $('#service').val();
-                                    var url = "/admin/service/update/" + serviceId;
-                                    // Envoi de la requête AJAX avec la méthode PUT sur l'id du service
-                                    // REMOVE BEFORE PRODUCTION
-                                    console.log(url);
-                                    console.log($('#Edit_nom').val());
-                                    console.log($('#Edit_description').val());
-
-                                    
-                                    $.ajax({
-                                        url: url,
-                                        type: 'PUT',
-                                        data: {
-                                            nom: $('#Edit_nom').val(),
-                                            description: $('#Edit_description').val(),
-
-                                        },
-                                        // Coder fonction succes et error
-                                        success: function(response) {
-                                            // Handle success response
-                                            alert('Service updated successfully');
-                                        },
-                                        error: function(xhr, status, error) {
-                                            // Handle error response
-                                            alert('Error updating service');
-                                        }
-                                    });
-                                });
-                            });
-                        </script>
+                        
                     </form>
                 </div>
             </div>
@@ -119,29 +73,7 @@
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('.delServ-btn').click(function() {
-        var serviceId = $(this).closest('.service').data('service-id');
-        var url = "/admin/service/delete/" + serviceId;
-        // Envoi de la requête AJAX avec la méthode DELETE sur l'id du service
-        $.ajax({
-            url: url,
-            type: 'DELETE',
-            // Coder fonction succes et error
-            success: function(response) {
-                // Handle success response
-                alert('Service deleted successfully');
-            },
-            error: function(xhr, status, error) {
-                // Handle error response
-            }
-        });
-    });
-});
-$(document.ajaxStop(function() {
-    window.location.reload();
-}));    
-</script>
 
+
+<script src="{{asset('js/service.js')}}"> </script>
 {% endblock %}
