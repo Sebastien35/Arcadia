@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240122162133 extends AbstractMigration
+final class Version20240124165910 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,13 +20,12 @@ final class Version20240122162133 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE horaire ADD jour VARCHAR(8) NOT NULL, DROP id_jour');
-        
+        $this->addSql('ALTER TABLE service ADD prix INT DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE horaire ADD id_jour INT NOT NULL, DROP jour');
+        $this->addSql('ALTER TABLE service DROP prix');
     }
 }
