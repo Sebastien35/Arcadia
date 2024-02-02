@@ -91,8 +91,8 @@ function editService() {
     myHeaders.append("Content-Type", "application/json");
 
     let raw = JSON.stringify({
-        "nom": dataForm.get('nom'),
-        "description": dataForm.get('description')
+        "nom": sanitizeHTML(dataForm.get('nom')),
+        "description": sanitizeHTML(dataForm.get('description'))
     });
 
     let requestOptions = {
