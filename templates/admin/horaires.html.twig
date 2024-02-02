@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block body %}
+
+<link rel="stylesheet" href="{{asset('css/admin.css')}}"/>
+
+<div class="container tableau-horaires mt-5">
+    <hr class="mt-5">
+    <h5>Horaires d'ouverture</h5>
+    <hr>
+    <div class="row">
+        <table>
+            <tr>
+                <th>Jour</th>
+                <th>Heure d'ouverture</th>
+                <th>Heure de fermeture</th>
+            </tr>
+            {% for horaire in horaires %}
+            <tr>
+                <td>{{ horaire.getJour }}</td>
+                {% if horaire.isOuvert %}
+                <td>{{ horaire.GetHOuverture|date ('H:i') }}</td>
+                <td>{{ horaire.getHFermeture|date ('H:i') }}</td>
+                {% else %}
+                <td>Fermé</td>
+                <td>Fermé</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+   
+</div>
+<div class="container mt-5" style="border:1px var(--bg-dark)">
+    <form>
+        <select name="jour" id="jour">
+            {% for horaire in horaires %}
+            <option value="{{ horaire.id }}">{{ horaire.getJour }}</option>
+            {% endfor %}
+        </select></br>
+        <label for="HOuverture">Heure d'ouverture</label>
+        <input type="time" name="HOuverture" id="HOuverture"></br>
+        <label for ="HFermeture">Heure de fermeture</label>
+        <input type="time" name="HFermeture" id="HFermeture"></br>
+        <label for="isOuvert">Ouvert</label>
+        <input type="checkbox" name="isOuvert" id="isOuvert"></br>
+        
+    </form>
+        </br>
+        <button class="btn btn-primary btn-edit">Modifier</button>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            // Quand le document est chargé
+            $(document).ready(function() {
+                // Gestionnaire d'évènement
+                $('.btn-edit').click(function(e) {
+                    // Empêche le comportement par défaut
+                    e.preventDefault();
+                    var id = $('#jour').val(); // ID du jour 
+                    if (id) {
+                        // Url fixe + valeur de id
+                        var url = '/admin/horaires/edit/' + id;
+                        // Récupère les valeurs des champs
+                        var HOuverture = $('#HOuverture').val();
+                        var HFermeture = $('#HFermeture').val();
+                        var isOuvert = $('#isOuvert').prop('checked') ? 1:0; // prop('checked') la case est coché ou non '? 1:0' si oui 1 sinon 0
+                        // Requête AJAX
+                        console.log("Heure d'ouverture: "+HOuverture+" Heure fermeture: "+ HFermeture,"Ouvert : "+ isOuvert,"id : "+  id,"url : "+ url);
+                        $.ajax({
+                            url: url,
+                            method: 'PUT',
+                            data: {
+                                HOuverture: HOuverture,
+                                HFermeture: HFermeture,
+                                isOuvert: isOuvert
+                            },
+                            success: function(response) {
+                                console.log(response);
+                            },
+                            error: function (response) {
+                                console.log("Une erreur a eu lieu lors de la mise à jour de l'horaire avec les paramètres suivants: "+HOuverture+" "+HFermeture+" "+isOuvert+" "+id+" "+url)
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+    
+</div>
+</div>
+
+{% endblock %}

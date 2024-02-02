@@ -1,0 +1,30 @@
+/* -------------------------------  texte  ----------------------------- */
+
+
+H1{ color:var(--primary)}
+
+
+/* -------------------------------  Containers  ------------------------ */
+
+.avis-list-container{
+    width:50vw;
+    position:relative;
+    left:20vw;
+    top:15vh;
+    padding:0%;
+    margin:0%;
+
+
+}
+
+.bg-dark-box{
+    background-color: var(--bg-dark);
+}
+
+.Bg-white-box{
+    background-color: var(--white);
+}
+
+.avis-form-container{
+    border:1px solid var(--bg-dark);
+}

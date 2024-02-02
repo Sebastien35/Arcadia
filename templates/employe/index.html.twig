@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello EmployeController!{% endblock %}
+
+{% block body %}
+
+<div class="container avis-list-container mt-5">
+    <div class="row">
+        <h1 class="text-center">Avis en attente de validation:</h1>
+        <div class="col-12 avis-scroll-container" style="max-height: 400px; overflow-y: auto;">
+            <div id="avisList">
+                {% for singleAvis in avisList %}
+                    {% if singleAvis.isValidation == false %}
+                        <div class="card" id="{{ singleAvis.id }}">
+                            <div class="stars card-title">
+                                {% for star in range(1, 5) %}
+                                    {% if star <= singleAvis.note %}
+                                        <i class="fa-solid fa-star"></i>
+                                    {% else %}
+                                        <i class="fa-regular fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">{{ singleAvis.getAvisContent }}</p>
+                                <p class="card-text"><small class="text-muted">Posté par {{ singleAvis.pseudo }} le {{ singleAvis.getCreatedAt|date('d/m/Y') }}</small></p>
+                                <button type="submit" class="btn btn-primary validBtn">Valider</button>
+                                <button type="submit" class="btn btn-danger delBtn">Supprimer</button>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.validBtn').click(function() {
+            var avisID = $(this).closest('.card').attr('id');
+            $.ajax({
+                url: '/avis/update/' + avisID,
+                type: 'PUT', // Make sure your server is configured to handle PUT requests
+                success: function() {
+                    
+                    location.reload();
+                },
+                error: function() {
+                    alert('Error updating avis');
+                }
+            });
+        });
+        $('.delBtn').click(function(){
+            var avisID=$(this).closest('.card').attr('id');
+            $.ajax({
+                url: '/avis/delete/' + avisID,
+                type: 'DELETE', // Make sure your server is configured to handle DELETE requests
+                success: function() {
+                    location.reload();
+                },
+                error: function() {
+                    alert('Error deleting avis');
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}
