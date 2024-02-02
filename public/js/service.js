@@ -2,9 +2,12 @@ const serviceId = document.getElementById('serviceId');
 const inputNom = document.getElementById('inputNom');
 const inputDescription = document.getElementById('inputDescription');
 const Btnedit = document.getElementById('Btnedit');
+const Btndelete = document.getElementById('Btndelete');
+
+//inputNom.addEventListener('keyup', validateRequired(inputNom));
 
 Btnedit.addEventListener('click', editService);
-inputNom.addEventListener('keyup', validateRequired(inputNom));
+Btndelete.addEventListener('click', deleteService);
 
 function validateRequired(input){
     if(input.value==''||input.value==null||input.value==undefined||input.value.length<3){
@@ -16,6 +19,10 @@ function validateRequired(input){
     }
 }
 
+/* edit Service  02/02/2024 */
+function testDeleteService(){
+    alert("Would delete service with id: "+serviceId.value);
+}
 
 function editService() {
     let dataForm = new FormData(serviceUpdateForm);
@@ -53,3 +60,34 @@ function editService() {
         });
 }
 
+/* Delete Service 02/02/2024 */
+
+function deleteService() {
+
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    let requestOptions = {
+        method: 'DELETE',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    fetch("/admin/services/delete/" + serviceId.value, requestOptions)
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                throw new Error('Erreur');
+            }
+        })
+        .then(result => {
+            console.log(result);
+            alert("Service supprimé avec succès");
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle error
+        });
+}
