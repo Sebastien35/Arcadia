@@ -14,12 +14,12 @@ class Horaire
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Zoo $id_etablissement = null;
+    // #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?Zoo $id_etablissement = null;
 
-    #[ORM\Column]
-    private ?int $id_jour = null;
+    #[ORM\Column(type: Types::STRING, length: 8)]
+    private ?string $jour = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTimeInterface $h_ouverture = null;
@@ -27,35 +27,37 @@ class Horaire
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTimeInterface $h_fermeture = null;
 
+    #[ORM\Column]
+    private ?bool $ouvert = null;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getIdEtablissement(): ?Zoo
-    {
-        return $this->id_etablissement;
-    }
+    // public function getIdEtablissement(): ?Zoo
+    //{
+    //    return $this->id_etablissement;
+    //}
 
-    public function setIdEtablissement(Zoo $id_etablissement): static
+     //public function setIdEtablissement(Zoo $id_etablissement): static
+     //{
+     //    $this->id_etablissement = $id_etablissement;
+      //   
+       // return $this;
+     //}
+
+    
+    public function getJour(): ?string
     {
-        $this->id_etablissement = $id_etablissement;
+        return $this->jour;
+    }
+    public function setJour(string $jour): static
+    {
+        $this->jour = $jour;
 
         return $this;
     }
-
-    public function getIdJour(): ?int
-    {
-        return $this->id_jour;
-    }
-
-    public function setIdJour(int $id_jour): static
-    {
-        $this->id_jour = $id_jour;
-
-        return $this;
-    }
-
     public function getHOuverture(): ?\DateTimeInterface
     {
         return $this->h_ouverture;
@@ -81,15 +83,30 @@ class Horaire
     }
 
     public function __construct(
-        ?Zoo $id_etablissement = null,
-        ?int $id_jour = null,
+        
+        ?int $jour = null,
+        ?bool $ouvert = true,
         ?\DateTimeInterface $h_ouverture = null,
         ?\DateTimeInterface $h_fermeture = null
     ) {
-        $this->id_etablissement = $id_etablissement;
-        $this->id_jour = $id_jour;
+         // $this->id_etablissement = $id_etablissement;
+        
+        $this->$jour = $jour;
+        $this->ouvert = $ouvert;
         $this->h_ouverture = $h_ouverture;
         $this->h_fermeture = $h_fermeture;
+    }
+
+    public function isOuvert(): ?bool
+    {
+        return $this->ouvert;
+    }
+
+    public function setOuvert(bool $ouvert): static
+    {
+        $this->ouvert = $ouvert;
+
+        return $this;
     }
     
 }
