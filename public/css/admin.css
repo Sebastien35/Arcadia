@@ -39,3 +39,16 @@ form{
 .container{
     min-height:40vw;
 }
+
+.center-vertically{
+    display:flex;
+    align-items:center;
+    min-height: 100vh;
+}
+
+#login-card{
+    width: 100%;
+    height:100%;
+    border:0px;
+    
+}
