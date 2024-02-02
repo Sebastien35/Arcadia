@@ -251,7 +251,7 @@ class AdminController extends AbstractController
         }
 
 
-    #[Route('/service/delete/{id}',name: 'deleteService', methods: 'DELETE')]
+    #[Route('/services/delete/{id}',name: 'deleteService', methods: 'DELETE')]
     public function delete(int $id):Response
     {
         $service=$this->entityManager->getRepository(Service::class)->find($id);
