@@ -21,9 +21,6 @@ class Service
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $prix = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -64,17 +61,7 @@ class Service
         return $this;
     }
 
-    public function getPrix(): ?int
-    {
-        return $this->prix;
-    }
-
-    public function setPrix(?int $prix): static
-    {
-        $this->prix = $prix;
-
-        return $this;
-    }
+  
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -112,12 +99,17 @@ class Service
         return $this;
     }
 
-    public function __construct(string $nom, string $description, int $prix, \DateTimeImmutable $createdAt, ?\DateTimeImmutable $updatedAt, )
+    public function __construct(
+        string $nom,
+        string $description,
+        \DateTimeImmutable $createdAt,
+        ?\DateTimeImmutable $updatedAt,
+        )
     {
         
         $this->nom = $nom;
         $this->description = $description;
-        $this->prix = $prix;
+        
         $this->createdAt=$createdAt;
         $this->updatedAt=$updatedAt;
         

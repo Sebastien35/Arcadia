@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 use App\Entity\Service;
-Use App\Repository\ServiceRepository;
+use App\Repository\ServiceRepository;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Entity\Zoo;
@@ -18,6 +18,8 @@ use App\Repository\ZooRepository;
 use App\Entity\Horaire;
 use App\Repository\HoraireRepository;
 use DateTime;
+use DateTimeImmutable;
+
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
@@ -115,7 +117,7 @@ class AdminController extends AbstractController
         }
         }
 
-        #[Route('/horaires/edit/{id}', name: 'app_admin_editHoraire', methods: ['PUT'])]
+        #[Route('/horaires/edit/{id}', name: 'editHoraire', methods: ['PUT'])]
         public function editHoraire(int $id, Request $request): Response
         {
         try {
@@ -163,7 +165,69 @@ class AdminController extends AbstractController
     //  ]);
     // }
 
+    #[Route('/service/create', name: 'createService', methods: 'POST')]
+    public function new(Request $request): Response
+    {
+        $service = new Service(
+            $request->request->get('nom'),
+            $request->request->get('description'),
+            new \DateTimeImmutable(),
+            null // Assuming updatedAt can be null initially, adjust if needed
+        );
+
+        $this->entityManager->persist($service);
+        $this->entityManager->flush();
+        return $this->redirectToRoute('app_services_index_');
+    }
+
     
+    
+    
+    
+    
+    #[Route('/service/update/{id}',name: 'updateService', methods: 'PUT')]
+    public function edit(int $id, Request $request):Response
+    {   
+
+        try {
+            $service = $this->entityManager->getRepository(Service::class)->find($id);
+            if (!$service){
+                throw $this->createNotFoundException("No service found for {$id} id");
+            }
+            
+            $service->setNom($request->request->get('nom'));
+            $service->setDescription($request->request->get('description'));
+            $service->setUpdatedAt(new DateTimeImmutable());
+
+            $this->entityManager->persist($service);
+            $this->entityManager->flush();
+            var_dump($service);
+            return new Response('Saved service with id '.$service->getId(), ''+'name = '+$service->getNom()+''+'description ='+$service->getDescription()+ Response::HTTP_OK);
+        } catch (\Exception $e) {
+            // Handle the exception here
+            // You can log the error, display a custom error message, or perform any other necessary actions
+            echo "An error occurred: " . $e->getMessage();
+        }
+
+    }
+
+
+    #[Route('/service/delete/{id}',name: 'deleteService', methods: 'DELETE')]
+    public function delete(int $id):Response
+    {
+        $service=$this->entityManager->getRepository(Service::class)->find($id);
+        
+        if (!$service){
+            throw $this->createNotFoundException("No service found for {$id} id");
+        }
+        
+        $this->entityManager->remove($service);
+        $this->entityManager->flush();
+        return $this->redirectToRoute('app_admin',[
+            'controller_name' => 'ServicesController',
+            'service'=>$service // Passer la variables services qui contient tous les services
+        ]);
+    }
 
     
 }

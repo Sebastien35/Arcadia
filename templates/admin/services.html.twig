@@ -12,16 +12,14 @@
             <div class="card">
                 <div class="card-body">
                     <h1 class="card-title">Créer un nouveau service</h1>
-                    <form action="/services/create" method="post">
+                    <form action="/admin/service/create" method="post">
                         <input type="hidden" name="_method" value="POST" />
                         <label for="nom">Service Name:</label>
                         <input type="text" id="nom" name="nom" required class="form-control mb-2">
                         
                         <label for="description">Description:</label>
                         <textarea id="description" name="description" required class="form-control mb-2"></textarea>
-                        
-                        <label for="prix">Price:</label>
-                        <input type="number" id="prix" name="prix" class="form-control mb-3">
+
                         
                         <div class="d-flex justify-content-center">
                             <button type="submit" class="btn btn-primary">Add Service</button>
@@ -49,8 +47,7 @@
                         
                         <label for="description">Description:</label>
                         <textarea id="Edit_description" name="Edit_description" required class="form-control mb-2" placeholder=""></textarea>
-                        <label for="prix">Price:</label>
-                        <input type="number" id="Edit_prix" name="Edit_prix" class="form-control mb-3" placeholder="">
+
                         
                         <div class="d-flex justify-content-center">
                             <button class="btn btn-primary UpdateBtn">Update Service</button>
@@ -67,21 +64,27 @@
                                     // Update the placeholders of input fields with the selected service information
                                     $('#Edit_nom').attr('placeholder', selectedOptionText);
                                     $('#Edit_description').attr('placeholder', 'Description for ' + selectedOptionText);
-                                    $('#Edit_prix').attr('placeholder', 'Price for ' + selectedOptionText);
+
                                 });
                     
                                 // Event listener for click on the "Update Service" button
                                 $('.UpdateBtn').click(function() {
                                     var serviceId = $('#service').val();
-                                    var url = "/services/update/" + serviceId;
+                                    var url = "/admin/service/update/" + serviceId;
                                     // Envoi de la requête AJAX avec la méthode PUT sur l'id du service
+                                    // REMOVE BEFORE PRODUCTION
+                                    console.log(url);
+                                    console.log($('#Edit_nom').val());
+                                    console.log($('#Edit_description').val());
+
+                                    
                                     $.ajax({
                                         url: url,
                                         type: 'PUT',
                                         data: {
                                             nom: $('#Edit_nom').val(),
                                             description: $('#Edit_description').val(),
-                                            prix: $('#Edit_prix').val()
+
                                         },
                                         // Coder fonction succes et error
                                         success: function(response) {
@@ -104,17 +107,12 @@
 </div>
 <div class="container-fluid  white-container">
     <H1> Supprimer un service</H1>
-    <div class="row justify-content-center">
+    <div class="row mb-4">
         {% for service in services %}
         <div class="col-md-2 col-sm-4 mb-4 mt-4 service" data-service="{{ service.nom }}" data-service-id="{{ service.id }}">
             <div class="card card-service">
                 <H5 class="card-title">{{ service.nom }}</H5>
-                {% if service.prix is not null %}
-                    <div class="col-md-2">
-                        <button class="btn btn-danger delServ-btn">Delete</button>
-                    </div>
-                {% endif %}
-                </div>
+                <btn class="btn btn-danger delServ-btn">Delete</btn>
             </div>
         </div>
         {% endfor %}
@@ -125,7 +123,7 @@
 $(document).ready(function() {
     $('.delServ-btn').click(function() {
         var serviceId = $(this).closest('.service').data('service-id');
-        var url = "/services/delete/" + serviceId;
+        var url = "/admin/service/delete/" + serviceId;
         // Envoi de la requête AJAX avec la méthode DELETE sur l'id du service
         $.ajax({
             url: url,
