@@ -35,29 +35,31 @@
 </div>
     </br></br>
     <div class="col-12 avis-form-container mt-5 mb-5">
-        <form action="/avis/create" method="POST">
+        <form action="/avis/create" id="createAvisForm">
             <div class="mb-3">
                 <label for="pseudo" class="form-label">Entrez un nom:</label>
-                <input type="text" name="pseudo" class="form-control" placeholder="Pseudo" required>
+                <input type="text" name="pseudo" id="pseudoInput" class="form-control" placeholder="Pseudo" required>
             </div>
     
             <div class="mb-3">
                 <label for="note" class="form-label">Notez le parc:</label>
-                <input type="number" name="note" class="form-control" min="0" max="5" required>
+                <input type="number" name="note" id="noteInput" class="form-control" min="0" max="5" required>
             </div>
     
             <div class="mb-3">
                 <label for="Avis_content" class="form-label">Entrez votre avis:</label>
-                <textarea name="Avis_content" class="form-control" placeholder="Avis" rows="5" required></textarea>
+                <textarea name="Avis_content" id="avisContentInput" class="form-control" placeholder="Avis" rows="5" required></textarea>
             </div>
             
             <div class="mb-5">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" id="btnCreate" class="btn btn-primary ">Submit</button>
             </div>
         </form>
     </div>
 </div>
 
 
-
+<script src="{{ asset('js/avis.js') }}"></script>
+<script src="{{ asset('js/sanitizer.js') }}"> </script>
 {% endblock %}
+
