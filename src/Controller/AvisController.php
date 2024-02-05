@@ -19,6 +19,7 @@ use App\Entity\Avis;
 use App\Repository\AvisRepository;
 use App\Entity\Zoo;
 use App\Repository\ZooRepository;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 #[Route('/avis', name: 'app_avis_')]
 class AvisController extends AbstractController
@@ -26,7 +27,8 @@ class AvisController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private SerializerInterface $serializer
+        private SerializerInterface $serializer,
+        private AvisRepository $repository
         )
     {
         $this->entityManager=$entityManager;
@@ -74,19 +76,25 @@ class AvisController extends AbstractController
         ]);
     }
 
-    #[Route('/update/{id}',name: 'update', methods: 'PUT')]
-    public function update(int $id):Response
+    #[Route('/valider/{id}',name: 'update', methods: 'POST')]
+    public function update(int $id, Request $request): JsonResponse
     {
-        $avis = $this->entityManager->getRepository(Avis::class)->find($id);
+        $avis=$this->repository->findOneBy(['id'=>$id]);
         if (!$avis){
             throw $this->createNotFoundException(
                 'No avis found for id '.$id
             );
-        }
+        }else{
         $avis->setValidation(true);
         $this->entityManager->flush();
-        return $this->redirectToRoute('app_avis_index');
+        return new JsonResponse(null, Response::HTTP_OK);
+
+        }
+        
+
+        
     }
+        
 
 
 
@@ -101,7 +109,7 @@ class AvisController extends AbstractController
         }
         $this->entityManager->remove($avis);
         $this->entityManager->flush();
-        return $this->redirectToRoute('app_avis_index');
+        return new JsonResponse(null, Response::HTTP_OK);
     }
 
     
