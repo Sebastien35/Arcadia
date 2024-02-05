@@ -54,5 +54,41 @@ function validateNote(input){
 
 /* create Avis 02/02/2024*/
 function createAvis(){
-    console.log("createAvis");
+    let dataForm = new FormData(createAvisForm);
+    let myHeaders = new Headers();
+    // Permet de récupérer un integer et non un string
+    let note = parseInt(dataForm.get('note'));
+
+    myHeaders.append("Content-Type", "application/json");
+
+    let raw=JSON.stringify({
+        "pseudo": dataForm.get('pseudo'),
+        "note": note,
+        "Avis_content": dataForm.get('Avis_content')
+
+    })
+    let requestOptions={
+        method:'POST',
+        headers: myHeaders,
+        body:raw,
+        redirect:'follow'
+
+    };
+    console.log('requestOptions',requestOptions, 'raw', raw)
+    fetch("/avis/create",requestOptions)
+    .then(response=>{
+        if(response.status === 201){
+            window.location.href = "/avis";
+        }else{
+            throw new Error('Erreur, statut : ' + response.status);
+        }
+
+    })
+    .then(result=>{
+        alert('Merci d\' avoir partagé votre avis,' + dataForm.get('pseudo') + ' !');
+        window.location.reload();
+    })
+    .catch(error=>{
+        console.error('Error:',error);
+    });
 }
