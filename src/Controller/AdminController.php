@@ -32,7 +32,8 @@ class AdminController extends AbstractController
     
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private SerializerInterface $serializer
+        private SerializerInterface $serializer,
+        private HoraireRepository  $horaireRepository
         )
     {
         $this->entityManager=$entityManager;
@@ -56,7 +57,7 @@ class AdminController extends AbstractController
 
     #[Route('/users', name: 'userAdmin', methods: ['GET'])]
     public function indexUser(UserRepository $userRepo, ZooRepository $ZooRepo): Response
-    {   
+    {
         $users=$userRepo->findAll();
         $zoos=$ZooRepo->findAll();
         
@@ -70,7 +71,7 @@ class AdminController extends AbstractController
 
     #[Route('/users/delete/{id}', name: 'deleteUser', methods: ['delete'])]
     public function deleteUser(int $id): Response
-    {   
+    {
         $user=$this->entityManager->getRepository(User::class)->find($id);
         if(!$user){
             throw $this->createNotFoundException('No user found for id '.$id);
@@ -103,13 +104,13 @@ class AdminController extends AbstractController
         }
 
         // Conversion des chaînes de date en objets DateTime
-        $houverture = new \DateTime($request->request->get('HOuverture'));
-        $fermeture = new \DateTime($request->request->get('HFermeture'));
+        $h_ouverture = new \DateTime($request->request->get('HOuverture'));
+        $h_fermeture = new \DateTime($request->request->get('HFermeture'));
 
         // Attribution des valeurs aux propriétés de l'objet Horaire
         $horaire->setIdJour($id_jour);
-        $horaire->setHOuverture($houverture);
-        $horaire->setHFermeture($fermeture);
+        $horaire->setHOuverture($h_ouverture);
+        $horaire->setHFermeture($h_fermeture);
 
         // Validation des données avant la persistance (ajoutez des validations supplémentaires si nécessaire)
 
@@ -124,52 +125,62 @@ class AdminController extends AbstractController
         }
         }
 
-        #[Route('/horaires/edit/{id}', name: 'editHoraire', methods: ['PUT'])]
-        public function editHoraire(int $id, Request $request): Response
-        {
-        try {
-
-        
-        $horaire = $this->entityManager->getRepository(Horaire::class)->find($id);
+    #[Route('/horaires/edit/{id}', name: 'editHoraire', methods: ['PUT'])]
+    public function editHoraire(int $id, Request $request): JsonResponse
+    {
+        error_log(print_r($request->getContent(), true)); // Debug
+        $horaire = $this->horaireRepository->find($id);
+    
         if (!$horaire) {
-            throw $this->createNotFoundException('No horaire found for ' . $id);
+            return new JsonResponse(['error' => 'Horaire not found'], Response::HTTP_NOT_FOUND);
         }
-        // Modification des propriétés de l'objet Horaire
-        
-        $houverture = DateTime::createFromFormat('H:i', $request->request->get('HOuverture'));
-        $fermeture = DateTime::createFromFormat('H:i', $request->request->get('HFermeture'));
-        if (!$houverture || !$fermeture) {
-            throw new \InvalidArgumentException('Invalid date format provided.');
-        }
-        $horaire->setHOuverture($houverture);
-        $horaire->setHFermeture($fermeture);
-        $horaire->setOuvert($request->request->get('isOuvert'));
-        // Validation des données avant la persistance (ajoutez des validations supplémentaires si nécessaire)
-        // Persistance et flush avec gestion des exceptions
+    
+        // Deserialize JSON data into Horaire object
+        $horaire = $this->serializer->deserialize(
+            $request->getContent(
+                
+            ),
+            Horaire::class,
+            'json',
+            [AbstractNormalizer::OBJECT_TO_POPULATE => $horaire]
+        );
+        $requestDecoded=Json_decode($request->getContent(), true);
+        $horaire->setOuvert($requestDecoded['ouvert']);
+        //dd($requestDecoded);
+
+        $HeureOuverture = date_create_from_format('H:i', $requestDecoded['ouverture']);
+        $HeureFermeture = date_create_from_format('H:i', $requestDecoded['fermeture']);
+        $horaire->setHOuverture($HeureOuverture);
+        $horaire->setHFermeture($HeureFermeture);
+       // dd($ouvert); // Debug
+
+       // $horaire->setOuvert($request->get('ouvert'));
+ 
+       // dd($request->get('h_ouverture'), $request->get('h_fermeture')); // Debug
+        // Persist changes to the database
         $this->entityManager->persist($horaire);
         $this->entityManager->flush();
-        return new Response('Horaire modifié avec succès !', 200);
-        } catch (\Exception $e) {
-        // Gestion des exceptions (log, affichage d'un message d'erreur, etc.)
-        return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
-        }
-    }
+    
+        return new JsonResponse(['message' => 'Horaire updated successfully'], Response::HTTP_OK);
+}
+
+
     
     // Pour tester
     //#[Route('/horaires/show/{id}',name: 'showHoraire', methods: ['GET'])]
     //public function showHoraire(int $id):Response
-    //{   
-    //    
+    //{
+    //
     //    $horaire = $this->entityManager->getRepository(Horaire::class)->find($id);
     //    dd($id, $horaire);
     //    if (!$horaire){
     //        throw $this->createNotFoundException(
     //            'No horaire found for id '.$id
-    //        ); 
+    //        );
      //   }
     //    return $this->render('admin/showHoraire.html.twig', [
     //        'controller_name' => 'AdminController',
-    //        'horaire'=>$horaire // 
+    //        'horaire'=>$horaire //
     //  ]);
     // }
 
@@ -190,13 +201,6 @@ class AdminController extends AbstractController
         }
     }
 
-        
-
-    
-    
-    
-    
-    
 
 
     #[Route('/services/update/{id}', name: 'updateService', methods: ['PUT'])]

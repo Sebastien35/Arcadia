@@ -7,5 +7,5 @@ controllers:
 
 app_admin_editHoraire:
     path: '/admin/horaires/edit/{id}'
-    controller: 'App\Controller\YourController::editHoraire'
+    controller: 'App\Controller\AdminController::editHoraire'
     methods: ['PUT']
