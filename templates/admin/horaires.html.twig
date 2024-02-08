@@ -33,7 +33,7 @@
    
 </div>
 <div class="container mt-5" style="border:1px var(--bg-dark)">
-    <form>
+    <form id="editHoraireForm">
         <select name="jour" id="jour">
             {% for horaire in horaires %}
             <option value="{{ horaire.id }}">{{ horaire.getJour }}</option>
@@ -48,9 +48,9 @@
         
     </form>
         </br>
-        <button class="btn btn-primary btn-edit">Modifier</button>
+        <button id='btnEdit' class="btn btn-primary btn-edit">Modifier</button>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
+        <!-- <script>
             // Quand le document est chargé
             $(document).ready(function() {
                 // Gestionnaire d'évènement
@@ -85,9 +85,12 @@
                     }
                 });
             });
-        </script>
+        </script> -->
     
 </div>
 </div>
+<script src="{{asset('js/horaire.js')}}"></script>
+{% endblock %}
 
+{% block stylesheets %}
 {% endblock %}
