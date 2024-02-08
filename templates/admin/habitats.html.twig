@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Arcadia admin{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="{{asset('css/admin.css')}}"/>
+<div class="container-fluid mt-5 mb-5 bg-dark-box ">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mt-5 mb-3">
+            <H2 class="text-white"> Renseigner un nouvel habitat:</H2>
+            <div class="card">
+                <div class="card-body">
+                {{ form_start(form, {'action':('/admin/habitats/create')}) }}
+                {{ form_errors(form)}}
+                <div class="mb-3">
+                    {{ form_row(form.nom, {'label': 'Nom'}) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_row(form.description, {'label': 'Description'}) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_row(form.imageFile, {'label': 'Image'}) }}
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="container-fluid mt-5 white-container">
+    <h2 class="text-center">Liste des habitats</h2>
+    <div class="row">
+        <div class="col-md-3 mt-3">
+            {% for habitat in habitats %}
+            <div class="card mb-3 card-habitat">
+                <div class="card-body">
+                    <h5 class="card-title">{{ habitat.nom }}</h5>
+                    <img src="{{ asset('images/habitat/' ~ habitat.ImageName) }}" alt="image_{{ habitat.getNom }}" style="max-width: 100%;" >
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+<script src="{{asset('js/habitat.js')}}"></script>
+<script src="{{asset('js/sanitizer.js')}}"></script>
+
+{% endblock %}

@@ -7,7 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: HabitatRepository::class)]
 class Habitat
 {
@@ -19,8 +22,11 @@ class Habitat
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(type: Types::BLOB, nullable: true)]
-    private $image = null;
+    #[ORM\Column(type: "string",length:255, nullable: true)]
+    private ?string $imageName = null;
+
+    #[Vich\UploadableField(mapping: "habitat", fileNameProperty: "imageName")]
+    private $imageFile;
 
     #[ORM\Column(length: 4096)]
     private ?string $description = null;
@@ -50,17 +56,29 @@ class Habitat
         return $this;
     }
 
-    public function getImage()
+    public function getImageName(): ?string
     {
-        return $this->image;
+        return $this->imageName;
     }
 
-    public function setImage($image): static
+    public function setImageName(?string $imageName): static
     {
-        $this->image = $image;
+        $this->imageName = $imageName;
 
         return $this;
     }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): self
+    {
+        $this->imageFile = $imageFile;
+        return $this;
+    }
+
 
     public function getDescription(): ?string
     {

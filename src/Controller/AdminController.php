@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
+use DateTime;
+use DateTimeImmutable;
 
 use App\Entity\Service;
 use App\Repository\ServiceRepository;
@@ -20,10 +22,9 @@ use App\Entity\Zoo;
 use App\Repository\ZooRepository;
 use App\Entity\Horaire;
 use App\Repository\HoraireRepository;
-use DateTime;
-use DateTimeImmutable;
-
-
+use App\Entity\Habitat;
+use App\Repository\HabitatRepository;
+use App\Form\habitatFormType;
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
@@ -137,9 +138,7 @@ class AdminController extends AbstractController
     
         // Deserialize JSON data into Horaire object
         $horaire = $this->serializer->deserialize(
-            $request->getContent(
-                
-            ),
+            $request->getContent(),
             Horaire::class,
             'json',
             [AbstractNormalizer::OBJECT_TO_POPULATE => $horaire]
@@ -277,4 +276,45 @@ class AdminController extends AbstractController
     }
 
     
+
+
+
+
+/* ------------------------Habitat------------------------ */
+
+    #[Route('/habitats', name: 'habitatsAdmin', methods: ['GET'])]
+    public function indexHabitats(HabitatRepository $habitatRepo): Response
+    {
+    $habitats = $habitatRepo->findAll();
+    $form = $this->createForm(habitatFormType::class);
+    return $this->render('admin/habitats.html.twig', [
+        'controller_name' => 'AdminController',
+        'habitats'=>$habitats,
+        'form' => $form->createView()
+    ]);
+    }
+
+    #[Route('/habitats/create', name: 'createHabitat', methods: 'POST')]
+    public function createHabitat(Request $request): Response
+    {   
+        try{
+        $habitat = new habitat();
+        $form = $this->createForm(habitatFormType::class, $habitat);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($habitat);
+            $this->entityManager->flush();
+            return $this->redirectToRoute('app_admin_habitatsAdmin');
+            
+        }
+    }catch (\Exception $e) {
+        return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
+    }
+    }
+
+
+
+
+
+
 }
