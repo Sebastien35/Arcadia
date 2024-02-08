@@ -296,7 +296,7 @@ class AdminController extends AbstractController
 
     #[Route('/habitats/create', name: 'createHabitat', methods: 'POST')]
     public function createHabitat(Request $request): Response
-    {   
+    {
         try{
         $habitat = new habitat();
         $form = $this->createForm(habitatFormType::class, $habitat);
@@ -310,6 +310,23 @@ class AdminController extends AbstractController
     }catch (\Exception $e) {
         return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
     }
+    }
+
+    #[Route('/habitats/delete/{id}',name: 'deleteHabitat', methods: 'DELETE')]
+    public function deleteHabitat(int $id):Response
+    {
+        $habitat=$this->entityManager->getRepository(Habitat::class)->find($id);
+        
+        if (!$habitat){
+            throw $this->createNotFoundException("No habitat found for {$id} id");
+        }
+        
+        $this->entityManager->remove($habitat);
+        $this->entityManager->flush();
+        return $this->redirectToRoute('app_admin',[
+            'controller_name' => 'HabitatsController',
+            'habitat'=>$habitat // Passer la variables habitats qui contient tous les habitats
+        ]);
     }
 
 
