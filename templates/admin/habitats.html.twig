@@ -32,17 +32,14 @@
 <div class="container-fluid mt-5 white-container">
     <h2 class="text-center">Liste des habitats</h2>
     <div class="row">
-        {% for habitat in habitats %}
-            {% if loop.index0 % 4 == 0 %}
-                </div><div class="row">
-            {% endif %}
+        {% for habitat in habitats %}  
             <div class="col-md-3 mt-3">
                 <div class="card mb-3 card-habitat">
                     <div class="card-body">
                         <h5 class="card-title">{{ habitat.nom }}</h5>
                         <img src="{{ asset('images/habitat/' ~ habitat.ImageName) }}" alt="image_{{ habitat.getNom }}" style="max-width: 100%;" >
                         <div class="d-flex justify-content-between">
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-light"><i class="fa-solid fa-trash"></i></button>
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-habitat-id ="{{habitat.id}}" class="btn btn-light"><i class="fa-solid fa-trash"></i></button>
                             <button type="button" class="btn btn-outline"><i class="fa-regular fa-pen-to-square" data-bs-toggle="modal" data-bs-target="#deleteModal"></i></button>
                         </div>
                     </div>
@@ -57,17 +54,21 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteModalLabel">Suppression d'un habitat</h5>
-                    <button type="button" class="btn-close btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-x"></i></button>
+                    <button id = "delete" type="button" class="btn-close btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-x"></i></button>
                 </div>
                 <div class="modal-body">
-                    Êtes-vous sûr de vouloir supprimer cet habitat?
+                    <p>Êtes-vous sûr de vouloir supprimer cet habitat?</p>
+                    <p class="d-none" id="habitatId"></p>
+                    
                 </div>
-                <div class="d-flex justify-content-between p-3">
+                <div class="d-flex justify-content-around p-3">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-danger">Supprimer</button>
+                    <button id="btnConfirmDelete" type="button" class="btn btn-danger" data-bs-dismiss="modal">Supprimer</button>
             </div>
         </div>
     </div>
+
+    
     
 
 </div>

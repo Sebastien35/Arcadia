@@ -282,7 +282,7 @@ class AdminController extends AbstractController
 
 /* ------------------------Habitat------------------------ */
 
-    #[Route('/habitats', name: 'habitatsAdmin', methods: ['GET'])]
+    #[Route('/habitats', name: 'habitatsIndex', methods: ['GET'])]
     public function indexHabitats(HabitatRepository $habitatRepo): Response
     {
     $habitats = $habitatRepo->findAll();
@@ -304,7 +304,7 @@ class AdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($habitat);
             $this->entityManager->flush();
-            return $this->redirectToRoute('app_admin_habitatsAdmin');
+            return $this->redirectToRoute('app_admin_habitatsIndex');
             
         }
     }catch (\Exception $e) {
@@ -316,22 +316,30 @@ class AdminController extends AbstractController
     public function deleteHabitat(int $id):Response
     {
         $habitat=$this->entityManager->getRepository(Habitat::class)->find($id);
-        
         if (!$habitat){
             throw $this->createNotFoundException("No habitat found for {$id} id");
         }
-        
         $this->entityManager->remove($habitat);
         $this->entityManager->flush();
-        return $this->redirectToRoute('app_admin',[
+        return $this->redirectToRoute('app_admin_habitatsIndex',[
             'controller_name' => 'HabitatsController',
             'habitat'=>$habitat // Passer la variables habitats qui contient tous les habitats
         ]);
     }
 
-
-
-
+    #[Route('/habitats/update/{id}', name: 'updateHabitat', methods: ['PUT'])]
+    public function editHabitat(int $id):Response
+    {
+        $habitat=$this->entityManager->getRepository(Habitat::class)->find($id);
+        if (!$habitat){
+            throw $this->createNotFoundException("No habitat found for {$id} id");
+        }
+        $form = $this->createForm(habitatFormType::class, $habitat);
+        return $this->render('admin/habitats.html.twig', [
+            'controller_name' => 'AdminController',
+            'form' => $form->createView()
+        ]);
+    }
 
 
 }
