@@ -25,6 +25,8 @@ use App\Repository\HoraireRepository;
 use App\Entity\Habitat;
 use App\Repository\HabitatRepository;
 use App\Form\habitatFormType;
+use App\Form\EditHabitatForm;
+
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
@@ -228,36 +230,18 @@ class AdminController extends AbstractController
 
                 // Return a success response
                 return new JsonResponse(['message' => 'Service updated successfully'], Response::HTTP_OK);
-            } catch (\Exception $e) {
+            }catch (\Exception $e) {
                 // Handle the exception here
                 // You can log the error, display a custom error message, or perform any other necessary actions
                 return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
-            if (!$service){
-                throw $this->createNotFoundException("No service found for {$id} id");
-            }
-            
-            // Parse the JSON data from the request body
-            $data = json_decode($request->getContent(), true);
-
-            // Update the service entity with the new data
-            $service->setNom($data['nom'] ?? $service->getNom());
-            $service->setDescription($data['description'] ?? $service->getDescription());
-            $service->setUpdatedAt(new DateTimeImmutable());
-
-            // Persist the changes to the database
-            $this->entityManager->flush();
-
-            // Return a success response
-            return new JsonResponse(['message' => 'Service updated successfully'], Response::HTTP_OK);
-            } catch (\Exception $e) {
-            // Handle the exception here
-            // You can log the error, display a custom error message, or perform any other necessary actions
+        } catch (\Exception $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
+
+            
         }
 
-
+    }
     #[Route('/services/delete/{id}',name: 'deleteService', methods: 'DELETE')]
     public function delete(int $id):Response
     {
@@ -286,11 +270,13 @@ class AdminController extends AbstractController
     public function indexHabitats(HabitatRepository $habitatRepo): Response
     {
     $habitats = $habitatRepo->findAll();
-    $form = $this->createForm(habitatFormType::class);
+    $createForm = $this->createForm(habitatFormType::class);
+    $editForm = $this->createForm(editHabitatForm::class);
     return $this->render('admin/habitats.html.twig', [
         'controller_name' => 'AdminController',
         'habitats'=>$habitats,
-        'form' => $form->createView()
+        'createForm' => $createForm->createView(),
+
     ]);
     }
 
@@ -312,6 +298,40 @@ class AdminController extends AbstractController
     }
     }
 
+
+    #[Route('/habitats/update/{id}', name: 'updateHabitat', methods: ['GET', 'POST'])]
+    public function updateHabitat(int $id, Request $request, HabitatRepository $habitatRepo): Response
+    {
+        $habitat = $habitatRepo->find($id);
+
+        if (!$habitat) {
+            throw $this->createNotFoundException("No habitat found for {$id} id");
+        }
+        $form = $this->createForm(habitatFormType::class, $habitat);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            var_dump('form submitted & valid');
+            //dd($form->getData()); // Debug
+            $habitat->setNom($form->get('nom')->getData());
+            $habitat->setDescription($form->get('description')->getData());
+            $habitat->setImageFile($form->get('imageFile')->getData());
+           
+            $this->entityManager->persist($habitat);
+            $this->entityManager->flush();
+            return $this->redirectToRoute('app_admin_habitatsIndex');
+       
+        }else{
+            
+            return $this->render('admin/update_habitat.html.twig', [
+            'controller_name' => 'AdminController',
+            'Form' => $form->createView(),
+            'habitat' => $habitat
+            ]);
+        }
+    }
+
+
     #[Route('/habitats/delete/{id}',name: 'deleteHabitat', methods: 'DELETE')]
     public function deleteHabitat(int $id):Response
     {
@@ -327,19 +347,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/habitats/update/{id}', name: 'updateHabitat', methods: ['PUT'])]
-    public function editHabitat(int $id):Response
-    {
-        $habitat=$this->entityManager->getRepository(Habitat::class)->find($id);
-        if (!$habitat){
-            throw $this->createNotFoundException("No habitat found for {$id} id");
-        }
-        $form = $this->createForm(habitatFormType::class, $habitat);
-        return $this->render('admin/habitats.html.twig', [
-            'controller_name' => 'AdminController',
-            'form' => $form->createView()
-        ]);
-    }
+    
 
 
 }
