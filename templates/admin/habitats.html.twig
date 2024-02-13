@@ -10,44 +10,98 @@
             <H2 class="text-white"> Renseigner un nouvel habitat:</H2>
             <div class="card">
                 <div class="card-body">
-                {{ form_start(form, {'action':('/admin/habitats/create')}) }}
-                {{ form_errors(form)}}
+                {{ form_start(createForm, {'action':('/admin/habitats/create')}) }}
+                {{ form_errors(createForm)}}
                 <div class="mb-3">
-                    {{ form_row(form.nom, {'label': 'Nom'}) }}
+                    {{ form_row(createForm.nom, {'label': 'Nom'}) }}
                 </div>
                 <div class="mb-3">
-                    {{ form_row(form.description, {'label': 'Description'}) }}
+                    {{ form_row(createForm.description, {'label': 'Description'}) }}
                 </div>
                 <div class="mb-3">
-                    {{ form_row(form.imageFile, {'label': 'Image'}) }}
+                    {{ form_row(createForm.imageFile, {'label': 'Image'}) }}
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Ajouter</button>
-                {{ form_end(form) }}
+                <button type="submit" class="btn btn-primary mb-1">Ajouter</button>
+                {{ form_end(createForm) }}
             </div>
         </div>
     </div>
 </div>
 </div>
 <div class="container-fluid mt-5 white-container">
+    <hr>
     <h2 class="text-center">Liste des habitats</h2>
+    <hr>
     <div class="row">
-        <div class="col-md-3 mt-3">
-            {% for habitat in habitats %}
-            <div class="card mb-3 card-habitat">
-                <div class="card-body">
-                    <h5 class="card-title">{{ habitat.nom }}</h5>
-                    <img src="{{ asset('images/habitat/' ~ habitat.ImageName) }}" alt="image_{{ habitat.getNom }}" style="max-width: 100%;" >
+        {% for habitat in habitats %}  
+            <div class="col-md-3 mt-3">
+                <div class="card mb-3 card-habitat">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ habitat.nom }}</h5>
+                        <img src="{{ asset('images/habitat/' ~ habitat.ImageName) }}" alt="image_{{ habitat.getNom }}" style="max-width: 100%;" >
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#deleteModal" data-habitat-id = "{{habitat.id}}" ><i class="fa-solid fa-trash"></i></button>
+                            <button class="btn btn-light" onclick="window.location='/admin/habitats/update/{{habitat.id}}'">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            {% endfor %}
-        </div>
+            
+        {% endfor %}
     </div>
+
+    
 
 </div>
 
 
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Suppression d'un habitat</h5>
+                <button id = "delete" type="button" class="btn-close btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cet habitat?</p>
+                <p class="d-none" id="habitatId"></p>
+                
+            </div>
+            <div class="d-flex justify-content-around p-3">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button id="btnConfirmDelete" type="button" class="btn btn-danger" data-bs-dismiss="modal">Supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Modification d'un habitat</h5>
+                <button type="button" class="btn-close btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <label for="nom">Nom</label>
+                    <input type="text" id="nom" name="nom" class="form-control">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" class="form-control"></textarea>
+                    <label for="image">Image</label>
+                    <input type="file" id="fileInput" name="image" class="form-control">
+                    <input type="hidden" id="habitatId" name="habitatId">  
+                    <button type="button" class="btn btn-primary mt-2 mb-2" id="btnConfirmEdit" >Modifier</button>
+                    <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
 
 
 
@@ -55,6 +109,4 @@
 
 
 <script src="{{asset('js/habitat.js')}}"></script>
-<script src="{{asset('js/sanitizer.js')}}"></script>
-
 {% endblock %}

@@ -38,13 +38,13 @@
                 {% if app.user %}
                     <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/logout">Déconnexion</a>
                     {% if is_granted ('ROLE_EMPLOYE') %}
-                    <a class="nav-item nav-link d-non d-lg-block mr-lg-3" href="/employe"> Mon espace</a>
+                    <a class="nav-item nav-link d-non d-lg-block mr-lg-3" href="/employe"><i>Espace employé</i></a>
                     {% endif %}
                     {% if is_granted ('ROLE_VET') %}
-                    <a class="nav-item" nav-link d-none d-lg-block mr-lg-3 href="/veterinaire">Mon espace</a>
+                    <a class="nav-item" nav-link d-none d-lg-block mr-lg-3 href="/veterinaire"><i>Espace vétérinaire</i></a>
                     {% endif %}
                     {% if is_granted ('ROLE_ADMIN') %}
-                    <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/admin">Mon espace</a>
+                    <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/admin"><i>Admin</i></a>
                     {% endif %}
                 {% else %}
                     <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/login">Connexion</a>
@@ -64,5 +64,6 @@
         </footer>
         <script src="https://kit.fontawesome.com/033a5007fc.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+        <script src="{{asset('js/sanitizer.js')}}"></script>
     </body>
 </html>

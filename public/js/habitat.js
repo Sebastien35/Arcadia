@@ -1,98 +1,105 @@
-const btnCreateHabitat = document.getElementById('btnCreateHabitat');
-const uploadImage = document.getElementById('create_inputImage');
-const imagePreview = document.getElementById('create_imagePreview');
-const create_nom = document.getElementById('create_inputNom');
-const create_description = document.getElementById('create_inputDescription');
-
-btnCreateHabitat.addEventListener('click', createHabitat);
-uploadImage.addEventListener('change', validateUpload);
+const btnConfirmDelete = document.getElementById('btnConfirmDelete');
+const btnConfirmEdit = document.getElementById('btnConfirmEdit');
 
 
 
-function createHabitat() {
-    alert('createHabitat');
-    let dataForm = new FormData(createHabitatForm);
+
+
+/* -------- Transmettre id de l'habitat à supprimer / éditer  ---------*/
+document.addEventListener('DOMContentLoaded', function () {
+    const deleteButtons = document.querySelectorAll('[data-habitat-id]');
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const habitatId = button.getAttribute('data-habitat-id');
+            const habitatIdContainer = document.getElementById('habitatId');
+            habitatIdContainer.textContent = habitatId;
+        });
+    });
+
+});
+btnConfirmDelete.addEventListener('click', deleteHabitat); 
+//btnConfirmEdit.addEventListener('click', editHabitat);
+
+async function deleteHabitat(){
+    const habitatId = document.getElementById('habitatId').textContent;
     let myHeaders = new Headers();
-    // Remove the Content-Type header as FormData will automatically set it
+    myHeaders.append("Content-Type", "application/json");
+
     let requestOptions = {
-        method: 'POST',
+        method : 'DELETE', 
         headers: myHeaders,
-        body: dataForm,
         redirect: 'follow'
     };
-    fetch('/admin/habitats/create', requestOptions)
+    fetch('/admin/habitats/delete/'+ habitatId , requestOptions)
         .then(response => {
-            if (response.status === 200) {
-                console.log('Habitat créé');
-                console.log(dataForm.get('image'), dataForm.get('nom'), dataForm.get('description'));
+            if (response.status === 200 | 202 | 204){
+                window.location.reload();
+                return response.json();
+                
             } else {
-                console.log('Habitat non créé');
-                console.log('response', response);
+                throw new Error('Erreur');
             }
         })
         .then(result => {
-            console.log('result', result);
+            console.log(result);
+            alert("Habitat supprimé avec succès");
+            window.location.reload();
         })
         .catch(error => {
-            console.log('error', error);
+            console.error('Error:', error);
+            // Handle error
         });
-}
+
+
+    }
+        
+    
+function editHabitat(){
+    console.log('editHabitat');
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const habitatId = document.getElementById('habitatId').textContent;
+    let file = fileInput.files[0];
+
+    let dataForm = new FormData(document.getElementById('editForm'))
+    dataForm.append('image', file);
+    let raw= JSON.stringify(dataForm);
 
 
 
-/* Valider image */
-
-function validateUpload(){
-    var fuData = document.getElementById('create_inputImage');
-    var FileUploadPath = fuData.value;
-    var Extension = FileUploadPath.substring(
-        FileUploadPath.lastIndexOf('.') + 1).toLowerCase();
-        if (Extension == "png" || Extension == "jpeg" || Extension == "jpg") {
-            if (fuData.files && fuData.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.classList.add('d-block');
-                    return true;
-                }
-                reader.readAsDataURL(fuData.files[0]);
+    let requestOptions = {
+        method: 'PUT',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    };
+    fetch('/admin/habitats/update/'+ habitatId , requestOptions)
+        .then(response => {
+            if (response.status === 200){
+                console.log(requestOptions)
+                return response.json();             
+            } else {
+                console.log(requestOptions);
+                console.log(dataForm);
+                throw new Error('Erreur');
             }
+        })
+        .then(result => {
+            console.log(result);
+            alert("Habitat modifié avec succès");
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle error
+        });
 
-        } else {
-            alert("Photo non acceptée, veuillez choisir une photo au format png, jpeg ou jpg");
-            imagePreview.src = '';
-            imagePreview.classList.add('d-none')
-            return false;
-        }
-    }
+    
 
-
-/* Vérification formulaire */
-
-function validateForm(){
-    let nom = document.getElementById('create_inputNom');
-    let description = document.getElementById('create_inputDescription');
-    let Btncreate = document.getElementById('btnCreateHabitat');
-    if(validateRequired(nom) && validateRequired(description) && validateUpload()){
-        Btncreate.disabled = false;
-    }else{
-        Btncreate.disabled = true;
-    }
 }
 
-function validateRequired(input){
-    if(input.value != '' && input.value.length > 3){
-        input.classList.add("is-valid");
-        input.classList.remove("is-invalid"); 
-        return true;
-    }
-    else{
-        input.classList.remove("is-valid");
-        input.classList.add("is-invalid");
-        return false;
-    }
-}
 
-create_nom.addEventListener('keyup', validateForm);
-create_description.addEventListener('keyup', validateForm);
+
+
 
