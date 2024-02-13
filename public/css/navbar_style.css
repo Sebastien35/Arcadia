@@ -40,3 +40,8 @@
 .footer-text-wrapper {
     margin-top: 15px; /* Adjust this value to move the text further down */
 }
+
+.navbar-toggle{
+    position:relative;
+    right: 0 !important;
+}
