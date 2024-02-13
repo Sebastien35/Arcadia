@@ -38,10 +38,10 @@
                 {% if app.user %}
                     <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/logout">Déconnexion</a>
                     {% if is_granted ('ROLE_EMPLOYE') %}
-                    <a class="nav-item nav-link d-non d-lg-block mr-lg-3" href="/employe"><i>Espace employé</i></a>
+                    <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/employe"><i>Espace employé</i></a>
                     {% endif %}
                     {% if is_granted ('ROLE_VET') %}
-                    <a class="nav-item" nav-link d-none d-lg-block mr-lg-3 href="/veterinaire"><i>Espace vétérinaire</i></a>
+                    <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/veterinaire"><i>Espace vétérinaire</i></a>
                     {% endif %}
                     {% if is_granted ('ROLE_ADMIN') %}
                     <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/admin"><i>Admin</i></a>
@@ -51,8 +51,45 @@
                 {% endif %}
                 <a class="nav-item nav-link d-none d-lg-block mr-lg-3" href="/contact">Contact</a>
             </div>
-        
-            <!-- Contenu navbar sur téléphone / tablette -->
+            <!-- Contenu navbar sur mobile -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Habitats">Habitats</a>
+                    </li>
+                    {% if app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Déconnexion</a>
+                        </li>
+                        {% if is_granted ('ROLE_EMPLOYE') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/employe"><i>Espace employé</i></a>
+                        </li>
+                        {% endif %}
+                        {% if is_granted ('ROLE_VET') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/veterinaire"><i>Espace vétérinaire</i></a>
+                        </li>
+                        {% endif %}
+                        {% if is_granted ('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin"><i>Admin</i></a>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">Connexion</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+            
         </nav>
         
         {% block body %}
