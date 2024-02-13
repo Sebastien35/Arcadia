@@ -45,3 +45,22 @@
     position:relative;
     right: 0 !important;
 }
+
+
+#navbar-brand:hover{
+    color: var(--primary);
+    transform: scale(1.1);
+    transition:all 0.5s;
+
+
+}
+
+.navbar{
+    --bs-navbar-color: var(--primary) !important;
+    transition: all 0.5s;
+}
+
+.navbar .nav-item .nav-link{
+    color: var(--white) !important;
+    transition: all 0.5s;
+}
