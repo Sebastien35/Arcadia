@@ -17,37 +17,58 @@
         <div class="BIG">
           <div class="big-overlap-group">
             <img class="big" src="{{asset('images/parc/big.png')}}" />
-              <div class="big-text-wrapper">
-                <p class="text">Arcadia vous acceuille du lundi au dimanche, de 10:00 à 17:00</p>
-              </div>
           </div>
         </div>
       </div>
     <div class="box-left-image">
         <div class="overlap-group">
           <div class="row">
-            <div class="col-2">
+            <div class="col">
             <img class="image image-left" src="{{ asset('images/parc/entrance-1.jpeg') }}" alt="Entrance Image" />
             </div>
-            <div class="col-2">
-            <div class="left-text-wrapper">
-                <p class="text">
+            
+            <div class="col mt-2">
+              <p class="text-white">
                     Bienvenue à Arcadia, votre destination enchantée au cœur de la forêt de Brocéliande en Bretagne depuis
                     1960 !<br />
-                    <p class="d-none d-lg-block ">Découvrez la magie de la nature dans notre zoo, où une variété d'animaux fascinants
-                    vous attend dans des habitats soigneusement conçus tels que la savane, la jungle et les marais. Chez
-                    Arcadia, le bien-être de nos pensionnaires est notre priorité absolue. Chaque jour, notre équipe de
-                    vétérinaires dévoués effectue des contrôles approfondis pour garantir la santé et le bonheur de chaque
-                    animal.
-                    </p>
-                </p>
+              </p>
+              <p class="d-none d-lg-block text-white">
+                Découvrez la magie de la nature dans notre zoo, où une variété d'animaux fascinants
+                vous attend dans des habitats soigneusement conçus tels que la savane, la jungle et les marais. Chez
+                Arcadia, le bien-être de nos pensionnaires est notre priorité absolue. Chaque jour, notre équipe de
+                vétérinaires dévoués effectue des contrôles approfondis pour garantir la santé et le bonheur de chaque
+                animal.
+              </p>             
+            </div>           
+            <div class="col d-none d-lg-flex mt-2  px-3">
+              <div class="card card-horaire mr-3">
+                <div class="card-header justify-content-between">
+                  <div class="card-title">
+                    <p class="text-white">Horaires d'ouverture</p>
+                  </div>
+                </div>
+                  <table class="table">
+                    <tbody>
+                      {% for horaire in horaires %}
+                      <tr>                   
+                        <td>{{ horaire.jour }}</td>
+                        <td>{{ horaire.getHOuverture |date('H:i')}}</td>
+                        <td>{{ horaire.getHFermeture |date('H:i')}}</td>   
+                      </tr>
+                      {% endfor%}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+              
+              </div> 
+
+
           </div>
         </div>
     </div>
     <div class="box-right-image">
-      <div class="overlap-group">
+      
         <div class="row">
             <div class="col right-text-wrapper">
               <p class="text">
@@ -65,7 +86,7 @@
             </div>
           </div>
         </div>
-      </div>
+      
     </div>
     <div class="box-left-image">
       <div class="overlap-group">
@@ -89,7 +110,7 @@
     </div>
     <div class="box-right-image" style="height: 135px">
       <div class="overlap-group">
-        <div class="center-text-wrapper">
+        <div class="center-text-wrapper mb-3">
           <p class="text" style="color:var(--secondary)">
             Découvrez les services proposés par le Zoo Arcadia ! </br>
             Restauration, visite guidée des habitats, tour en petit train et bien plus encore.

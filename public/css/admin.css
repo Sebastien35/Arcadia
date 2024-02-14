@@ -103,3 +103,24 @@ form{
 .form-container{
     width:50%;
 }
+
+
+.card-createHabitat{
+    
+    height: auto;
+    object-fit: contain;
+    background-color: #ece9d8;
+    border: 2px solid var(--secondary);
+}
+
+.card-createHabitat .card-header{
+    background: linear-gradient(180deg, var(--primary), var(--secondary) 8%, var(--secondary) 40%, var(--primary) 88%, var(--primary) 93%, var(--secondary) 95%, var(--primary) 96%, var(--secondary));
+    color: white !important ; 
+    font-size: 13px !important ;
+    text-shadow: 1px 1px #000000 !important;
+    padding: 3px 5px 3px 3px !important ;
+    justify-content: space-between !important;
+    position: relative !important;
+    top: 0 ;
+    text-align: left;
+}
