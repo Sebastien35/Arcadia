@@ -60,7 +60,11 @@
     .image-left{
       top: 8vh !important;
       left: 5vw !important;
-    }    
+    }  
+    .image-right{
+      top: 8vh !important;
+      left: 5vw !important;
+    }  
   }
 
   
@@ -78,14 +82,11 @@
     width:100%;
     overflow: hidden;
     height: 278px;
-    margin-top:0
+    margin-top:0;
+    margin-bottom:0px;
   }
 
-  .box-left-image .image-left{
-    position:relative;
-    left:5%;
-    top:3%;
-  }
+
 
 
 /* ----------------- box-right-image ----------------- */ 
@@ -100,15 +101,12 @@
 }
 
 
-.box-right-image .image-right{
-  position:relative;
 
-  top:-15vw;
-}
 
 .image-right{
   position: relative;
-  top: 10%
+  vertical-align: middle;
+  
 }
 
 /* ---------------- 2 images sur la même div ------------------------*/
@@ -161,18 +159,18 @@
   width: 66%;
 }
 
-.avis-card{
+.card{
   width: 100%;
   height: auto;
   border: 2px solid var(--secondary);
   background-color: #ece9d8;
 }
 
-.avis-card .card-header{
+.card .card-header{
   background: linear-gradient(180deg, var(--primary), var(--secondary) 8%, var(--secondary) 40%, var(--primary) 88%, var(--primary) 93%, var(--secondary) 95%, var(--primary) 96%, var(--secondary));
   color: white !important ; 
   font-size: 13px !important ;
-  text-shadow: 1px 1px #0f1089 !important;
+  text-shadow: 1px 1px #000000 !important;
   padding: 3px 5px 3px 3px !important ;
   justify-content: space-between !important;
   position: relative !important;
@@ -185,3 +183,12 @@
   color:var(--secondary);
 }
 H5 { color: var(--dark)}
+
+
+.card-horaire{
+  overflow-y: auto;
+  overflow-x: hidden;
+  overflow:scroll;
+  height: 250px;
+  margin-inline: auto;
+}

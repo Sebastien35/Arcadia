@@ -34,6 +34,9 @@ class Habitat
     #[ORM\OneToMany(mappedBy: 'Habitat', targetEntity: Animal::class)]
     private Collection $animals;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
     public function __construct()
     {
         $this->animals = new ArrayCollection();
@@ -73,10 +76,12 @@ class Habitat
         return $this->imageFile;
     }
 
-    public function setImageFile(?File $imageFile = null): self
+    public function setImageFile(?File $imageFile = null): void
     {
         $this->imageFile = $imageFile;
-        return $this;
+        if (null !== $imageFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
     }
 
 
@@ -118,6 +123,18 @@ class Habitat
                 $animal->setHabitat(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
