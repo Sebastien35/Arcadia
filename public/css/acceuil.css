@@ -157,11 +157,29 @@
 
 /* -------------------- Carte représentant les avis -------------------*/
 
-.card-avis{
-  width:60%;
-  position:relative;
-  top: 5%;
+.carouselAvis{
+  width: 66%;
 }
+
+.avis-card{
+  width: 100%;
+  height: auto;
+  border: 2px solid var(--secondary);
+  background-color: #ece9d8;
+}
+
+.avis-card .card-header{
+  background: linear-gradient(180deg, var(--primary), var(--secondary) 8%, var(--secondary) 40%, var(--primary) 88%, var(--primary) 93%, var(--secondary) 95%, var(--primary) 96%, var(--secondary));
+  color: white !important ; 
+  font-size: 13px !important ;
+  text-shadow: 1px 1px #0f1089 !important;
+  padding: 3px 5px 3px 3px !important ;
+  justify-content: space-between !important;
+  position: relative !important;
+  top: 0 ;
+
+}
+
 
 .subtitle{
   color:var(--secondary);

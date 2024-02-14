@@ -3,37 +3,53 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-    <link rel="stylesheet" href="{{asset('css/admin.css')}}">
+    
+
+<link rel="stylesheet" href="{{asset('css/admin.css')}}">
     <div class="container center-vertically">
         
             <div class="card" id="login-card">
+                <div class="card-header d-flex justify-content-between">  
+                    <div class="card-title-text">
+                        <h1 class="card-title h3 mb-3 font-weight-normal">Please sign in</h1>
+                    </div>
+                    <div class="card-title-icon">
+                        
+                        <button class="button" id="maximizeBtn"><i class="fa-regular fa-window-maximize"></i></button>
+                        <button class="button" id="closeBtn" onclick="window.location=('/')"><i class="fa-solid fa-x"></i></button>
+                        
+                    
+                    </div>
+                    
+                        
+                    
+                </div>
                 <form method="post" id="loginForm">
-
-
+                    
                     {% if app.user %}
                         <div class="mb-3">
                             You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
                         </div>
                     {% endif %}
-                    
-                    <h1 class="card-title h3 mb-3 font-weight-normal">Please sign in</h1>
-                    <label for="inputEmail">Email</label>
-                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-                    <label for="inputPassword">Password</label>
-                    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-
+                    <div class="form-container">
+                        <label for="inputEmail">Email</label>
+                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                        <label for="inputPassword">Password</label>
+                        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                    </div>
                     <input type="hidden" name="_csrf_token"
                         value="{{ csrf_token('authenticate') }}"
                     >
 
-                    <div class="text-center mt-3">
-                        <button class="btn btn-lg btn-primary" type="submit" id="signinBtn">
-                            Sign in
-                        </button>
-                    </div>
+                    
                     {% if error %}
                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                     {% endif %}
+                    <div class="text-center mt-2 mb-5">
+                        <button class="submit_cancel" type="submit" id="submitBtn">Connection</button>
+                        <button class="submit_cancel" type="button" id="cancelBtn" onclick="window.location=('/')">Annuler</button>
+                    </div>   
+                        
                 </form>
             </div>
            
