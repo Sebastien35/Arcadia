@@ -11,7 +11,7 @@
     
 }
 
-.navbar-custom a:hover, a:active, a:visited,a {
+.navbar-custom , a:active, a:visited,a {
     text-decoration: none;
     color:#ffffffff;
     font-size: 32 ;
@@ -23,6 +23,10 @@
     font-size: 32;
 }
 
+.nav-link:hover{
+    color: #ffcb00;
+    transition: color 0.15s,  ease-in-out, background-color 0.15s ease-in-out;
+}
 
 .navbar-custom-footer {
     color: white;
@@ -57,10 +61,5 @@
 
 .navbar{
     --bs-navbar-color: var(--primary) !important;
-    transition: all 0.5s;
-}
-
-.navbar .nav-item .nav-link{
-    color: var(--white) !important;
-    transition: all 0.5s;
+    
 }
