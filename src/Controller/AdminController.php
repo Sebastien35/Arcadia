@@ -271,7 +271,6 @@ class AdminController extends AbstractController
     {
     $habitats = $habitatRepo->findAll();
     $createForm = $this->createForm(habitatFormType::class);
-    $editForm = $this->createForm(editHabitatForm::class);
     return $this->render('admin/habitats.html.twig', [
         'controller_name' => 'AdminController',
         'habitats'=>$habitats,
@@ -316,16 +315,16 @@ class AdminController extends AbstractController
             $habitat->setNom($form->get('nom')->getData());
             $habitat->setDescription($form->get('description')->getData());
             $habitat->setImageFile($form->get('imageFile')->getData());
-           
+
             $this->entityManager->persist($habitat);
             $this->entityManager->flush();
             return $this->redirectToRoute('app_admin_habitatsIndex');
-       
+
         }else{
             
             return $this->render('admin/update_habitat.html.twig', [
             'controller_name' => 'AdminController',
-            'Form' => $form->createView(),
+            'form' => $form->createView(),
             'habitat' => $habitat
             ]);
         }

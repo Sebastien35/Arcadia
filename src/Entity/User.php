@@ -25,9 +25,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
@@ -37,10 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?Zoo $worksAt = null;
-
-   
+ 
 
     public function getId(): ?int
     {
@@ -136,19 +130,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getWorksAt(): ?Zoo
-    {
-        return $this->worksAt;
-    }
-
-    public function setWorksAt(?Zoo $worksAt): static
-    {
-        $this->worksAt = $worksAt;
-
-        return $this;
-    }
-
-
 
     public function __construct(string $email, string $password, array $roles, \DateTimeImmutable $createdAt, ?\DateTimeImmutable $updatedAt, ?Zoo $worksAt,)
     {
@@ -160,5 +141,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->worksAt = $worksAt;
         
     }
-     
 }

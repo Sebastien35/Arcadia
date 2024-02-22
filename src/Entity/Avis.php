@@ -17,7 +17,7 @@ class Avis
     #[ORM\Column(length: 255)]
     private ?string $pseudo = null;
 
-    #[ORM\Column(length: 4096)]
+    #[ORM\Column(length: 512)]
     private ?string $Avis_content = null;
 
     #[ORM\Column]
