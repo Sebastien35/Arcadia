@@ -1,0 +1,84 @@
+/* CSS FOR EMPLOYE PAGE *\ 
+/* ---------------------*/
+body{
+    background-color: #f4f4f4;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+ul{
+    list-style-type: none;
+}
+
+.sidebar-item{
+    color: rgba(255, 255, 255, 0.7);
+    
+}
+
+.sidebar-item:hover{
+    color: rgba(255, 255, 255, 1);
+    transform:scale(1.1);
+    transition:all 0.3s;
+}
+
+#servicesContainer{
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow: scroll;
+}
+
+
+/* Card */
+
+.card{
+    background-color: #ece9d8;
+}
+
+.card-header{
+    background: linear-gradient(180deg, var(--primary), var(--secondary) 8%, var(--secondary) 40%, var(--primary) 88%, var(--primary) 93%, var(--secondary) 95%, var(--primary) 96%, var(--secondary));
+    color: white;
+    font-size: 13px;
+    text-shadow: 1px 1px #000000;
+    padding: 3px 5px 3px 3px;
+    justify-content: space-between;
+    position: relative;
+    top: 0;
+}
+
+.active{
+    color: #ffcb00
+}
+
+#foodContainer{
+    background-color: #f4f4f4;
+}
+
+#foodContainer .container-header{
+    background: linear-gradient(180deg, var(--primary), var(--secondary) 8%, var(--secondary) 40%, var(--primary) 88%, var(--primary) 93%, var(--secondary) 95%, var(--primary) 96%, var(--secondary));
+    color: white;
+    font-size: 13px;
+    text-shadow: 1px 1px #000000;
+    justify-content: space-between !important;
+    position: relative;
+    top: 0;
+    vertical-align: middle;
+    height:3em;
+
+}
+
+.header-btn{
+    background-color: var(--white);
+    border-color:#f4f4f4;
+    color: var(--dark);
+    width: 2em;
+    height: 2em;
+
+}
+
+.header-btn:hover{
+    box-shadow: inset -1px 1px #fff0cf,inset 1px 2px #fdd889,inset -2px 2px #fbc761,inset 2px -2px #e5a01a;
+}

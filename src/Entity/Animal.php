@@ -3,9 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\AnimalRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
+use App\Entity\InfoAnimal;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 class Animal
 {
@@ -14,20 +20,11 @@ class Animal
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $nbClicks = null;
-
     #[ORM\Column(length: 255)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nom = null;
-
     #[ORM\Column]
-    private array $race = [];
-
-    #[ORM\Column(type: Types::BLOB, nullable: true)]
-    private $image = null;
+    private ?string $race = null;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
     private ?Habitat $Habitat = null;
@@ -38,39 +35,32 @@ class Animal
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column]
-    private array $etat = [];
+    #[Vich\UploadableField(mapping: "animal", fileNameProperty: "imageName")]
+    private $imageFile;
 
-    #[ORM\Column]
-    private array $nourriture = [];
+    #[ORM\Column(type: "string",length:255, nullable: true)]
+    private ?string $imageName = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $grammage = null;
+    
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $dateDePassage = null;
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Repas::class)]
+    private Collection $repas;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $detailEtatAnimal = null;
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: InfoAnimal::class, orphanRemoval: true)]
+    private Collection $infoAnimals;
 
-    #[ORM\ManyToOne(inversedBy: 'animals')]
-    private ?zoo $zoo = null;
+    
+    public function __construct()
+    {
+        $this->repas = new ArrayCollection();
+        $this->infoAnimals = new ArrayCollection();
+    }
+
+    
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getNbClicks(): ?int
-    {
-        return $this->nbClicks;
-    }
-
-    public function setNbClicks(?int $nbClicks): static
-    {
-        $this->nbClicks = $nbClicks;
-
-        return $this;
     }
 
     public function getPrenom(): ?string
@@ -85,41 +75,18 @@ class Animal
         return $this;
     }
 
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    public function getRace(): array
+    public function getRace(): ?string
     {
         return $this->race;
     }
 
-    public function setRace(array $race): static
+    public function setRace(string $race): static
     {
         $this->race = $race;
 
         return $this;
     }
 
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    public function setImage($image): static
-    {
-        $this->image = $image;
-
-        return $this;
-    }
 
     public function getHabitat(): ?Habitat
     {
@@ -132,6 +99,8 @@ class Animal
 
         return $this;
     }
+
+    
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -157,106 +126,96 @@ class Animal
         return $this;
     }
 
-    public function getEtat(): array
+
+    public function getImageName(): ?string
     {
-        return $this->etat;
+        return $this->imageName;
     }
 
-    public function setEtat(array $etat): static
+    public function setImageName(?string $imageName): static
     {
-        $this->etat = $etat;
+        $this->imageName = $imageName;
 
         return $this;
     }
 
-    public function getNourriture(): array
+    public function getImageFile(): ?File
     {
-        return $this->nourriture;
+        return $this->imageFile;
     }
 
-    public function setNourriture(array $nourriture): static
+    public function setImageFile(?File $imageFile = null): void
     {
-        $this->nourriture = $nourriture;
+        $this->imageFile = $imageFile;
+        if (null !== $imageFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+
+    /**
+     * @return Collection<int, repas>
+     */
+    public function getRepas(): Collection
+    {
+        return $this->repas;
+    }
+
+    public function addRepa(repas $repa): static
+    {
+        if (!$this->repas->contains($repa)) {
+            $this->repas->add($repa);
+            $repa->setAnimal($this);
+        }
 
         return $this;
     }
 
-    public function getGrammage(): ?int
+    public function removeRepa(repas $repa): static
     {
-        return $this->grammage;
-    }
-
-    public function setGrammage(?int $grammage): static
-    {
-        $this->grammage = $grammage;
+        if ($this->repas->removeElement($repa)) {
+            // set the owning side to null (unless already changed)
+            if ($repa->getAnimal() === $this) {
+                $repa->setAnimal(null);
+            }
+        }
 
         return $this;
     }
 
-    public function getDateDePassage(): ?\DateTimeInterface
+    /**
+     * @return Collection<int, InfoAnimal>
+     */
+    public function getInfoAnimals(): Collection
     {
-        return $this->dateDePassage;
+        return $this->infoAnimals;
     }
 
-    public function setDateDePassage(?\DateTimeInterface $dateDePassage): static
+    public function addInfoAnimal(InfoAnimal $infoAnimal): static
     {
-        $this->dateDePassage = $dateDePassage;
+        if (!$this->infoAnimals->contains($infoAnimal)) {
+            $this->infoAnimals->add($infoAnimal);
+            $infoAnimal->setAnimal($this);
+        }
 
         return $this;
     }
 
-    public function getDetailEtatAnimal(): ?\DateTimeInterface
+    public function removeInfoAnimal(InfoAnimal $infoAnimal): static
     {
-        return $this->detailEtatAnimal;
-    }
-
-    public function setDetailEtatAnimal(?\DateTimeInterface $detailEtatAnimal): static
-    {
-        $this->detailEtatAnimal = $detailEtatAnimal;
+        if ($this->infoAnimals->removeElement($infoAnimal)) {
+            // set the owning side to null (unless already changed)
+            if ($infoAnimal->getAnimal() === $this) {
+                $infoAnimal->setAnimal(null);
+            }
+        }
 
         return $this;
     }
 
-    public function getZoo(): ?zoo
-    {
-        return $this->zoo;
-    }
 
-    public function setZoo(?zoo $zoo): static
-    {
-        $this->zoo = $zoo;
 
-        return $this;
-    }
-
-    public function __construct( 
-        string $prenom,
-        string $nom,
-        array $race,
-        $image,
-        Habitat $Habitat,
-        array $etat,
-        array $nourriture,
-        int $grammage,
-        \DateTimeInterface $dateDePassage,
-        \DateTimeInterface $detailEtatAnimal,
-        zoo $zoo
-    )
-    {
-        $this->prenom = $prenom;
-        $this->nom = $nom;
-        $this->race = $race;
-        $this->image = $image;
-        $this->Habitat = $Habitat;
-        $this->etat = $etat;
-        $this->nourriture = $nourriture;
-        $this->grammage = $grammage;
-        $this->dateDePassage = $dateDePassage;
-        $this->detailEtatAnimal = $detailEtatAnimal;
-        $this->zoo = $zoo;
-        $this->createdAt = new \DateTimeImmutable();
-        
-    }
 
     
+
 }

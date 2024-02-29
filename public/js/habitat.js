@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 btnConfirmDelete.addEventListener('click', deleteHabitat); 
-//btnConfirmEdit.addEventListener('click', editHabitat);
 
 async function deleteHabitat(){
     const habitatId = document.getElementById('habitatId').textContent;
@@ -55,49 +54,7 @@ async function deleteHabitat(){
     }
         
     
-function editHabitat(){
-    console.log('editHabitat');
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    const habitatId = document.getElementById('habitatId').textContent;
-    let file = fileInput.files[0];
 
-    let dataForm = new FormData(document.getElementById('editForm'))
-    dataForm.append('image', file);
-    let raw= JSON.stringify(dataForm);
-
-
-
-    let requestOptions = {
-        method: 'PUT',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-    };
-    fetch('/admin/habitats/update/'+ habitatId , requestOptions)
-        .then(response => {
-            if (response.status === 200){
-                console.log(requestOptions)
-                return response.json();             
-            } else {
-                console.log(requestOptions);
-                console.log(dataForm);
-                throw new Error('Erreur');
-            }
-        })
-        .then(result => {
-            console.log(result);
-            alert("Habitat modifié avec succès");
-            window.location.reload();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            // Handle error
-        });
-
-    
-
-}
 
 
 

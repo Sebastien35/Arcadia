@@ -43,6 +43,8 @@ security:
         - { path: ^/veterinaire, roles: ROLE_VET};
         - { path: ^/veterinaire, roles: ROLE_ADMIN};
         
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_EMPLOYE, ROLE_VET
         
 
 

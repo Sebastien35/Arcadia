@@ -26,6 +26,10 @@ use App\Entity\Habitat;
 use App\Repository\HabitatRepository;
 use App\Form\habitatFormType;
 use App\Form\EditHabitatForm;
+use App\Entity\Animal;
+use App\Repository\AnimalRepository;
+use App\Entity\infoAnimal;
+use App\Repository\infoAnimalRepository;
 
 
 #[Route('/admin', name: 'app_admin_')]
@@ -48,6 +52,31 @@ class AdminController extends AbstractController
             'controller_name' => 'AdminController',
         ]);
     }
+
+    #[Route('/dashboard', name: 'dashboard', methods: ['GET'])]
+    public function dashboard(): Response
+    {
+        $services = $this->entityManager->getRepository(Service::class)->findAll();
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+        $zoos = $this->entityManager->getRepository(Zoo::class)->findAll();
+        $horaires = $this->entityManager->getRepository(Horaire::class)->findAll();
+        $habitats = $this->entityManager->getRepository(Habitat::class)->findAll();
+        $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
+        $infoAnimals = $this->entityManager->getRepository(infoAnimal::class)->findAll();
+        return $this->render('admin/dashboard.html.twig', [
+            'controller_name' => 'AdminController',
+            'services'=>$services,
+            'users'=>$users,
+            'zoos'=>$zoos,
+            'horaires'=>$horaires,
+            'habitats'=>$habitats,
+            'animaux'=>$animaux,
+            'infoAnimals'=>$infoAnimals,
+
+        ]);
+    }
+
+
     #[Route('/services', name: 'servicesAdmin', methods: ['GET'])]
     public function indexServices(ServiceRepository $servRepo): Response
     {
@@ -72,7 +101,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/users/delete/{id}', name: 'deleteUser', methods: ['delete'])]
+    #[Route('/user/delete/{id}', name: 'deleteUser', methods: ['DELETE'])]
     public function deleteUser(int $id): Response
     {
         $user=$this->entityManager->getRepository(User::class)->find($id);
@@ -81,7 +110,7 @@ class AdminController extends AbstractController
         }
         $this->entityManager->remove($user);
         $this->entityManager->flush();
-        return $this->redirectToRoute('app_admin_userAdmin');
+        return new Response('User deleted successfully', 200);
     }
 
     #[Route('/horaires', name: 'horairesAdmin', methods: ['GET'])]
@@ -93,6 +122,39 @@ class AdminController extends AbstractController
             'horaires'=>$horaires
         ]);
     }
+
+    #[Route('/user/edit/{id}', name: 'editUser', methods: ['PUT'])]
+    public function editUser(int $id, Request $request): JsonResponse
+    {
+        $user = $this->entityManager->getRepository(User::class)->find($id);
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+        $data=json_decode($request->getContent(), true);
+        if (isset($data['email']) && !empty($data['email'])) {
+            $user->setEmail($data['email']);
+        }else{
+            $user->setEmail($user->getEmail());
+        }
+        if(isset($data['roles'])) {
+            $user->setRoles($data['roles']);
+        }else{
+            $user->setRoles($user->getRoles());
+        }
+        if(isset($data['password'])) {
+            $user->setPassword($data['password']);
+        }else{
+            $user->setPassword($user->getPassword());
+        }
+        $user->setUpdatedAt(new DateTimeImmutable());
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        return new JsonResponse(['message' => 'User updated successfully'], Response::HTTP_OK);
+    }
+
+
+
+
     
     #[Route('/horaires/new', name: 'newHoraire', methods: ['POST'])]
     public function newHoraire(Request $request): Response
@@ -271,7 +333,6 @@ class AdminController extends AbstractController
     {
     $habitats = $habitatRepo->findAll();
     $createForm = $this->createForm(habitatFormType::class);
-    $editForm = $this->createForm(editHabitatForm::class);
     return $this->render('admin/habitats.html.twig', [
         'controller_name' => 'AdminController',
         'habitats'=>$habitats,
@@ -316,16 +377,16 @@ class AdminController extends AbstractController
             $habitat->setNom($form->get('nom')->getData());
             $habitat->setDescription($form->get('description')->getData());
             $habitat->setImageFile($form->get('imageFile')->getData());
-           
+
             $this->entityManager->persist($habitat);
             $this->entityManager->flush();
             return $this->redirectToRoute('app_admin_habitatsIndex');
-       
+
         }else{
             
             return $this->render('admin/update_habitat.html.twig', [
             'controller_name' => 'AdminController',
-            'Form' => $form->createView(),
+            'form' => $form->createView(),
             'habitat' => $habitat
             ]);
         }

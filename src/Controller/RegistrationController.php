@@ -19,21 +19,22 @@ use App\Repository\UserRepository;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register', methods: ['POST'])]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppCustomAuthAuthenticator $authenticator, EntityManagerInterface $entityManager,UserRepository $userRepo, ZooRepository $ZooRepo): Response
-    {   
-        $users=$userRepo->findAll();
-        $zoos=$ZooRepo->findAll();
-
-        $worksAtId = $request->request->get('worksAt');
-        $worksAt = $entityManager->getRepository(Zoo::class)->find($worksAtId);
+    public function register(
+        Request $request, 
+        UserPasswordHasherInterface $userPasswordHasher, 
+        UserAuthenticatorInterface $userAuthenticator, 
+        AppCustomAuthAuthenticator $authenticator, 
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepo
+        ): Response
+    {
         $user = new User(
             $request->request->get('email'),
             $request->request->get('plainPassword'),
             [$request->request->get('Roles')],
             new \DateTimeImmutable(),
             null,
-           $worksAt,
-        ); 
+        );
     
     $plainPassword = $request->request->get('plainPassword');
     $hashedPassword = $userPasswordHasher->hashPassword($user, $plainPassword);
@@ -42,23 +43,10 @@ class RegistrationController extends AbstractController
     $entityManager->flush();
     
     // Envoyer Email de confirmation
-    
-    // return $userAuthenticator->authenticateUser(
-    //            $user,
-    //            $authenticator,
-    //            $request
-    //        );
-    //    }
-    return $this->render('admin/users.html.twig', [
-        'controller_name' => 'RegistrationController',
-        'zoos'=>$zoos,
-        'users'=>$users
-    ]);
-    }
 
-        
-    
+    return $this->redirectToRoute('app_admin_dashboard');
+}
+
 
 
 }
-

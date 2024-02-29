@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HabitatController!{% endblock %}
+
+{% block body %}
+
+<div class="mt-5" id="habitat-container">
+    <div class="container-header d-flex">
+        <div class="container-header-title">
+            <p>Les habitats</p>
+        </div>
+    </div>
+    
+    <div class="container-body mt-2">
+        <div class="row">
+            {% for habitat in habitats %}
+            <div class="col col-lg-4 col-sm-12">
+                <div class="card mb-2 habitatCard" role="button" onClick="window.location=('/habitats/show/'+ {{ habitat.id }} )" >
+                    <div class="card-header">
+                        <h5 class="card-title">{{ habitat.getNom }}</h5>
+                        <img src="{{ asset('images/habitat/' ~ habitat.imageName) }}" class="card-img-top habitat-img" alt="image_{{ habitat.getNom }}" >
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+                    
+        </div>
+    </div>
+
+    
+</div>
+{% endblock %}

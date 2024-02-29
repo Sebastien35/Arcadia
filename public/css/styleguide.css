@@ -24,11 +24,12 @@
     color:var(--white);
     background-color:var(--primary);
     border-color:var(--dark);
-    border-radius: 0px;
+    
 }
 
 .btn-primary:hover{
     background-color:var(--dark);
+    border-color:var(--primary)
     
 }
 

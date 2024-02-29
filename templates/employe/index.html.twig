@@ -3,57 +3,164 @@
 {% block title %}Hello EmployeController!{% endblock %}
 
 {% block body %}
+<link rel="stylesheet" href="{{ asset('css/employe.css') }}">
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="mt-5">
+                    <li class="mt-2 mb-3">
+                        <H5 class="nav-item"><i class="fa-solid fa-user-tie"></i>Espace Employé </H5>
+                    </li>
+                    <li class="my-2 mt-2">
+                        <p role="button" id="avisBtn" class="sidebar-item"><i class="fa-regular fa-comment"></i> Avis</p>
+                    </li>
+                    <li class="my-2">
+                        <p role="button" id="servicesBtn"class="sidebar-item"><i class="fa-solid fa-shop"     ></i> Services</p>
+                    </li>
+                    <li class="my-2">
+                        <p role="button" id="foodBtn" class="sidebar-item"><i class="fa-solid fa-drumstick-bite"></i>Repas des animaux</p>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        {% for flashMessage in app.flashes('error') %}
+            <div class="alert alert-danger mt-5" role="alert" style="height:10vh">
+                {{ flashMessage }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.flashes('success') %}
+            <div class="alert alert-success mt-5" role="alert" style="height:10vh">
+                {{ flashMessage }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+        <div class="col py-3">
+            <div class="avis-list-container mt-5 d-none" id="avisContainer">
+                <div class="row">
+                    <h1 class="text-center">Avis en attente de validation:</h1>
+                    <div class="col-12 avis-scroll-container" style="max-height: 400px; overflow-y: auto;">
+                        <div id="avisList">
+                            {% for singleAvis in avisList %}
+                                {% if singleAvis.isValidation == false %}
+                                    <form id="validateAvisForm">
+                                        <input type="hidden" name="id" value="{{ singleAvis.id }}">
+                                        <div class="card" id="{{ singleAvis.id }}">
+                                            <div class="stars card-title">
+                                                {% for star in range(1, 5) %}
+                                                    {% if star <= singleAvis.note %}
+                                                        <i class="fa-solid fa-star"></i>
+                                                    {% else %}
+                                                        <i class="fa-regular fa-star"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">{{ singleAvis.getAvisContent }}</p>
+                                                <p class="card-text"><small class="text-muted">Posté par {{ singleAvis.pseudo }} le {{ singleAvis.getCreatedAt|date('d/m/Y') }}</small></p>
+                                                <button id='BtnValider' type="button" class="btn btn-primary BtnValider">Valider</button>
+                                                <button id='BtnSupprimer'type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger delete-btn">Supprimer</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel">Confirmer la Suppression</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="DelAvisForm">
+                                                        <input type="hidden" name="id" value="{{singleAvis.id}}">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                        <button type="button" class="btn btn-danger BtnSupprimer" id="deleteAvis">Supprimer</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
 
-<div class="container avis-list-container mt-5">
-    <div class="row">
-        <h1 class="text-center">Avis en attente de validation:</h1>
-        <div class="col-12 avis-scroll-container" style="max-height: 400px; overflow-y: auto;">
-            <div id="avisList">
-                {% for singleAvis in avisList %}
-                    {% if singleAvis.isValidation == false %}
-                        <form id="validateAvisForm">
-                            <input type="hidden" name="id" value="{{ singleAvis.id }}">
-                            <div class="card" id="{{ singleAvis.id }}">
-                                <div class="stars card-title">
-                                    {% for star in range(1, 5) %}
-                                        {% if star <= singleAvis.note %}
-                                            <i class="fa-solid fa-star"></i>
-                                        {% else %}
-                                            <i class="fa-regular fa-star"></i>
-                                        {% endif %}
-                                    {% endfor %}
+            <div class="mt-5 d-none" id="servicesContainer">
+                <div class="row">
+                    {% for service in services %}
+                        <div class="col-12 col">
+                            <div class="card mb-2">
+                                <div class="card-header">
+                                    <h5 class="card-title">{{ service.getNom }}</h5>
                                 </div>
-                                <div class="card-body">
-                                    <p class="card-text">{{ singleAvis.getAvisContent }}</p>
-                                    <p class="card-text"><small class="text-muted">Posté par {{ singleAvis.pseudo }} le {{ singleAvis.getCreatedAt|date('d/m/Y') }}</small></p>
-                                    <button id='BtnValider' type="button" class="btn btn-primary valid-btn">Valider</button>
-                                    <button id='BtnSupprimer'type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger delete-btn">Supprimer</button>
-                                </div>
-                            </div>
-                        </form>
-                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteModalLabel">Confirmer la Suppression</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id="DelAvisForm">
-                                            <input type="hidden" name="id" value="{{singleAvis.id}}">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                            <button type="button" class="btn btn-danger" id="deleteAvis">Supprimer</button>
-                                        </form>
-                                    </div>
+                                <div class="card-body">                                
+                                    <p class="card-text">{{ service.getDescription }}</p>
+                                    <a href="{{ path('app_services_showService', {'id': service.getId}) }}" class="btn btn-primary">Voir</a>
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editServiceModal" data-service-id="{{service.id}}">Modifier  </button>
                                 </div>
                             </div>
                         </div>
-                    {% endif %}
-                {% endfor %}
+                    {% endfor %}
+
+                    <div class="modal fade" id="editServiceModal" tabindex="-1" aria-labelledby="editServiceModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editServiceModalLabel">Modifier</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="editServiceForm">
+                                        <label for="nom">Nom</label>
+                                        <input type="text" id="nom" name="nom" class="form-control">
+                                        <label for="description">Description</label>
+                                        <textarea id="description" name="description" class="form-control"></textarea>
+                                        <input type="hidden" id="serviceId" name="serviceId">
+                                        <button type="button" class="btn btn-primary mt-2 mb-2" id="btnConfirmEditService">Modifier</button>
+                                        <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            
+            <div class=" mt-5 d-none" id="foodContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <H5>Repas des animaux</H5>
+                    </div>
+                </div>
+                <div class="container-body mt-3">
+                    {{form_start(form, {'action': path('app_employe_createRepas'), 'method': 'POST'})}}
+                    {{form_errors(form)}}
+                    <div class="mb-3">
+                        {{form_label(form.animal, 'Animal')}}
+                        {{form_widget(form.animal, {'attr': {'class': 'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        {{form_label(form.datetime, 'Date')}}
+                        {{form_widget(form.datetime, {'attr': {'class': 'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        {{form_label(form.quantite, 'Quantité')}}
+                        {{form_widget(form.quantite, {'attr': {'class': 'form-control'}})}}
+                    </div>             
+                    <button type="submit" class="btn btn-primary">Valider</button>       
+                    {{form_end(form)}}
+                </div>           
+            </div>    
+            
         </div>
     </div>
 </div>
+
 
 
 

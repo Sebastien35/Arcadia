@@ -1,20 +1,358 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello VeterinaireController!{% endblock %}
+{% block title %}Espace Employé{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<link rel="stylesheet" href="{{ asset('css/veterinaire.css') }}">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/Seb/Desktop/arcadia git clone/Arcadia/src/Controller/VeterinaireController.php'|file_link(0) }}">src/Controller/VeterinaireController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/Seb/Desktop/arcadia git clone/Arcadia/templates/veterinaire/index.html.twig'|file_link(0) }}">templates/veterinaire/index.html.twig</a></code></li>
-    </ul>
+<div class="container-fluid page-container">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="mt-5">
+                    <li class="mt-2 mb-3">
+                        <H5 class="nav-item"><i class="fa-solid fa-user-doctor"></i> Espace vétérinaire </H5>
+                    </li>
+                    <li class="my-2 mt-2">
+                        <p role="button" id="animal-btn"class="sidebar-item"><i class="fa-solid fa-otter"></i>Animaux</p>
+                    </li>
+                    <li class="my-2 mt-2">
+                        <p role="button" id="nourriture-btn" class="sidebar-item"><i class="fa-solid fa-utensils"></i>Nourriture</p>
+                    </li> 
+                    <li class="my-2 mt-2">
+                        <p role="button" id="repasBtn" class="sidebar-item"><i class="fa-solid fa-utensils"></i>Repas des animaux</p>
+                    </li>
+                    <li class="my-2 mt-2">
+                        <p role="button" id="habitatsBtn" class="sidebdar-item"><i class="fa-solid fa-home"></i>Habitats</p>
+                    </li>
+                    <li class="my-2 mt-2 text-danger btn btn-danger">
+                        <a href="{{ path('app_logout') }}" class="sidebar-item"><i class="fa-solid fa-sign-out"></i>Se déconnecter</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        
+        <div class="col py-3">
+            
+            
+            <div class="mt-5 d-none" id="animal-container">
+                <div class="container-header d-flex">
+                    <div class="container-header-title">
+                        <p>Les animaux</p>
+                    </div>
+                    <div class="container-header-btn d-flex">
+                        <button class="header-btn" id="add-animal-btn"><i class="fa-solid fa-plus" data-bs-toggle="modal" data-bs-target="#add-animal-modal"></i></button>
+                    </div>
+                </div>
+                <div class="animal-container-body">
+                    <div class="table-div">
+                        <table id="animal-table" class="table table-striped" aria-label="animals table">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Race</th>
+                                    <th>Habitat</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for animal in animaux %}
+                                <tr>
+                                    <td>{{ animal.prenom }}</td>
+                                    <td>{{ animal.race }}</td>
+                                    <td>{{ animal.habitat.getNom }}</td>
+                                    <td>
+                                        <button class="btn btn-primary" id="edit-animal-btn"onclick="window.location=('/veterinaire/animal/update/'+ {{ animal.id }} )"><i class="fa-solid fa-pen-to-square"></i></button>
+                                        <button class="btn btn-primary" id="see-animal-btn" onclick="window.location=('/veterinaire/animal/show/'+ {{ animal.id }} )" ><i class="fa-regular fa-eye"></i></button>
+                                        <button class="btn btn-info" id="add-info-animal-btn"data-bs-target="#info-animal-modal" data-bs-toggle="modal" data-animal-id="{{ animal.id}}">+<i class="fa-solid fa-clipboard"></i></button>
+                                        <button class="btn btn-danger" id="delete-animal-btn"data-bs-toggle="modal" data-bs-target="#delete-animal-Modal" data-animal-id="{{ animal.id }}"><i class="fa-solid fa-user-minus"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="modal modal-fade" id="add-animal-modal" tabindex="-1" aria-labelledby="add-animal-modal-label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="add-animal-modal-label">Nouvel arrivant!</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                        {{ form_start(createAnimalForm, {'action':('/veterinaire/animal/create')}) }}
+                                        {{ form_errors(createAnimalForm)}}
+                                    <div class="mb-3">
+                                        {{ form_label(createAnimalForm.prenom) }}</br>
+                                        {{ form_widget(createAnimalForm.prenom) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(createAnimalForm.race) }}</br>
+                                        {{ form_widget(createAnimalForm.race) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(createAnimalForm.habitat) }}</br>
+                                        {{ form_widget(createAnimalForm.habitat) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(createAnimalForm.imageFile) }}</br>
+                                        {{ form_widget(createAnimalForm.imageFile) }}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary mb-2">Ajouter</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                    {{ form_end(createAnimalForm) }}
+                                </div>   
+                            </div>
+                        </div>
+                    </div>  
+
+                    <div class="modal modal-fade" id="info-animal-modal" tabindex="-1" aria-labelledby="info-animal-modal-label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="info-animal-modal-label"> Renseigner les informations</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="add-info-animal-form">
+                                        <input type="hidden" id="animalId" name="animal">
+                                        <div class="mb-3">
+                                            <label for="animal-etat" class="form-label">Etat de l'animal</label>
+                                            <input type="text" class="form-control" id="animal-etat" name="animal-etat">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="animal-etat-details" class="form-label">Details</label>
+                                            <input type="text" class="form-control" id="animal-etat-details" name="animal-etat-details">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="animal-nourriture" class="form-label">Régime alimentaire</label>
+                                            <select class="form-select" id="animal-nourriture" name="animal-nourriture" multiple>
+                                                {% for nourriture in nourritures %}
+                                                <option value="{{ nourriture.id }}">{{ nourriture.nom }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="grammage" class="form-label">Grammage</label>
+                                            <input type="number" class="form-control" id="grammage" name="animal-grammage">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="confirm-add-info-animal-btn">Enregistrer</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                </div>                                   
+                            </div>
+                        </div>  
+                    </div>
+
+
+                    <div class="modal modal-fade" id="delete-animal-Modal" tabindex="-1" aria-labelledby="delete-animal-Modal-label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="delete-animal-Modal-label">Supprimer l'animal</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="d-none" id="animalIdContainer" name="animal-id"></p>
+                                    <p>Voulez-vous vraiment supprimer cet animal?</p>   
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" id="confirmDeleteAnimalBtn">Supprimer</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="mt-5" id="nourriture-container">
+                <div class="container-header d-flex">
+                    <div class="container-header-title">
+                        <p>Nourriture disponible</p>
+                    </div>
+                    <div class="container-header-btn d-flex">
+                        <button class="header-btn" id="add-animal-btn"><i class="fa-solid fa-plus" data-bs-toggle="modal" data-bs-target="#add-nourriture-modal"></i></button>
+                    </div>
+                </div>
+                <div class="container-body">
+                    <table class="table table-striped"aria-label="nourriture table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for nourriture in nourritures %}
+                            <tr>
+                                <td>{{ nourriture.nom }}</td>
+                                <td>{{ nourriture.description }}</td>
+                                <td>
+                                    <button class="btn btn-danger delete-nourriture-btn" id="delete-nourriture-btn" data-nourriture-id="{{ nourriture.id }}"><i class="fa-solid fa-x"></i></button>
+                                    <button class="btn btn-primary edit-nourriture-btn" id="edit-nourriture-btn"  data-bs-toggle="modal" data-bs-target="#editNourritureModal" data-nourriture-id="{{ nourriture.id }}"><i class="fa-solid fa-pen-to-square"></i></button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                
+                <div class="modal modal-fade" id="add-nourriture-modal" tabindex="-1" aria-labelledby="add-nourriture-modal-label" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="add-nourriture-modal-label">Nouvelle nourriture</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="add-nourriture-form">
+                                    <div class="mb-3">
+                                        <label for="nourriture-nom" class="form-label">Nom</label>
+                                        <input type="text" class="form-control" id="nourriture-nom" name="nourriture-nom">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="nourriture-description" class="form-label">Description</label>
+                                        <textarea  class="form-control" id="nourriture-description" name="nourriture-description"></textarea>
+                                    </div> 
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="add-nourriture-btn">Ajouter</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="modal modal-fade" id="editNourritureModal" tabindex="-1" aria-labelledby="edit-nourriture-modal-label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="edit-nourriture-modal-label">Modifier la nourriture</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="edit-nourriture-form">
+                                        <input type="hidden" id="nourritureIdContainer" name="nourriture-id">
+                                        <div class="mb-3">
+                                            <label for="nourriture-nom" class="form-label">Nom</label>
+                                            <input type="text" class="form-control" id="nourriture-nom" name="nourriture-nom">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="nourriture-description" class="form-label">Description</label>
+                                            <textarea  class="form-control" id="nourriture-description" name="nourriture-description"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="confirmEditNourritureBtn">Modifier</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            
+            
+            
+            <div class="mt-5 d-none" id="repas-container">
+                <H1> Consulter les repas des animaux:</H1>
+                
+                <div class="row">
+                    {% for animal in animaux %}
+                    <div class="col-3">
+                            <div class="card mb-2 animalRepasCard" role="button" onClick="window.location=('/veterinaire/animal/show/'+ {{ animal.id }} )" >
+                                <div class="card-header">
+                                    <h5 class="card-title">{{ animal.getPrenom }}</h5>
+                                </div>
+                                <div class="card-image">
+                                    <img src="{{ asset('images/animal/' ~ animal.imageName) }}" class="card-img-top animal-img" alt="image_{{ animal.getPrenom }}" >
+                                </div>               
+                            </div>   
+                    </div>
+                    {% endfor %}                   
+                </div>
+                
+            </div>
+
+            <div class="mt-5 d-none" id="habitat-container">
+                <div class="container-header d-flex">
+                    <div class="container-header-title">
+                        <p>Les habitats</p>
+                    </div>
+                </div>
+                
+                <div class="container-body mt-2">
+                    <div class="row">
+                        {% for habitat in habitats %}
+                        <div class="col col-lg-4 col-sm-12">
+                            <div class="card mb-2 habitatCard" >
+                                <div class="card-header d-flex">
+                                    <div class="card-header-title">
+                                        <h5 class="card-title">{{ habitat.getNom }}</h5>
+                                    </div>
+                                    <div class="card-header-btn">
+                                        <button type="button" class="header-btn add-comment-btn" data-bs-toggle="modal" data-bs-target="#commentHabitatModal" data-habitat-id="{{ habitat.id }}"><i class="fa-regular fa-comment"></i></button>
+                                    </div>
+                                </div>
+                                <div class="card-image">
+                                    <img src="{{ asset('images/habitat/' ~ habitat.imageName) }}" class="card-img-top habitat-img" alt="image_{{ habitat.getNom }}" 
+                                    role="button" onClick="window.location=('/habitats/show/'+ {{ habitat.id }} )" >
+                                </div>                         
+                            </div>
+                        </div>
+                        {% endfor %}   
+                    </div>
+                    
+                    <div class="modal modal-fade" tabindex="-1" id="commentHabitatModal" aria-labelledby="commentHabitatModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="commentHabitatModalLabel">Poster un commentaire:</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="comment-habitat-form">
+                                        <input type="hidden" id="habitatIdContainer" name="habitat-id">
+                                        <div class="mb-3">
+                                            <label for="habitat-comment" class="form-label">Commentaire</label>
+                                            <textarea  class="form-control" id="habitat-comment" name="habitat-comment"></textarea>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" id="confirm-add-comment-btn">Enregistrer</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                    
+
+
+
+                </div>
+
+                
+            </div>
+            
+        </div>
+    </div>
 </div>
+
+<script src="{{ asset('js/veterinaire.js') }}"></script>
+
 {% endblock %}
