@@ -6,6 +6,7 @@ use App\Repository\InfoAnimalRepository;
 use App\Entity\Nourriture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InfoAnimalRepository::class)]
@@ -16,9 +17,7 @@ class InfoAnimal
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'infoAnimal', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Animal $animal = null;
+    
 
     #[ORM\Column(length: 255)]
     private ?string $etat = null;
@@ -30,6 +29,8 @@ class InfoAnimal
     #[ORM\Column(nullable: true)]
     private ?int $grammage = null;
 
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $createdAt = null;
 
     /**
     * @ORM\ManyToOne(targetEntity="Nourriture", inversedBy="infoAnimals")
@@ -38,22 +39,16 @@ class InfoAnimal
     #[ORM\ManyToOne(targetEntity: Nourriture::class, inversedBy: 'infoAnimals')]
     private ?Nourriture $nourriture = null;
 
+    #[ORM\ManyToOne(inversedBy: 'infoAnimals')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?animal $animal = null;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getAnimal(): ?Animal
-    {
-        return $this->animal;
-    }
-
-    public function setAnimal(Animal $animal): static
-    {
-        $this->animal = $animal;
-
-        return $this;
-    }
+    
 
     public function getEtat(): ?string
     {
@@ -105,7 +100,31 @@ class InfoAnimal
         return $this;
     }
 
-   
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getAnimal(): ?animal
+    {
+        return $this->animal;
+    }
+
+    public function setAnimal(?animal $animal): static
+    {
+        $this->animal = $animal;
+
+        return $this;
+    }
+
 
 
 

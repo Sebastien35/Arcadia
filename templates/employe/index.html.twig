@@ -13,7 +13,7 @@
                         <H5 class="nav-item"><i class="fa-solid fa-user-tie"></i>Espace Employé </H5>
                     </li>
                     <li class="my-2 mt-2">
-                        <p role="button" id="avisBtn"    class="sidebar-item"><i class="fa-regular fa-comment"></i> Avis</p>
+                        <p role="button" id="avisBtn" class="sidebar-item"><i class="fa-regular fa-comment"></i> Avis</p>
                     </li>
                     <li class="my-2">
                         <p role="button" id="servicesBtn"class="sidebar-item"><i class="fa-solid fa-shop"     ></i> Services</p>
@@ -21,11 +21,24 @@
                     <li class="my-2">
                         <p role="button" id="foodBtn" class="sidebar-item"><i class="fa-solid fa-drumstick-bite"></i>Repas des animaux</p>
                     </li>
+                    
                 </ul>
             </div>
         </div>
+        {% for flashMessage in app.flashes('error') %}
+            <div class="alert alert-danger mt-5" role="alert" style="height:10vh">
+                {{ flashMessage }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.flashes('success') %}
+            <div class="alert alert-success mt-5" role="alert" style="height:10vh">
+                {{ flashMessage }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
         <div class="col py-3">
-            <div class="container avis-list-container mt-5 d-none" id="avisContainer">
+            <div class="avis-list-container mt-5 d-none" id="avisContainer">
                 <div class="row">
                     <h1 class="text-center">Avis en attente de validation:</h1>
                     <div class="col-12 avis-scroll-container" style="max-height: 400px; overflow-y: auto;">
@@ -63,7 +76,7 @@
                                                     <form id="DelAvisForm">
                                                         <input type="hidden" name="id" value="{{singleAvis.id}}">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                                        <button type="button" class="btn btn-danger" id="deleteAvis">Supprimer</button>
+                                                        <button type="button" class="btn btn-danger BtnSupprimer" id="deleteAvis">Supprimer</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -71,14 +84,13 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
-                            
                         </div>
                     </div>
                 </div>
             </div>
             
 
-            <div class="container mt-5 d-none" id="servicesContainer">
+            <div class="mt-5 d-none" id="servicesContainer">
                 <div class="row">
                     {% for service in services %}
                         <div class="col-12 col">
@@ -117,70 +129,32 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-            <div class="container mt-5 d-none" id="foodContainer">
-                <div class="container-header d-flex">
-                    <div class="container-header-title">
-                        <p>Les animaux</p>
-                    </div>
-                    
-                </div>
-                <div class="animal-container-body">
-                <table id="animal-table" class="table table-striped" aria-label="animals table">
-                    <thead>
-                        <tr>
-                            <th>Nom</th>
-                            <th>Race</th>
-                            <th>Habitat</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for animal in animaux %}
-                        <tr>
-                            <td>{{ animal.prenom }}</td>
-                            <td>{{ animal.race }}</td>
-                            <td>{{ animal.habitat.getNom }}</td>
-                            <td>
-                                <button class="btn btn-primary" id="feedAnimalBtn" data-animal-id="{{ animal.id }}" data-bs-toggle="modal" data-bs-target="#feedAnimalModal"><i class="fa-solid fa-drumstick-bite"></i></button>   
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <div class="modal fade" id="feedAnimalModal" tabindex="-1" aria-labelledby="feedAnimalModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="feedAnimalModalLabel">Renseigner repas d'un animal</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                {{form_start(form, {'action': path('app_employe_createRepas'), 'method': 'POST'})}}
-                                {{form_errors(form)}}
-                                <div class="mb-3">
-                                    {{form_label(form.animal, 'Animal')}}
-                                    {{form_widget(form.animal, {'attr': {'class': 'form-control'}})}}
-                                </div>
-                                <div class="mb-3">
-                                    {{form_label(form.datetime, 'Date')}}
-                                    {{form_widget(form.datetime, {'attr': {'class': 'form-control'}})}}
-                                </div>
-                                <div class="mb-3">
-                                    {{form_label(form.quantite, 'Quantité')}}
-                                    {{form_widget(form.quantite, {'attr': {'class': 'form-control'}})}}
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                <button type="submit" class="btn btn-primary">Valider</button>
-                            </div>
-                            {{form_end(form)}}
-                        </div>
-                    </div>
-                </div>   
             
+            <div class=" mt-5 d-none" id="foodContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <H5>Repas des animaux</H5>
+                    </div>
+                </div>
+                <div class="container-body mt-3">
+                    {{form_start(form, {'action': path('app_employe_createRepas'), 'method': 'POST'})}}
+                    {{form_errors(form)}}
+                    <div class="mb-3">
+                        {{form_label(form.animal, 'Animal')}}
+                        {{form_widget(form.animal, {'attr': {'class': 'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        {{form_label(form.datetime, 'Date')}}
+                        {{form_widget(form.datetime, {'attr': {'class': 'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        {{form_label(form.quantite, 'Quantité')}}
+                        {{form_widget(form.quantite, {'attr': {'class': 'form-control'}})}}
+                    </div>             
+                    <button type="submit" class="btn btn-primary">Valider</button>       
+                    {{form_end(form)}}
+                </div>           
             </div>    
             
         </div>

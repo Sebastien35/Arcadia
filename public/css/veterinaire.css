@@ -72,3 +72,14 @@ sidebar-item{
     max-height:100%;
     max-width:100%;
 }
+
+#repas-container{
+    max-height:100%;
+    max-width:100%;
+}
+
+#repas-container .animal-img{
+    width:100%;
+    height: 15vh;
+    object-fit:cover;
+}

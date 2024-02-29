@@ -21,9 +21,8 @@ use App\Entity\Repas;
 use App\Repository\RepasRepository;
 
 use App\Form\RepasType;
-
-
-
+use PHPUnit\Util\Json;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 #[Route('/employe', name: 'app_employe_')]
 class EmployeController extends AbstractController
@@ -67,23 +66,38 @@ class EmployeController extends AbstractController
     }
 
     #[Route('/animal/repas/new', name: 'createRepas', methods:['POST'])]
-    public function newRepas(Request $request, SerializerInterface $serializer):Response
-    {
-        $form = $this->createForm(RepasType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $repas = $form->getData();
-            $animal = $form->get('animal')->getData();
-            $nourriture = $animal->getInfoAnimal()->getNourriture();
-            $repas->setAnimal($animal);
-            $repas->setNourriture($nourriture);
-            $repas->setDateTime($form->get('datetime')->getData());
-            $repas->setQuantite($form->get('quantite')->getData());
-
-            $this->entityManager->persist($repas);
-            $this->entityManager->flush();
-            return $this->redirectToRoute('app_employe_index');
+public function newRepas(Request $request, SerializerInterface $serializer):Response
+{
+    $form = $this->createForm(RepasType::class);
+    $form->handleRequest($request);
+    
+    if ($form->isSubmitted() && $form->isValid()) {
+        $repas = $form->getData();
+        $animal = $form->get('animal')->getData();
+        
+        // Get the last instance of InfoAnimal associated with the animal
+        $infoAnimal = $animal->getInfoAnimals()->last();
+        
+        if (!$infoAnimal) {
+            $this->addFlash('error', 'Le vétérinaire n\'a pas encore défini ce que mange cet animal.');
+            return new RedirectResponse($this->generateUrl('app_employe_index'));
         }
+        
+        $nourriture = $infoAnimal->getNourriture();
+        
+        $repas->setAnimal($animal);
+        $repas->setNourriture($nourriture);
+        $repas->setDateTime($form->get('datetime')->getData());
+        $repas->setQuantite($form->get('quantite')->getData());
+        
+        $this->entityManager->persist($repas);
+        $this->entityManager->flush();
+        
+        $this->addFlash('success', 'Le repas a bien été enregistré.');
+        return new RedirectResponse($this->generateUrl('app_employe_index'));
     }
     
+    return new Response('Invalid data.', Response::HTTP_BAD_REQUEST);
+}
+
 }

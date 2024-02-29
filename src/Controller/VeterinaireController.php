@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 
 use App\Entity\Animal;
+use App\Entity\CommentaireHabitat;
 use App\Repository\AnimalRepository;
 use App\Form\animalFormType;
 use App\Form\EditAnimalType;
@@ -22,8 +23,14 @@ use App\Repository\HabitatRepository;
 use App\Entity\Nourriture;
 use App\Repository\NourritureRepository;
 use App\Entity\InfoAnimal;
+use App\Repository\InfoAnimalRepository;
+use App\Entity\Repas;
+use App\Repository\RepasRepository;
+use App\Repository\CommentaireHabitatRepository;
 
 
+use Doctrine\ORM\Mapping\OrderBy;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 #[Route('/veterinaire', name: 'app_veterinaire_')]
 class VeterinaireController extends AbstractController
@@ -41,14 +48,19 @@ class VeterinaireController extends AbstractController
     {
         $nourritures = $nourritureRepo->findAll();
         $animaux = $animalRepo->findAll();
+        $habitats = $this->entityManager->getRepository(Habitat::class)->findAll();
         $createAnimalForm = $this->createForm(animalFormType::class);
         $editAnimalForm = $this->createForm(EditAnimalType::class);
+        $repas= $this->entityManager->getRepository(InfoAnimal::class)->findAll();
         return $this->render('veterinaire/index.html.twig', [
             'controller_name' => 'VeterinaireController',
             'animaux' => $animaux,
             'nourritures' => $nourritures,
+            'habitats' => $habitats,
+            'repas'=>$repas,
             'createAnimalForm' => $createAnimalForm->createView(),
             'editAnimalForm' => $editAnimalForm->createView(),
+
         ]);
     }
 
@@ -68,6 +80,27 @@ class VeterinaireController extends AbstractController
             $this->entityManager->flush();
             return $this->redirectToRoute('app_veterinaire_index');
         }
+    }
+
+    #[Route('/animal/show/{id}', name: 'showAnimal', methods: ['GET'])]
+    public function showAnimal(int $id, AnimalRepository $animalRepo):Response
+    {
+        $animal = $animalRepo->find($id);
+        if (!$animal) {
+            return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
+        }
+        $repas = $this->entityManager->getRepository(repas::class)->findBy(['animal' => $id], ['datetime' => 'DESC']);
+        if (!$repas){
+            $repas = null;
+        }
+        $infoAnimal = $this->entityManager->getRepository(InfoAnimal::class)->findBy
+            (['animal' => $id], ['createdAt' => 'DESC']);
+        return $this->render('veterinaire/showAnimal.html.twig', [
+            'controller_name' => 'VeterinaireController',
+            'animal' => $animal,
+            'repas'=>$repas,
+            'infoAnimals'=>$infoAnimal
+        ]);
     }
     #[Route('/animal/update/{id}', name: 'updateAnimal', methods: ['GET','POST'])]
     public function updateAnimal(Request $request, int $id, AnimalRepository $animalRepo):Response
@@ -135,37 +168,47 @@ class VeterinaireController extends AbstractController
 
 
 
-    #[Route('/animal/info/create',name:'createInfoAnimal', methods: ['POST'])]
-    public function addAnimalInfo(Request $request): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
-        // Trouver l'animal corresponant à l'id passé en paramètre
-        
-        $animalId = $data['animal'];
-        $animal= $this->entityManager->getRepository(Animal::class)->find($animalId);
-        if(!$animal) {
-            return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
-        }
-        // Trouver la nourriture correspondant à l'id passé en paramètre
-        $nourritureId = $data['nourriture'];
-        $nourriture = $this->entityManager->getRepository(Nourriture::class)->find($nourritureId);
-        if(!$nourriture) {
-            return new JsonResponse(['status' => 'Nourriture not found'], Response::HTTP_NOT_FOUND);
-        }
-        $infoAnimal = new InfoAnimal();
-        $infoAnimal->setAnimal($animal);
-        $infoAnimal->setEtat($data['etat']);
-        if($data['details']!=null){
-            $infoAnimal->setDetails($data['details']);
-        }
-        $infoAnimal->setNourriture($nourriture);
-        $infoAnimal->setGrammage($data['grammage']);
-        
-        
-        $this->entityManager->persist($infoAnimal);
-        $this->entityManager->flush();
-        return new JsonResponse( Response::HTTP_CREATED);
+    #[Route('/animal/info/create', name: 'createInfoAnimal', methods: ['POST'])]
+public function addAnimalInfo(Request $request): JsonResponse
+{
+    $data = json_decode($request->getContent(), true);
+    $animalId = $data['animal'];
+    $nourritureId = $data['nourriture'];
+    
+    // Trouver l'animal correspondant à l'id passé en paramètre
+    $animal = $this->entityManager->getRepository(Animal::class)->find($animalId);
+    if (!$animal) {
+        return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
     }
+    
+    // Créer une nouvelle instance d'InfoAnimal
+    $infoAnimal = new InfoAnimal();
+    
+    // Définir l'animal associé
+    $infoAnimal->setAnimal($animal);
+    
+    // Trouver la nourriture correspondant à l'id passé en paramètre
+    $nourriture = $this->entityManager->getRepository(Nourriture::class)->find($nourritureId);
+    if (!$nourriture) {
+        return new JsonResponse(['status' => 'Nourriture not found'], Response::HTTP_NOT_FOUND);
+    }
+    
+    // Mettre à jour les informations de l'animal
+    $infoAnimal->setEtat($data['etat']);
+    if (isset($data['details']) && $data['details'] !== null) {
+        $infoAnimal->setDetails($data['details']);
+    }
+    $infoAnimal->setNourriture($nourriture);
+    $infoAnimal->setGrammage($data['grammage']);
+    $infoAnimal->setCreatedAt(new \DateTimeImmutable());
+    
+    // Enregistrer les modifications dans la base de données
+    $this->entityManager->persist($infoAnimal);
+    $this->entityManager->flush();
+    
+    return new JsonResponse(['status' => 'Animal info ' . ($infoAnimal->getId() ? 'updated' : 'created')], Response::HTTP_CREATED);
+}
+
 
 
 
@@ -206,7 +249,6 @@ class VeterinaireController extends AbstractController
         }else{
             $nourriture->setDescription($nourriture->getDescription());
         }
-
         $this->entityManager->persist($nourriture);
         $this->entityManager->flush();
         return new JsonResponse(['status' => 'Nourriture updated!'], Response::HTTP_OK);
@@ -226,13 +268,31 @@ class VeterinaireController extends AbstractController
         
     }
 
+    #[Route('/habitat/commentaire/new', name: 'createHabitatCommentaire', methods: ['POST'])]
+    public function createHabitatCommentaire(Request $request): Response
+    {
+        try{
+        $data = json_decode($request->getContent(), true);
+        $habitatId = $data['habitat'];
+        $habitatCommentaire = new CommentaireHabitat();
+        $habitat = $this->entityManager->getRepository(Habitat::class)->find($habitatId);
+        if (!$habitat) {
+            $this->addFlash('error', 'Habitat not found');
+            return new JsonResponse(['status' => 'Habitat not found'], Response::HTTP_NOT_FOUND);
+        }
+        $habitatCommentaire->setHabitat($habitat);
+        $habitatCommentaire->setCommentaire($data['commentaire']);
+        $habitatCommentaire->setCreatedAt(new \DateTimeImmutable());
+        $this->entityManager->persist($habitatCommentaire);
+        $this->entityManager->flush();
+        $this->addFlash('success', 'Commentaire ajouté avec succès');
+        return new RedirectResponse($this->generateUrl('app_veterinaire_index'));
+        }catch(\Exception $e){
+            $this->addFlash('error', 'Erreur lors de l\'ajout du commentaire');
+            return new JsonResponse(['status' => 'Error creating HabitatCommentaire'], Response::HTTP_BAD_REQUEST);
+        }
 
+    
 
-
-
-
-
+    }
 }
-
-
-

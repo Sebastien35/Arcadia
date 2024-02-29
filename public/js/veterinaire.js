@@ -1,8 +1,4 @@
 
-
-
-
-
 /*----------------------- Animaux -------------------------------------*/
 const animalContainer = document.getElementById('animal-container');
 const animalBtn = document.getElementById('animal-btn');
@@ -242,20 +238,97 @@ function editNourriture(){
 
 
 
+/*-----------Affichage des repas des animaux 23/02/2024------------ */
+
+const repasContainer = document.getElementById('repas-container');
+const repasBtn = document.getElementById('repasBtn');
+
+repasBtn.addEventListener('click', showRepas);
+
+function showRepas(){
+    console.log('showRepas'); // debug
+    flushFeatures();
+    flushActive();
+    repasBtn.classList.add('active');
+    repasContainer.classList.remove('d-none');
+
+}
+/*-----------------------Habitats------------------------------*/
+
+const habitatContainer = document.getElementById('habitat-container');
+const habitatBtn = document.getElementById('habitatsBtn');
+
+habitatBtn.addEventListener('click', showHabitatContainer);
+
+function showHabitatContainer(){
+    flushActive();
+    flushFeatures();
+    habitatBtn.classList.add('active');
+    habitatContainer.classList.remove('d-none');
+
+}
+// Publier un commentaire sur un habitat
+
+const addCommentBtns = document.querySelectorAll('.add-comment-btn');
+addCommentBtns.forEach(buttons=>
+    buttons.addEventListener('click', function(){
+        const habitatId = buttons.getAttribute('data-habitat-id');
+        const habitatIdContainer = document.getElementById('habitatIdContainer');
+        habitatIdContainer.value = habitatId;
+    })
+);
+
+const confirmAddCommentBtn = document.getElementById('confirm-add-comment-btn');
+confirmAddCommentBtn.addEventListener('click', addComment);
+
+function addComment(){
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    let form = new FormData(document.getElementById('comment-habitat-form'));
+    let raw = JSON.stringify({
+        'habitat': form.get('habitat-id'), // Make sure you have a field named 'habitat-id' in your form
+        'commentaire': sanitizeHTML(form.get('habitat-comment')),
+    });  
+    fetch('/veterinaire/habitat/commentaire/new', {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    })
+    .then(response => {
+        if(response.ok){
+            console.log(raw);
+            return response.json();
+        } else {
+            console.log('Erreur : ' + response.statusText);
+            console.log(raw);
+            throw new Error('Erreur');
+        }
+    })
+    .then(result => {
+        window.location.reload(); 
+    })
+    .catch(error => 
+        console.log(error));
+}
 
 
 
-
+/*-------------------------------------------------------------*/
 
 
 // Afficher masquer features 
 function flushFeatures(){
     animalContainer.classList.add('d-none')
     nourritureContainer.classList.add('d-none')
+    repasContainer.classList.add('d-none')
+    habitatContainer.classList.add('d-none')
 }
 flushFeatures();
 function flushActive(){
     animalBtn.classList.remove('active');
     nourritureBtn.classList.remove('active');
+    repasBtn.classList.remove('active');
+    habitatBtn.classList.remove('active');
 }
 flushActive();

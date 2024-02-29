@@ -54,9 +54,6 @@ ul{
 }
 
 #foodContainer{
-    max-height: 90vh;
-    overflow-y: auto;
-    overflow: scroll;
     background-color: #f4f4f4;
 }
 
@@ -65,12 +62,12 @@ ul{
     color: white;
     font-size: 13px;
     text-shadow: 1px 1px #000000;
-    padding: 3px 5px 3px 3px;
     justify-content: space-between !important;
     position: relative;
     top: 0;
     vertical-align: middle;
     height:3em;
+
 }
 
 .header-btn{

@@ -131,14 +131,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
-    public function __construct(string $email, string $password, array $roles, \DateTimeImmutable $createdAt, ?\DateTimeImmutable $updatedAt, ?Zoo $worksAt,)
+    public function __construct(string $email, string $password, array $roles, \DateTimeImmutable $createdAt, ?\DateTimeImmutable $updatedAt,)
     {
         $this->email = $email;
         $this->password = $password;
         $this->roles = $roles;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
-        $this->worksAt = $worksAt;
+        
         
     }
 }

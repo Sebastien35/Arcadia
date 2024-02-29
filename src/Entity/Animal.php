@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
+use App\Entity\InfoAnimal;
 
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
@@ -40,16 +41,19 @@ class Animal
     #[ORM\Column(type: "string",length:255, nullable: true)]
     private ?string $imageName = null;
 
-    #[ORM\OneToOne(mappedBy: 'animal', cascade: ['persist', 'remove'])]
-    private ?InfoAnimal $infoAnimal = null;
+    
 
     #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Repas::class)]
     private Collection $repas;
+
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: InfoAnimal::class, orphanRemoval: true)]
+    private Collection $infoAnimals;
 
     
     public function __construct()
     {
         $this->repas = new ArrayCollection();
+        $this->infoAnimals = new ArrayCollection();
     }
 
     
@@ -148,22 +152,6 @@ class Animal
         }
     }
 
-    public function getInfoAnimal(): ?InfoAnimal
-    {
-        return $this->infoAnimal;
-    }
-
-    public function setInfoAnimal(InfoAnimal $infoAnimal): static
-    {
-        // set the owning side of the relation if necessary
-        if ($infoAnimal->getAnimal() !== $this) {
-            $infoAnimal->setAnimal($this);
-        }
-
-        $this->infoAnimal = $infoAnimal;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, repas>
@@ -189,6 +177,36 @@ class Animal
             // set the owning side to null (unless already changed)
             if ($repa->getAnimal() === $this) {
                 $repa->setAnimal(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, InfoAnimal>
+     */
+    public function getInfoAnimals(): Collection
+    {
+        return $this->infoAnimals;
+    }
+
+    public function addInfoAnimal(InfoAnimal $infoAnimal): static
+    {
+        if (!$this->infoAnimals->contains($infoAnimal)) {
+            $this->infoAnimals->add($infoAnimal);
+            $infoAnimal->setAnimal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInfoAnimal(InfoAnimal $infoAnimal): static
+    {
+        if ($this->infoAnimals->removeElement($infoAnimal)) {
+            // set the owning side to null (unless already changed)
+            if ($infoAnimal->getAnimal() === $this) {
+                $infoAnimal->setAnimal(null);
             }
         }
 

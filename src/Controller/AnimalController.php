@@ -37,9 +37,11 @@ class AnimalController extends AbstractController
     #[Route('/show/{id}', name: 'show', methods: ['GET'])]
     public function showAnimal(int $id): Response
     {
+        $infoAnimals = $this->entityManager->getRepository(Animal::class)->findAll();
         $animal = $this->entityManager->getRepository(Animal::class)->find($id);
         return $this->render('animal/show.html.twig', [
             'animal' => $animal,
+            'infoAnimals' => $infoAnimals
             
         ]);
 

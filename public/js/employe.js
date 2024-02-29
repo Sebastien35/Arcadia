@@ -7,11 +7,15 @@ const BtnValider = avisContainer.querySelectorAll('.BtnValider');
 const BtnSupprimer = avisContainer.querySelectorAll('.BtnSupprimer');
 
 if(BtnValider.length > 0){
-    button.addEventListener('click', validateAvis);
+    BtnValider.forEach(button=>{
+        button.addEventListener('click', validateAvis);
+    });
 };
 
 if(BtnSupprimer.length > 0){
-    button.addEventListener('click', deleteAvis);
+    BtnSupprimer.forEach(button=>{
+        button.addEventListener('click', deleteAvis);
+    });
 };
 
 function validateAvis(){
@@ -174,6 +178,9 @@ function showNourriture(){
 }
 
 
+
+
+
 /* Affichage des fonctionnalités de l'employé 14/02/2024 ------------------ */
 
 function flushFeatures(){
@@ -181,6 +188,7 @@ function flushFeatures(){
     avisContainer.classList.add('d-none');
     servicesContainer.classList.add('d-none');
     nourritureContainer.classList.add('d-none');
+
 }
 flushFeatures();
 

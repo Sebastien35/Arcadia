@@ -17,6 +17,7 @@
 <div class="nav navbar mt-5 animal-navbar">
         <a class="navbar-brand" href="{{ path('app_animal_index') }}">Tous les animaux</a>  
 </div>
+
 <div class="container mt-5 mb-5">
     <div class="card mt-5">
         <div class="card-header">
@@ -41,24 +42,31 @@
         </div>  
     </div>
     <div class="row">
-        <div class="col-6">
-            {% if animal.infoAnimal != null %}
+        <div class="col">
+            
             <div class="card">
                 <div class="card-header">
                     <h2>Note du vétérinaire : </h2>
                 </div>
                 <div class="card-body">
-                    <p class="card-text">État de l'animal:  {{animal.infoAnimal.etat}} </p>
-                    {% if animal.infoAnimal.details != null %}
-                    <p class="card-text">Détails:  {{animal.infoAnimal.details}} </p>
-                    {% endif %}
-                    <p class="card-text">Alimentation quotidienne: {{animal.infoAnimal.grammage}}g</p>
-                    <p class="card-text">Régime alimentaire: {{animal.infoAnimal.nourriture.nom}}</p>
-                    <p class="card-text">{{animal.infoAnimal.nourriture.description}}</p>
+                    {% for infoAnimal in infoAnimals %}
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>{{ infoAnimal.createdAt | date('d-m-Y') }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Etat de l'animal: {{ infoAnimal.etat }}</p>
+                            <p class="card-text">Details: {{ infoAnimal.details }}</p>
+                            <p class="card-text">Nourriture: {{ infoAnimal.nourriture.nom }}</p>
+                            <p class="card-text">Quantité recommandé: {{ infoAnimal.grammage }}g</p>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
-            {% endif %}
+            
         </div>
+        
     </div>
 </div>
 
