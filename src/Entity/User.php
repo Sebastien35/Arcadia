@@ -36,6 +36,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\OneToMany(mappedBy: 'auteur', targetEntity: CommentaireHabitat::class)]
+    private Collection $commentaireHabitats;
+
 
 
     public function getId(): ?int
@@ -140,7 +143,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = $roles;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->commentaireHabitats = new ArrayCollection();
         
         
+    }
+
+    /**
+     * @return Collection<int, CommentaireHabitat>
+     */
+    public function getCommentaireHabitats(): Collection
+    {
+        return $this->commentaireHabitats;
+    }
+
+    public function addCommentaireHabitat(CommentaireHabitat $commentaireHabitat): static
+    {
+        if (!$this->commentaireHabitats->contains($commentaireHabitat)) {
+            $this->commentaireHabitats->add($commentaireHabitat);
+            $commentaireHabitat->setAuteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaireHabitat(CommentaireHabitat $commentaireHabitat): static
+    {
+        if ($this->commentaireHabitats->removeElement($commentaireHabitat)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaireHabitat->getAuteur() === $this) {
+                $commentaireHabitat->setAuteur(null);
+            }
+        }
+
+        return $this;
     }
 }

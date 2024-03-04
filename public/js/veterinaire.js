@@ -310,7 +310,7 @@ function addComment(){
             console.log(error));
     }
     
-}
+
 
 
 

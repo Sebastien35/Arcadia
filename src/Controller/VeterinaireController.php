@@ -283,6 +283,8 @@ public function addAnimalInfo(Request $request): JsonResponse
         $habitatCommentaire->setHabitat($habitat);
         $habitatCommentaire->setCommentaire($data['commentaire']);
         $habitatCommentaire->setCreatedAt(new \DateTimeImmutable());
+        $habitatCommentaire->setAuteur($this->getUser());
+
         
         
         $this->entityManager->persist($habitatCommentaire);

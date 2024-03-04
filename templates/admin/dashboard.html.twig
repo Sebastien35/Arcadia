@@ -203,7 +203,7 @@
                 <div class="container-body mt-2 scrollable-container">
                     <div class="row">
                         {% for singlehabitat in habitats %}
-                        <div class="col col-lg-4 col-sm-12">
+                        <div class="col col-lg-6 col-sm-12">
                             <div class="card mb-2 habitatCard">
                                 <div class="card-header d-flex justify-content-between">
                                     <div class="card-header-title">
@@ -223,10 +223,12 @@
                                     <div class="d-none" id="commentsDiv">
                                         {% for commentaire in commentaires %}
                                             {% if commentaire.getHabitat.id == singlehabitat.id %}
-                                                <div class="comment">
-                                                    <p class="text-muted">{{ commentaire.getcreatedAt }}</p>
-                                                    <p class="card-text"">{{commentaire.commentaire }} </p>"
-                                            </div>
+                                                <div class="card">
+                                                    {% if commentaire.auteur.id != 0 %}                    
+                                                        <p class="text-muted">{{ commentaire.getcreatedAt | date ('d m Y') }}, {{ commentaire.auteur.email }}</p>
+                                                        <p class="card-text"">{{commentaire.commentaire }} </p>
+                                                    {% endif %}
+                                                </div>
                                             {% endif %}
                                         {% endfor %}
                                         
