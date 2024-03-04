@@ -26,7 +26,9 @@ class CommentaireHabitat
 
     #[ORM\ManyToOne(inversedBy: 'commentaireHabitats')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?habitat $habitat = null;
+    private ?Habitat $Habitat = null;
+
+    
 
     public function getId(): ?int
     {
@@ -70,15 +72,17 @@ class CommentaireHabitat
     }
 
 
-    public function getHabitat(): ?habitat
+    public function getHabitat(): ?Habitat
     {
-        return $this->habitat;
+        return $this->Habitat;
     }
 
-    public function setHabitat(?habitat $habitat): static
+    public function setHabitat(?Habitat $Habitat): static
     {
-        $this->habitat = $habitat;
+        $this->Habitat = $Habitat;
 
         return $this;
     }
+
+    
 }

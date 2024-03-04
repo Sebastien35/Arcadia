@@ -17,8 +17,6 @@ class InfoAnimal
     #[ORM\Column]
     private ?int $id = null;
 
-    
-
     #[ORM\Column(length: 255)]
     private ?string $etat = null;
 
@@ -41,7 +39,8 @@ class InfoAnimal
 
     #[ORM\ManyToOne(inversedBy: 'infoAnimals')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?animal $animal = null;
+    private ?Animal $animal = null;
+
 
     public function getId(): ?int
     {
@@ -124,6 +123,8 @@ class InfoAnimal
 
         return $this;
     }
+
+    
 
 
 

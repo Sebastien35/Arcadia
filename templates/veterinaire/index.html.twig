@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Espace Employé{% endblock %}
+{% block title %}Espace Vétérinaire{% endblock %}
 
 {% block body %}
 <link rel="stylesheet" href="{{ asset('css/veterinaire.css') }}">
@@ -26,9 +26,14 @@
                     <li class="my-2 mt-2">
                         <p role="button" id="habitatsBtn" class="sidebdar-item"><i class="fa-solid fa-home"></i>Habitats</p>
                     </li>
-                    <li class="my-2 mt-2 text-danger btn btn-danger">
-                        <a href="{{ path('app_logout') }}" class="sidebar-item"><i class="fa-solid fa-sign-out"></i>Se déconnecter</a>
-                    </li>
+                    <div class="user-info" style="position:relative; bottom:0">
+                        <li class="mt-5">
+                            <p> Bonjour {{ app.user.email }} </p>
+                        </li>
+                        <li class="text-danger btn btn-danger">
+                            <a href="{{ path('app_logout') }}" class="sidebar-item"><i class="fa-solid fa-sign-out"></i>Se déconnecter</a>
+                        </li>
+                    </div>
                 </ul>
             </div>
         </div>
@@ -36,7 +41,21 @@
         
         <div class="col py-3">
             
-            
+            {# Error and success messages #}
+            <div>
+                {% for flashMessage in app.flashes('error') %}
+                <div class="alert alert-danger mt-5" role="alert" style="height:10vh">
+                    {{ flashMessage }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% for flashMessage in app.flashes('success') %}
+                    <div class="alert alert-success mt-5" role="alert" style="height:10vh">
+                        {{ flashMessage }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
             <div class="mt-5 d-none" id="animal-container">
                 <div class="container-header d-flex">
                     <div class="container-header-title">
@@ -75,6 +94,7 @@
                         </table>
                     </div>
                     
+                    {# Modal d'ajout d'animal #}
                     <div class="modal modal-fade" id="add-animal-modal" tabindex="-1" aria-labelledby="add-animal-modal-label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -111,6 +131,7 @@
                         </div>
                     </div>  
 
+                    {# Modal d'ajout d'informations sur l'animal #}
                     <div class="modal modal-fade" id="info-animal-modal" tabindex="-1" aria-labelledby="info-animal-modal-label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -151,7 +172,7 @@
                         </div>  
                     </div>
 
-
+                    {# Modal de suppression d'animal #}
                     <div class="modal modal-fade" id="delete-animal-Modal" tabindex="-1" aria-labelledby="delete-animal-Modal-label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -170,6 +191,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             
@@ -340,15 +362,8 @@
                             </div>
                         </div>
                     </div>
-                                    
-
-
-
-                </div>
-
-                
-            </div>
-            
+                </div>          
+            </div>  
         </div>
     </div>
 </div>

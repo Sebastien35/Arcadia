@@ -10,6 +10,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 use App\Entity\Animal;
 use App\Repository\AnimalRepository;
+use App\Entity\InfoAnimal;
 
 #[Route('/animal', name: 'app_animal_')]
 class AnimalController extends AbstractController
@@ -36,12 +37,16 @@ class AnimalController extends AbstractController
 
     #[Route('/show/{id}', name: 'show', methods: ['GET'])]
     public function showAnimal(int $id): Response
-    {
-        $infoAnimals = $this->entityManager->getRepository(Animal::class)->findAll();
+    {   
         $animal = $this->entityManager->getRepository(Animal::class)->find($id);
+        $infoAnimal = $this->entityManager->getRepository(InfoAnimal::class)->findBy(
+            ['animal' => $id],
+            ['createdAt' => 'DESC'],
+            1
+        );
         return $this->render('animal/show.html.twig', [
             'animal' => $animal,
-            'infoAnimals' => $infoAnimals
+            'infoAnimal' => $infoAnimal,
             
         ]);
 

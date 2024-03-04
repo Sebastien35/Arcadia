@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
-use DateTime;
 use DateTimeImmutable;
 
 use App\Entity\Service;
@@ -25,11 +24,12 @@ use App\Repository\HoraireRepository;
 use App\Entity\Habitat;
 use App\Repository\HabitatRepository;
 use App\Form\habitatFormType;
-use App\Form\EditHabitatForm;
 use App\Entity\Animal;
 use App\Repository\AnimalRepository;
-use App\Entity\infoAnimal;
-use App\Repository\infoAnimalRepository;
+use App\Form\EditAnimalType;
+use App\Entity\InfoAnimal;
+use App\Form\animalFormType;
+use App\Entity\CommentaireHabitat;
 
 
 #[Route('/admin', name: 'app_admin_')]
@@ -45,15 +45,8 @@ class AdminController extends AbstractController
     {
         $this->entityManager=$entityManager;
     }
-    #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(): Response
-    {
-        return $this->render('admin/index.html.twig', [
-            'controller_name' => 'AdminController',
-        ]);
-    }
 
-    #[Route('/dashboard', name: 'dashboard', methods: ['GET'])]
+    #[Route('/', name: 'index', methods: ['GET'])]
     public function dashboard(): Response
     {
         $services = $this->entityManager->getRepository(Service::class)->findAll();
@@ -63,6 +56,10 @@ class AdminController extends AbstractController
         $habitats = $this->entityManager->getRepository(Habitat::class)->findAll();
         $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
         $infoAnimals = $this->entityManager->getRepository(infoAnimal::class)->findAll();
+        $commentaires= $this->entityManager->getRepository(CommentaireHabitat::class)->findAll();
+        $createAnimalForm=$this->createForm(animalFormType::class);
+        $createHabitatForm=$this->createForm(habitatFormType::class);
+
         return $this->render('admin/dashboard.html.twig', [
             'controller_name' => 'AdminController',
             'services'=>$services,
@@ -72,9 +69,16 @@ class AdminController extends AbstractController
             'habitats'=>$habitats,
             'animaux'=>$animaux,
             'infoAnimals'=>$infoAnimals,
+            'createAnimalForm'=>$createAnimalForm->createView(),
+            'createHabitatForm'=>$createHabitatForm->createView(),
+            'commentaires'=>$commentaires
+
+
 
         ]);
     }
+
+    /*-------------------------Services ------------------------*/
 
 
     #[Route('/services', name: 'servicesAdmin', methods: ['GET'])]
@@ -86,6 +90,69 @@ class AdminController extends AbstractController
             'services'=>$services
         ]);
     }
+
+    #[Route('/services/create', name: 'createService', methods: 'POST')]
+    public function createService(Request $request): JsonResponse
+    {
+        try{
+            $service = $this->serializer->deserialize($request->getContent(), Service::class, 'json');
+            $service->setCreatedAt(new DateTimeImmutable());
+
+            $this->entityManager->persist($service);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Service created successfully');
+            return new JsonResponse(['message' => 'Service created successfully'], Response::HTTP_CREATED);
+
+        }
+        catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/services/edit/{id}', name: 'edit_service', methods:['PUT'])]
+    public function editService(Request $request, $id): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $service = $this->entityManager->getRepository(Service::class)->find($id);
+        if(isset($data['nom']) && !empty($data['nom'])){
+            $service->setNom($data['nom']);
+        }else{
+            $service->setNom($service->getNom());
+        }
+        if(isset($data['description']) && !empty($data['description'])){
+            $service->setDescription($data['description']);
+        }else{
+            $service->setDescription($service->getDescription());
+        }
+        $this->entityManager->persist($service);
+        $this->entityManager->flush();
+        $this->addFlash('success', 'Service updated!');
+        return new JsonResponse(['status' => 'Service updated!'], Response::HTTP_OK);
+    }
+
+    #[Route('/services/delete/{id}',name: 'deleteService', methods: 'DELETE')]
+    public function delete(int $id):Response
+    {
+        try{
+        $service=$this->entityManager->getRepository(Service::class)->find($id);
+        
+        if (!$service){
+            $this->addFlash('error', 'Service not found');
+            throw $this->createNotFoundException("No service found for {$id} id");
+        }
+        
+        $this->entityManager->remove($service);
+        $this->entityManager->flush();
+        $this->addFlash('success', 'Service deleted successfully');
+        $this->addFlash('Success', 'Le service a été supprimé avec succès!');
+        return new Response('Service deleted successfully', 200);
+        }catch (\Exception $e) {
+            $this->addFlash('error', 'An error occured');
+            return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
+        }
+    }
+
+    /* ------------------------users------------------------ */
 
     #[Route('/users', name: 'userAdmin', methods: ['GET'])]
     public function indexUser(UserRepository $userRepo, ZooRepository $ZooRepo): Response
@@ -106,22 +173,22 @@ class AdminController extends AbstractController
     {
         $user=$this->entityManager->getRepository(User::class)->find($id);
         if(!$user){
+            $this->addFlash('error', 'User not found');
             throw $this->createNotFoundException('No user found for id '.$id);
+        }else{
+            try{
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'User deleted successfully');
+            return new Response('User deleted successfully', 200);
+            }catch (\Exception $e) {
+                $this->addFlash('error', 'An error occured');
+                return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
+            }
         }
-        $this->entityManager->remove($user);
-        $this->entityManager->flush();
-        return new Response('User deleted successfully', 200);
     }
 
-    #[Route('/horaires', name: 'horairesAdmin', methods: ['GET'])]
-    public function indexHoraires(HoraireRepository $horaireRepo): Response
-    {
-        $horaires = $horaireRepo->findAll();
-        return $this->render('admin/horaires.html.twig', [
-            'controller_name' => 'AdminController',
-            'horaires'=>$horaires
-        ]);
-    }
+    
 
     #[Route('/user/edit/{id}', name: 'editUser', methods: ['PUT'])]
     public function editUser(int $id, Request $request): JsonResponse
@@ -154,8 +221,18 @@ class AdminController extends AbstractController
 
 
 
+    /* ------------------------Horaires------------------------ */
 
-    
+    #[Route('/horaires', name: 'horairesAdmin', methods: ['GET'])]
+    public function indexHoraires(HoraireRepository $horaireRepo): Response
+    {
+        $horaires = $horaireRepo->findAll();
+        return $this->render('admin/horaires.html.twig', [
+            'controller_name' => 'AdminController',
+            'horaires'=>$horaires
+        ]);
+    }
+
     #[Route('/horaires/new', name: 'newHoraire', methods: ['POST'])]
     public function newHoraire(Request $request): Response
     {
@@ -209,122 +286,17 @@ class AdminController extends AbstractController
         );
         $requestDecoded=Json_decode($request->getContent(), true);
         $horaire->setOuvert($requestDecoded['ouvert']);
-        //dd($requestDecoded);
 
         $HeureOuverture = date_create_from_format('H:i', $requestDecoded['ouverture']);
         $HeureFermeture = date_create_from_format('H:i', $requestDecoded['fermeture']);
         $horaire->setHOuverture($HeureOuverture);
         $horaire->setHFermeture($HeureFermeture);
-       // dd($ouvert); // Debug
-
-       // $horaire->setOuvert($request->get('ouvert'));
- 
-       // dd($request->get('h_ouverture'), $request->get('h_fermeture')); // Debug
-        // Persist changes to the database
         $this->entityManager->persist($horaire);
         $this->entityManager->flush();
-    
+
+        $this->addFlash('success', 'Horaire updated successfully');
         return new JsonResponse(['message' => 'Horaire updated successfully'], Response::HTTP_OK);
 }
-
-
-    
-    // Pour tester
-    //#[Route('/horaires/show/{id}',name: 'showHoraire', methods: ['GET'])]
-    //public function showHoraire(int $id):Response
-    //{
-    //
-    //    $horaire = $this->entityManager->getRepository(Horaire::class)->find($id);
-    //    dd($id, $horaire);
-    //    if (!$horaire){
-    //        throw $this->createNotFoundException(
-    //            'No horaire found for id '.$id
-    //        );
-     //   }
-    //    return $this->render('admin/showHoraire.html.twig', [
-    //        'controller_name' => 'AdminController',
-    //        'horaire'=>$horaire //
-    //  ]);
-    // }
-
-    #[Route('/services/create', name: 'createService', methods: 'POST')]
-    public function createService(Request $request): JsonResponse
-    {
-        try{
-            $service = $this->serializer->deserialize($request->getContent(), Service::class, 'json');
-            $service->setCreatedAt(new DateTimeImmutable());
-
-            $this->entityManager->persist($service);
-            $this->entityManager->flush();
-            return new JsonResponse(['message' => 'Service created successfully'], Response::HTTP_CREATED);
-
-        }
-        catch (\Exception $e) {
-            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-
-    #[Route('/services/update/{id}', name: 'updateService', methods: ['PUT'])]
-    public function editService(int $id, Request $request): JsonResponse
-    {
-        try {
-            // Find the service by its ID
-            $service=$this->entityManager->getRepository(Service::class)->find($id);
-
-            try {
-                // If service not found, return 404
-                if (!$service) {
-                    throw $this->createNotFoundException("No service found for {$id} id");
-                }
-                
-                // Parse the JSON data from the request body
-                $data = json_decode($request->getContent(), true);
-
-                // Update the service entity with the new data
-                $service->setNom($data['nom'] ?? $service->getNom());
-                $service->setDescription($data['description'] ?? $service->getDescription());
-                $service->setUpdatedAt(new DateTimeImmutable());
-
-                // Persist the changes to the database
-                $this->entityManager->flush();
-
-                // Return a success response
-                return new JsonResponse(['message' => 'Service updated successfully'], Response::HTTP_OK);
-            }catch (\Exception $e) {
-                // Handle the exception here
-                // You can log the error, display a custom error message, or perform any other necessary actions
-                return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-        } catch (\Exception $e) {
-            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-
-            
-        }
-
-    }
-    #[Route('/services/delete/{id}',name: 'deleteService', methods: 'DELETE')]
-    public function delete(int $id):Response
-    {
-        $service=$this->entityManager->getRepository(Service::class)->find($id);
-        
-        if (!$service){
-            throw $this->createNotFoundException("No service found for {$id} id");
-        }
-        
-        $this->entityManager->remove($service);
-        $this->entityManager->flush();
-        return $this->redirectToRoute('app_admin',[
-            'controller_name' => 'ServicesController',
-            'service'=>$service // Passer la variables services qui contient tous les services
-        ]);
-    }
-
-    
-
-
-
 
 /* ------------------------Habitat------------------------ */
 
@@ -351,10 +323,12 @@ class AdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($habitat);
             $this->entityManager->flush();
-            return $this->redirectToRoute('app_admin_habitatsIndex');
+            $this->addFlash('success', 'Habitat created successfully');
+            return $this->redirectToRoute('app_admin_index');
             
         }
     }catch (\Exception $e) {
+        $this->addFlash('error', 'An error occured');
         return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
     }
     }
@@ -380,10 +354,9 @@ class AdminController extends AbstractController
 
             $this->entityManager->persist($habitat);
             $this->entityManager->flush();
-            return $this->redirectToRoute('app_admin_habitatsIndex');
+            return $this->redirectToRoute('app_admin_index');
 
         }else{
-            
             return $this->render('admin/update_habitat.html.twig', [
             'controller_name' => 'AdminController',
             'form' => $form->createView(),
@@ -392,23 +365,127 @@ class AdminController extends AbstractController
         }
     }
 
-
     #[Route('/habitats/delete/{id}',name: 'deleteHabitat', methods: 'DELETE')]
     public function deleteHabitat(int $id):Response
     {
         $habitat=$this->entityManager->getRepository(Habitat::class)->find($id);
         if (!$habitat){
+            $this->addFlash('error', 'Habitat not found');
             throw $this->createNotFoundException("No habitat found for {$id} id");
         }
         $this->entityManager->remove($habitat);
         $this->entityManager->flush();
-        return $this->redirectToRoute('app_admin_habitatsIndex',[
-            'controller_name' => 'HabitatsController',
-            'habitat'=>$habitat // Passer la variables habitats qui contient tous les habitats
-        ]);
+        $this->addFlash('success', 'Habitat deleted successfully');
+        return new Response('Habitat deleted successfully', 200);
     }
 
+
+
+    /* ------------------------infoAnimal------------------------ */
+    #[Route('/infoAnimal/show/{id}',name: 'showInfoAnimal', methods: ['GET'])]
+    public function showInfoAnimal(int $id){
+        $infoAnimal = $this->entityManager->getRepository(InfoAnimal::class)->find($id);
+        if (!$infoAnimal){
+            throw $this->createNotFoundException(
+                'No infoAnimal found for id '.$id
+            );
+        }else{
+            return $this->render('admin/showInfoAnimal.html.twig', [
+                'controller_name' => 'AdminController',
+                'infoAnimal'=>$infoAnimal
+            ]);
+        }
+    }
     
 
 
+
+
+    /* ------------------------Animal------------------------ */
+    
+    #[Route('/animal/create', name: 'createAnimal', methods: ['POST'])]
+    public function createAnimal(Request $request){
+        try{
+            $animal= new Animal();
+            $form = $this->createForm(animalFormType::class);
+            $form->handleRequest($request);
+            if($form->isSubmitted() && $form->isValid()){
+                $animal->setPrenom($form->get('prenom')->getData());
+                $animal->setRace($form->get('race')->getData());
+                $animal->setHabitat($form->get('habitat')->getData());
+                $animal->setCreatedAt(new \DateTimeImmutable());
+                $animal->setImageFile($form->get('imageFile')->getData());
+
+                $this->entityManager->persist($animal);
+                $this->entityManager->flush();
+                $this->addFlash('success', 'Animal created successfully');
+                return $this->redirectToRoute('app_admin_index');
+            }
+        }catch (\Exception $e) {
+            $this->addFlash('error', 'An error occured');
+            return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
+        }
+    }
+    
+    #[Route('/animal/update/{id}', name: 'updateAnimal', methods: ['GET','POST'])]
+    public function updateAnimal(Request $request, int $id, AnimalRepository $animalRepo):Response
+    {
+        $animal = $animalRepo->find($id);
+        if (!$animal) {
+            return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
+        }
+        $form = $this->createForm(EditAnimalType::class, $animal);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            if(isset($form['prenom'])){
+                $animal->setPrenom($form['prenom']->getData());
+            }else{
+                $animal->setPrenom($animal->getPrenom());
+            }
+            if(isset($form['race'])){
+                $animal->setRace($form['race']->getData());
+            }else{
+                $animal->setRace($animal->getRace());
+            }
+            if(isset($form['habitat'])){
+                $animal->setHabitat($form['habitat']->getData());
+            }else{
+                $animal->setHabitat($animal->getHabitat());
+            }
+            if(isset($form['imageFile'])){
+                $animal->setImageFile($form['imageFile']->getData());
+            }else{
+                $animal->setImageFile($animal->getImageFile());
+            }
+            $this->entityManager->persist($animal);
+            $this->entityManager->flush();
+            return $this->redirectToRoute('app_admin_index');
+        }else{
+            
+            return $this->render('admin/editAnimal.html.twig', [
+                'controller_name' => 'AdminController',
+                'animal' => $animal,
+                'editAnimalForm' => $form->createView(),
+                'form'=>$form
+            ]);
+        }
+        $this->addFlash('success', 'Animal updated successfully');
+        return new JsonResponse(['status' => 'Animal updated!'], Response::HTTP_OK);
+    }
+
+    #[Route('/animal/delete/{id}', name: 'deleteAnimal', methods: ['DELETE'])]
+    public function deleteAnimal(int $id): JsonResponse
+    {
+        $animal = $this->entityManager->getRepository(Animal::class)->find($id);
+        if (!$animal) {
+            $this->addFlash('error', 'Animal not found');
+            return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
+        }else{
+            $this->entityManager->remove($animal);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Animal deleted successfully');
+            return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+        }
+        
+    }
 }
