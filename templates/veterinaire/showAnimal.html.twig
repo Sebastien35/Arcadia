@@ -9,57 +9,70 @@
 <div class="nav navbar bg-dark mt-5 animal-navbar">
         <a class="navbar-brand" href="{{ path('app_veterinaire_index') }}">Tous les animaux</a>
 </div>
-<div class="container mt-5 mb-5">
-    <div class="card mt-2">
-        <div class="card-header">
-            <h1>{{animal.prenom}}</h1>
-        </div>
-        <div class="row">
-            <div class="col-4"> 
-                {% if animal.imageName == null %}
-                    <img src="{{ asset('images/animal/default.jpg') }}" alt="image_{{ animal.getPrenom }}" style="max-width: 100%;" >
-                {% else %}
-                <img src="{{ asset('images/animal/' ~ animal.imageName) }}" alt="image_{{ animal.getPrenom }}" style="max-width: 100%; height:100%" >
-                {% endif %}
-            </div>
-            <div class="col-8">
-                <div class="card-body">
-                    <p class="card-text">Habitat: {{animal.habitat.nom}} </p>
-                    <p class="card-text">Race: {{animal.race}}</p>
-                    <p class="card-text">Date d'arrivée: {{animal.createdAt | date('d-m-Y')}}</p> 
-                    <p class="card-text">Habitat: {{animal.habitat.nom}} </p>        
+<div class="row">
+    <div class="col">
+        <div class="mt-1 mb-2">
+            <div class="card">
+                <div class="card-header">
+                    <h1>{{animal.prenom}}</h1>
                 </div>
+                <div class="row">
+                    <div class="col-lg-4 col-sm-6"> 
+                        {% if animal.imageName == null %}
+                            <img src="{{ asset('images/animal/default.jpg') }}" alt="image_{{ animal.getPrenom }}" style="max-width: 100%;" >
+                        {% else %}
+                        <img src="{{ asset('images/animal/' ~ animal.imageName) }}" alt="image_{{ animal.getPrenom }}" style="max-width: 100%; height:100%" >
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-8 col-sm-6">
+                        <div class="card-body">
+                            <p class="card-text">Habitat: {{animal.habitat.nom}} </p>
+                            <p class="card-text">Race: {{animal.race}}</p>
+                            <p class="card-text">Date d'arrivée: {{animal.createdAt | date('d-m-Y')}}</p> 
+                            <p class="card-text">Habitat: {{animal.habitat.nom}} </p>        
+                        </div>
+                    </div>
+                </div>  
             </div>
-        </div>  
+        </div>
     </div>
-    <div class="card mt-2 mb-2">
-        <div class="card-header">
-            <h2>Notes vétérinaires:</h2>
+    <div class="col">
+        <div class=" mt-1 card mb-2">
+            <div class="card-header">
+                <h2>Notes vétérinaires:</h2>
+            </div>
+            <div class="card-body" style="overflow-y: scroll; height: 30vh">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Etat de l'animal</th>
+                            <th class="d-none d-lg-table-cell">Details</th>
+                            <th class="d-none d-lg-table-cell">Nourriture</th>
+                            <th class="d-none d-lg-table-cell">Quantité recommandé</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for infoAnimal in infoAnimals %}
+                        <tr>
+                            <td>{{ infoAnimal.createdAt | date('d-m-Y') }}</td>
+                            <td>{{ infoAnimal.etat }}</td>
+                            <td class="d-none d-lg-table-cell">{{ infoAnimal.details }}</td>
+                            <td class="d-none d-lg-table-cell">{{ infoAnimal.nourriture.nom }}</td>
+                            <td class="d-none d-lg-table-cell">{{ infoAnimal.grammage }}g</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
         </div>
-        <div class="card-body" style="overflow-y: scroll; height: 30vh">
-            <table class="table table-striped">
-            <thead>
-                <th>Date</th>
-                <th>Etat de l'animal</th>
-                <th>Details</th>
-                <th>Nourriture</th>
-                <th>Quantité recommandé</th>
-            </thead>
-            <tbody>
-                {% for infoAnimal in infoAnimals %}
-                <tr>
-                    <td>{{ infoAnimal.createdAt | date('d-m-Y') }}</td>
-                    <td>{{ infoAnimal.etat }}</td>
-                    <td>{{ infoAnimal.details }}</td>
-                    <td>{{ infoAnimal.nourriture.nom }}</td>
-                    <td>{{ infoAnimal.grammage }}g</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            </table>
-        </div>
-    </div>       
-            <div class="card mb-2" id="animalMealCard">
+
+    </div>
+</div>
+
+    
+            <div class="card" id="animalMealCard">
                 <div class="card-header">
                     <h2>Repas</h2>
                 </div>
@@ -80,8 +93,8 @@
                             <th>Aliment</th>
                         </tr>
                     </thead>
-                    <div class="scrollable">
-                        <tbody>
+                    <div class="scrollable mb-1">
+                        <tbody class="mb-5">
                             {% if repas == null %}
                             <tr>
                                 <td colspan="3">Pas de repas enregistré</td>
@@ -89,7 +102,7 @@
                             {% else %}
                                 {% for repas in repas %}                    
                                     <tr class="d-none repas">
-                                        <td class="repasdate">{{ repas.Datetime | date('d-m-Y') }}</td>
+                                        <td class="repasdate">{{ repas.Datetime | date('d/m') }}</td>
                                         <td>{{ repas.quantite }}g</td>
                                         <td>{{ repas.nourriture.nom }}</td>
                                     </tr>

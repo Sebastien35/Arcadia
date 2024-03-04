@@ -14,24 +14,53 @@
                 <ul class="mt-5">
                     <li class="mt-2 mb-3">
                         <H5 class="nav-item"><i class="fa-solid fa-user-tie"></i></i> Espace administrateur </H5>
+                        
                     </li>
+
                     <li class="mt-5 mb-3">
                         <p class="nav-item" id="userBtn" role="button"><i class="fa-regular fa-user"></i> Utilisateurs</p>
                     </li>
                     <li class="mt-2 mb-3">
                         <p class="nav-item" id="habitatBtn" role="button"><i class="fa-solid fa-igloo"></i></i> Habitats</p>
                     </li>
+                    <li class="mt-2 mb-3 d-none">
+                        <p class="nav-item" id="commentairesBtn" role="button"><i class="fa-solid fa-comment"></i> Commentaires</p>
                     <li class="mt-2 mb-3">
                         <p class="nav-item" id="animalBtn" role="button"><i class="fa-solid fa-dog"></i> Animaux</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item" id="infoAnimalBtn" role="button"><i class="fa-regular fa-clipboard"></i>Comptes-rendus vétérinaires</p>
+                        <p class="nav-item" id="infoAnimalBtn" role="button"><i class="fa-regular fa-clipboard"></i> Comptes-rendus vétérinaires</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item" id="servicesBtn" role="button"><i class="fa-solid fa-shop"></i> Services</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item" id="horairesBtn" role="button"><i class="fa-regular fa-clock"></i> Horaires</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-regular fa-sign-out"></i> Se déconnecter</a>
                     </li>
                 </ul>
             </div>
         </div>
 
         <div class="col py-3" >
+            {# Error and success messages #}
+            <div>
+                {% for flashMessage in app.flashes('error') %}
+                <div class="alert alert-danger mt-5" role="alert" style="height:10vh">
+                    {{ flashMessage }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% for flashMessage in app.flashes('success') %}
+                    <div class="alert alert-success mt-5" role="alert" style="height:10vh">
+                        {{ flashMessage }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+
             {# User Container #}
             <div class="custom-container mt-5 d-none" id="user-container" style="height:90vh">
                 <div class="container-header d-flex">
@@ -162,37 +191,119 @@
             </div>
             
             {# Habitat Container #}
-            <div class="custom-container mt-5 d-none" id="habitat-container">
+            <div class="custom-container mt-5  mb-3 d-none" id="habitat-container">
                 <div class="container-header d-flex">
                     <div class="container-header-title">
                         <p>Les habitats</p>
                     </div>
+                    <div class="container-header-button">
+                        <button class="header-btn" id="add-habitat" data-bs-toggle="modal" data-bs-target="#addHabitatModal"><i class="fa-solid fa-plus"></i></button>
+                    </div>
                 </div>    
                 <div class="container-body mt-2 scrollable-container">
                     <div class="row">
-                        {% for habitat in habitats %}
-                        <div class="col col-lg-4 col-sm-12">
-                            <div class="card mb-2 habitatCard" role="button" onClick="window.location=('/habitats/show/'+ {{ habitat.id }} )" >
-                                <div class="card-header">
-                                    <h5 class="card-title">{{ habitat.getNom }}</h5>
-                                    <img src="{{ asset('images/habitat/' ~ habitat.imageName) }}" class="card-img-top habitat-img" alt="image_{{ habitat.getNom }}" >
+                        {% for singlehabitat in habitats %}
+                        <div class="col col-lg-6 col-sm-12">
+                            <div class="card mb-2 habitatCard">
+                                <div class="card-header d-flex justify-content-between">
+                                    <div class="card-header-title">
+                                        <h5 class="card-title">{{ singlehabitat.getNom }}</h5>
+                                    </div>
+                                    <div class="card-header-buttons">
+                                        <button type="button" data-bs-target="#deleteHabitatModal" data-bs-toggle="modal" data-habitat-id="{{ singlehabitat.id }}" class="btn btn-danger" id="delete-habitat"><i class="fa-solid fa-trash"></i></button>
+                                        <button type="button" class="btn btn-primary" id="edit-habitat" onclick="window.location=('/admin/habitats/update/'+ {{ singlehabitat.id }} )"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <img src="{{ asset('images/habitat/' ~ singlehabitat.imageName) }}" class="card-img-top habitat-img" alt="image_{{ singlehabitat.getNom }}"  
+                                    role="button" onClick="window.location=('/habitats/show/'+ {{ singlehabitat.id }} )" >
+                                </div>
+                                <div class="card-footer scrollable-container">
+                                    <p class="card-text commentsBt" role="button" data-habitat-id="{{singlehabitat.id}}"><i class="fa-regular fa-comment"></i> Commentaires</p>
+                                    <div class="d-none" id="commentsDiv">
+                                        {% for commentaire in commentaires %}
+                                            {% if commentaire.getHabitat.id == singlehabitat.id %}
+                                                <div class="card">
+                                                    {% if commentaire.auteur.id != 0 %}                    
+                                                        <p class="text-muted">{{ commentaire.getcreatedAt | date ('d m Y') }}, {{ commentaire.auteur.email }}</p>
+                                                        <p class="card-text"">{{commentaire.commentaire }} </p>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         {% endfor %}       
                     </div>
-                </div>   
+                </div>  
+                {# Modal for creating habitat #}
+                <div class="modal modal-fade" tabindex="-1" id="addHabitatModal" aria-labelledby="addHabitatModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addHabitatModalLabel">Ajouter un habitat</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                {{ form_start(createHabitatForm, {'action':('/admin/habitats/create')}) }}
+                                {{ form_errors(createHabitatForm)}}
+                                <div class="mb-3">
+                                    {{ form_label(createHabitatForm.nom) }}</br>
+                                    {{ form_widget(createHabitatForm.nom) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(createHabitatForm.description) }}</br>
+                                    {{ form_widget(createHabitatForm.description) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_row(createHabitatForm.imageFile, {'label': 'Image'}) }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary mb-2">Ajouter</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                {{ form_end(createHabitatForm) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# Modal for deleting habitat #}
+                <div class="modal modal-fade" tabindex="-1" id="deleteHabitatModal" aria-labelledby="deleteHabitatModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteHabitatModalLabel">Supprimer un habitat</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Êtes-vous sûr de vouloir supprimer cet habitat?</h1>
+                                <input type="hidden" id="habitat-id" value="">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="confirm-delete-habitat-btn">Supprimer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             {# Animal Container #}
-            <div class="custom-container mt-5 d-none" id="animal-container">
+            <div class="custom-container mt-5 mb-3 d-none" id="animal-container">
                 <div class="container-header d-flex">
                     <div class="container-header-title">
                         <p>Les animaux</p>
                     </div>
+                    <div class="container-header-button">
+                        <button class="header-btn" id="add-animal-btn"><i class="fa-solid fa-plus" data-bs-toggle="modal" data-bs-target="#add-animal-modal"></i></button>
+                    </div>
                 </div>    
                 <div class="container-body mt-2 scrollable-container">
-                    <table class="table table-striped">
+                    <table class="table table-striped" aria-labelledby="Animaux">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
@@ -208,19 +319,77 @@
                                 <td>{{ animal.prenom }}</td>
                                 <td>{{ animal.getHabitat.getNom }}</td> 
                                 <td>
-                                    <a type="button" class="btn btn-info" href="/veterinaire/animal/show/{{animal.id}}"><i class="fa-regular fa-eye"></i></button>
-                                    
+                                    <a type="button" class="btn btn-info" href="/veterinaire/animal/show/{{animal.id}}"><i class="fa-regular fa-eye"></i></a>
+                                    <button class="btn btn-primary" id="edit-animal-btn"onclick="window.location=('/admin/animal/update/'+ {{ animal.id }} )"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button class="btn btn-danger" id="delete-animal-btn"data-bs-toggle="modal" data-bs-target="#delete-animal-Modal" data-animal-id="{{ animal.id }}"><i class="fa-solid fa-user-minus"></i></button>
                                 </td>         
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-            </div>
+                </div>
+                {# Modal for creating animal #}
+                <div class="modal modal-fade" id="add-animal-modal" tabindex="-1" aria-labelledby="add-animal-modal-label" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="add-animal-modal-label">Nouvel arrivant!</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                    {{ form_start(createAnimalForm, {'action':('/admin/animal/create')}) }}
+                                    {{ form_errors(createAnimalForm)}}
+                                <div class="mb-3">
+                                    {{ form_label(createAnimalForm.prenom) }}</br>
+                                    {{ form_widget(createAnimalForm.prenom) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(createAnimalForm.race) }}</br>
+                                    {{ form_widget(createAnimalForm.race) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(createAnimalForm.habitat) }}</br>
+                                    {{ form_widget(createAnimalForm.habitat) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(createAnimalForm.imageFile) }}</br>
+                                    {{ form_widget(createAnimalForm.imageFile) }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary mb-2">Ajouter</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                {{ form_end(createAnimalForm) }}
+                            </div>   
+                        </div>
+                    </div>
+                </div> 
+
+                {# Modal for deleting animal #}
+                <div class="modal modal-fade" id="delete-animal-Modal" tabindex="-1" aria-labelledby="delete-animal-Modal-label" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="delete-animal-Modal-label">Supprimer l'animal</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="d-none" id="animal-id" ></p>
+                                <p>Voulez-vous vraiment supprimer cet animal?</p>   
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="confirm-delete-animal-btn">Supprimer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
 
             {# InfoAnimal Container #}
-            <div class="custom-container mt-5 d-none" id="info-animal-container">
+            <div class="custom-container mt-5 mb-3 d-none" id="info-animal-container">
                 <div class="container-header d-flex">
                     <div class="container-header-title">
                         <p>Comptes-rendus vétérinaires</p>
@@ -243,7 +412,7 @@
                     </div>              
                 </div>
                 <div class="container-body mt-2 scrollable-container">
-                    <table class="table table-striped">
+                    <table class="table table-striped" aria-labelledby="Comptes-rendus">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
@@ -256,45 +425,202 @@
                             {% for infoAnimal in infoAnimals %}
                             <tr class="infoAnimalRow" data-animal-id="{{infoAnimal.getAnimal.id}}" data-infoAnimal-date="{{infoAnimal.createdAt|date('Y-m-d')}}"> 
                                 <td>{{ infoAnimal.id }}</td>
-                                <td>{{ infoAnimal.createdAt|date('d/m/Y') }}</td>
+                                <td>{{ infoAnimal.createdAt|date('Y-m-d') }}</td>
                                 <td>{{ infoAnimal.getAnimal.prenom }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#infoAnimalModal" data-infoAnimal-id="{{ infoAnimal.id }}"><i class="fa-regular fa-eye"></i></button>
+                                    <a type="button" class="btn btn-info" href="/admin/infoAnimal/show/{{infoAnimal.id}}"><i class="fa-regular fa-eye"></i></button>
                                 </td>
                             </tr>
-                            
-                            {# Modal contenant le contenu de l'infoAnimal #}
-                            <div class="modal modal-fade" id="infoAnimalModal" tabindex="-1" aria-labelledby="infoAnimalModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="infoAnimalModalLabel">Compte-rendu vétérinaire</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <h1>Compte-rendu vétérinaire:</h1>
-                                            <p>Date: {{ infoAnimal.createdAt|date('d/m/Y') }}</p>
-                                            <p>Animal: {{ infoAnimal.getAnimal.prenom }}</p>
-                                            <p>Etat: {{ infoAnimal.etat }}</p>
-                                            <p>Details: {{ infoAnimal.details }}</p>
-                                            <p>Nourriture: {{ infoAnimal.nourriture.nom }}</p>
-                                            <p>Quantité recommandé: {{ infoAnimal.grammage }}g</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             {% endfor %}
 
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            {# Services Container #}
+            <div class="custom-container mt-5 mb-3 d-none" id="services-container">
+                <div class="container-header d-flex">
+                    <div class="container-header-title">
+                        <p>Les services</p>
+                    </div>
+                    <div class="container-header-button">
+                        <button class="header-btn" id="add-service" data-bs-toggle="modal" data-bs-target="#createServiceModal"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="container-body mt-2 scrollable-container">
+                    <table class="table table-striped" aria-labelledby="services">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for service in services %}
+                            <tr>
+                                <td>{{ service.id }}</td>
+                                <td>{{ service.nom }}</td>
+                                <td>{{service.description}}</td>
+                                <td>
+                                    <button class="btn btn-danger" id="delete-service" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" data-service-id="{{ service.id }}"><i class="fa-solid fa-trash"></i></button>
+                                    <button class="btn btn-primary" id="edit-service" data-bs-toggle="modal" data-bs-target="#editServiceModal" data-service-id="{{ service.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Modal for deleting service #}
+                <div class="modal modal-fade" tabindex="-1" id="deleteServiceModal" aria-labelledby="deleteServiceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteServiceModalLabel">Supprimer un service</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Êtes-vous sûr de vouloir supprimer ce service?</h1>
+                                <input type="hidden" id="service-id" value="">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="confirm-delete-service-btn">Supprimer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# Modal for creating Service #}
+                <div class="modal modal-fade" tabindex="-1" id="createServiceModal" aria-labelledby="createServiceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="createServiceModalLabel">Créer un service</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Créer un nouveau service:</h1>
+                                <form action="/admin/services/create" method="POST" id="create-service-form">
+                                    <label for="nom">Nom:</label><br>
+                                    <input type="text" name="nom" id="nom" required><br>
+                                    <label for="description">Description:</label><br>
+                                    <textarea name="description" id="description" required></textarea><br>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="create-service-btn">Enregistrer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# Modal for editing service #}
+                <div class="modal modal-fade" tabindex="-1" id="editServiceModal" aria-labelledby="editServiceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editServiceModalLabel">Modifier un service</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Modifier les informations du service:</h1>
+                                <form id="edit-service-form">
+                                    <input type="hidden" id="edit-service-id" value="">
+                                    <label for="edit-nom">Nom:</label><br>
+                                    <input type="text" name="edit-nom" id="edit-nom" required><br>
+                                    <label for="edit-description">Description:</label><br>
+                                    <textarea name="edit-description" id="edit-description" required></textarea><br>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="confirm-edit-service-btn">Enregistrer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Horaires Container #}
+            <div class="custom-container mt-5 mb-3 d-none" id="horaires-container">
+                <div class="container-header d-flex">
+                    <div class="container-header-title">
+                        <p>Les horaires</p>
+                    </div>
+                </div>
+                <div class="container-body">
+                    <table class="table table-striped"aria-labelledby="horaires">
+                        <thead>
+                            <tr>
+                                <th scope="col">Jour</th>
+                                <th scope="col">Ouverture</th>
+                                <th scope="col">Fermeture</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for horaire in horaires %}
+                            <tr>
+                                <td>{{ horaire.jour }}</td>
+                                {% if horaire.isOuvert %}
+                                <td>{{ horaire.HOuverture|date ('H:i')  }}</td>
+                                <td>{{ horaire.HFermeture|date ('H:i') }}</td>
+                                {% else %}
+                                <td>Fermé</td>
+                                <td>Fermé</td>
+                                {% endif %}
+                                <td>
+                                    <button class="btn btn-primary" id="edit-horaire" data-bs-toggle="modal" data-bs-target="#editHoraireModal" data-horaire-id="{{ horaire.id }}"><i class="fa-solid fa-pencil"></i></button>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Modal for editing horaire #}
+                <div class="modal modal-fade" tabindex="-1" id="editHoraireModal" aria-labelledby="editHoraireModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editHoraireModalLabel">Modifier un horaire</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="edit-horaire-form">
+                                    <input type="hidden" id="edit-horaire-id" value="">
+                                    <div class="mb-3">
+                                        <label for="isOuvert" class="col-form-label">Ouvert:</label>
+                                        <input type="checkbox" class="form-check-input" id="isOuvert">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="HOuverture" class="col-form-label">Heure d'ouverture:</label>
+                                        <input type="time" class="form-control" id="HOuverture">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="HFermeture" class="col-form-label">Heure de fermeture:</label>
+                                        <input type="time" class="form-control" id="HFermeture">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="confirm-edit-horaire-btn">Enregistrer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
     </div>
 </div>
 
 <script src="{{ asset('js/admin-dashboard.js') }}"></script>
+<script src="{{ asset('js/sanitizer.js') }}"></script>
+{% endblock %}
+
+{% block javascripts %}
 
 {% endblock %}

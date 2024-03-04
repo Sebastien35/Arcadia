@@ -44,7 +44,7 @@ class RegistrationController extends AbstractController
     
     // Envoyer Email de confirmation
 
-    return $this->redirectToRoute('app_admin_dashboard');
+    return $this->redirectToRoute('app_admin_index');
 }
 
 

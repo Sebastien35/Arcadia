@@ -26,7 +26,13 @@ class CommentaireHabitat
 
     #[ORM\ManyToOne(inversedBy: 'commentaireHabitats')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?habitat $habitat = null;
+    private ?Habitat $Habitat = null;
+
+    #[ORM\ManyToOne(inversedBy: 'commentaireHabitats')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?user $auteur = null;
+
+    
 
     public function getId(): ?int
     {
@@ -70,15 +76,29 @@ class CommentaireHabitat
     }
 
 
-    public function getHabitat(): ?habitat
+    public function getHabitat(): ?Habitat
     {
-        return $this->habitat;
+        return $this->Habitat;
     }
 
-    public function setHabitat(?habitat $habitat): static
+    public function setHabitat(?Habitat $Habitat): static
     {
-        $this->habitat = $habitat;
+        $this->Habitat = $Habitat;
 
         return $this;
     }
+
+    public function getAuteur(): ?user
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(?user $auteur): static
+    {
+        $this->auteur = $auteur;
+
+        return $this;
+    }
+
+    
 }

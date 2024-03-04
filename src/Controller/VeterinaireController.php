@@ -283,16 +283,17 @@ public function addAnimalInfo(Request $request): JsonResponse
         $habitatCommentaire->setHabitat($habitat);
         $habitatCommentaire->setCommentaire($data['commentaire']);
         $habitatCommentaire->setCreatedAt(new \DateTimeImmutable());
+        $habitatCommentaire->setAuteur($this->getUser());
+
+        
+        
         $this->entityManager->persist($habitatCommentaire);
         $this->entityManager->flush();
         $this->addFlash('success', 'Commentaire ajouté avec succès');
         return new RedirectResponse($this->generateUrl('app_veterinaire_index'));
         }catch(\Exception $e){
-            $this->addFlash('error', 'Erreur lors de l\'ajout du commentaire');
-            return new JsonResponse(['status' => 'Error creating HabitatCommentaire'], Response::HTTP_BAD_REQUEST);
+            $this->addFlash('error', 'Erreur lors de l\'ajout du commentaire', $e->getMessage());
+            return new Response($e->getMessage());
         }
-
-    
-
     }
 }

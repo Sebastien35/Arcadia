@@ -246,7 +246,6 @@ const repasBtn = document.getElementById('repasBtn');
 repasBtn.addEventListener('click', showRepas);
 
 function showRepas(){
-    console.log('showRepas'); // debug
     flushFeatures();
     flushActive();
     repasBtn.classList.add('active');
@@ -285,32 +284,33 @@ function addComment(){
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     let form = new FormData(document.getElementById('comment-habitat-form'));
-    let raw = JSON.stringify({
-        'habitat': form.get('habitat-id'), // Make sure you have a field named 'habitat-id' in your form
-        'commentaire': sanitizeHTML(form.get('habitat-comment')),
-    });  
-    fetch('/veterinaire/habitat/commentaire/new', {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-    })
-    .then(response => {
-        if(response.ok){
-            console.log(raw);
-            return response.json();
-        } else {
-            console.log('Erreur : ' + response.statusText);
-            console.log(raw);
-            throw new Error('Erreur');
-        }
-    })
-    .then(result => {
-        window.location.reload(); 
-    })
-    .catch(error => 
-        console.log(error));
-}
+        const commentaire = sanitizeHTML(form.get('habitat-comment'));
+        let raw = JSON.stringify({
+            'habitat': form.get('habitat-id'), // Make sure you have a field named 'habitat-id' in your form
+            'commentaire': commentaire,
+        });  
+        fetch('/veterinaire/habitat/commentaire/new', {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        })
+        .then(response => {
+            if(response.ok){
+                console.log(raw);
+                return response.json();
+            } else {
+                throw new Error('Erreur');
+            }
+        })
+        .then(result => {
+            window.location.reload(); 
+        })
+        .catch(error => 
+            console.log(error));
+    }
+    
+
 
 
 
