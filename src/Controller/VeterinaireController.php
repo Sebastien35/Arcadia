@@ -180,20 +180,12 @@ public function addAnimalInfo(Request $request): JsonResponse
     if (!$animal) {
         return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
     }
-    
-    // Créer une nouvelle instance d'InfoAnimal
     $infoAnimal = new InfoAnimal();
-    
-    // Définir l'animal associé
     $infoAnimal->setAnimal($animal);
-    
-    // Trouver la nourriture correspondant à l'id passé en paramètre
     $nourriture = $this->entityManager->getRepository(Nourriture::class)->find($nourritureId);
     if (!$nourriture) {
         return new JsonResponse(['status' => 'Nourriture not found'], Response::HTTP_NOT_FOUND);
     }
-    
-    // Mettre à jour les informations de l'animal
     $infoAnimal->setEtat($data['etat']);
     if (isset($data['details']) && $data['details'] !== null) {
         $infoAnimal->setDetails($data['details']);
@@ -201,6 +193,7 @@ public function addAnimalInfo(Request $request): JsonResponse
     $infoAnimal->setNourriture($nourriture);
     $infoAnimal->setGrammage($data['grammage']);
     $infoAnimal->setCreatedAt(new \DateTimeImmutable());
+    $infoAnimal->setAuteur($this->getUser());
     
     // Enregistrer les modifications dans la base de données
     $this->entityManager->persist($infoAnimal);

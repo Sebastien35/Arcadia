@@ -39,6 +39,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'auteur', targetEntity: CommentaireHabitat::class)]
     private Collection $commentaireHabitats;
 
+    #[ORM\OneToMany(mappedBy: 'auteur', targetEntity: InfoAnimal::class)]
+    private Collection $infoAnimals;
+
 
 
     public function getId(): ?int
@@ -144,6 +147,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->commentaireHabitats = new ArrayCollection();
+        $this->infoAnimals = new ArrayCollection();
         
         
     }
@@ -172,6 +176,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($commentaireHabitat->getAuteur() === $this) {
                 $commentaireHabitat->setAuteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, InfoAnimal>
+     */
+    public function getInfoAnimals(): Collection
+    {
+        return $this->infoAnimals;
+    }
+
+    public function addInfoAnimal(InfoAnimal $infoAnimal): static
+    {
+        if (!$this->infoAnimals->contains($infoAnimal)) {
+            $this->infoAnimals->add($infoAnimal);
+            $infoAnimal->setAuteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInfoAnimal(InfoAnimal $infoAnimal): static
+    {
+        if ($this->infoAnimals->removeElement($infoAnimal)) {
+            // set the owning side to null (unless already changed)
+            if ($infoAnimal->getAuteur() === $this) {
+                $infoAnimal->setAuteur(null);
             }
         }
 
