@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Demande de contact{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="{{ asset('css/contact.css') }}">
+<div class="mt-5 page-container">
+    <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            {# Form #}
+            <div class="container custom-container  mb-5">
+                <div class="container-header">
+                    <h1 class="text-center mt-5">Demande de contact</h1>
+                    <p class="text-center text-muted d-none d-lg-block">Laissez un message à nos employés, ils se chargeront de vous recontacter</p>
+                </div>
+                <div class="container-body">
+                    {{ form_start(form, {'action': path('app_contact_index'), 'method':'POST'}) }}
+                    {{ form_errors(form) }}
+                    <div class="mb-3">
+                        {{ form_label(form.titre, 'Titre')}}
+                        {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.titre) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.mail, 'Mail')}}
+                        {{ form_widget(form.mail, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.mail) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.message, 'Message')}}
+                        {{ form_widget(form.message, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.message) }}
+                    </div>
+                </div>
+                <div class="container-footer mb-3">
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            {# Error and success messages #}
+            <div>
+                {% for flashMessage in app.flashes('error') %}
+                <div class="alert alert-danger" role="alert" style="height:10vh">
+                    {{ flashMessage }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% for flashMessage in app.flashes('success') %}
+                    <div class="alert alert-success" role="alert" style="height:10vh">
+                        {{ flashMessage }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-6 d-lg-block d-none">
+            <img src="{{ asset('images/parc/chouette.webp') }}" class="img-fluid" alt="L'image n'a pas chargé" id="chouette">
+        </div>
+    </div>   
+</div>
+{% endblock %}

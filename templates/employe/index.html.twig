@@ -21,24 +21,34 @@
                     <li class="my-2">
                         <p role="button" id="foodBtn" class="sidebar-item"><i class="fa-solid fa-drumstick-bite"></i>Repas des animaux</p>
                     </li>
+                    <li class="my-2">
+                        <p role="button" id="contactBtn" class="sidebar-item"><i class="fa-solid fa-envelope"></i> Contact</p>
+                    </li>
                     
                 </ul>
             </div>
         </div>
-        {% for flashMessage in app.flashes('error') %}
-            <div class="alert alert-danger mt-5" role="alert" style="height:10vh">
-                {{ flashMessage }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-        {% for flashMessage in app.flashes('success') %}
-            <div class="alert alert-success mt-5" role="alert" style="height:10vh">
-                {{ flashMessage }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
+        
+        
         <div class="col py-3">
-            <div class="avis-list-container mt-5 d-none" id="avisContainer">
+            {# error & success messages #}
+            <div class="alerts">
+                {% for flashMessage in app.flashes('error') %}
+                    <div class="alert alert-danger mt-5" role="alert" style="height:10vh">
+                        {{ flashMessage }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.flashes('success') %}
+                    <div class="alert alert-success mt-5" role="alert" style="height:10vh">
+                        {{ flashMessage }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {# avis container #}
+            <div class="custom-container mt-5 d-none" id="avisContainer">
                 <div class="row">
                     <h1 class="text-center">Avis en attente de validation:</h1>
                     <div class="col-12 avis-scroll-container" style="max-height: 400px; overflow-y: auto;">
@@ -89,48 +99,57 @@
                 </div>
             </div>
             
-
-            <div class="mt-5 d-none" id="servicesContainer">
-                <div class="row">
-                    {% for service in services %}
-                        <div class="col-12 col">
-                            <div class="card mb-2">
-                                <div class="card-header">
-                                    <h5 class="card-title">{{ service.getNom }}</h5>
-                                </div>
-                                <div class="card-body">                                
-                                    <p class="card-text">{{ service.getDescription }}</p>
-                                    <a href="{{ path('app_services_showService', {'id': service.getId}) }}" class="btn btn-primary">Voir</a>
-                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editServiceModal" data-service-id="{{service.id}}">Modifier  </button>
+            {# services container #}
+            <div class=" custom-container mt-5 d-none" id="servicesContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <H5>Services</H5>
+                    </div>
+                </div>
+                <div class="container-body mt-3 scrollable-container">
+                    <div class="row">
+                        {% for service in services %}
+                            <div class="col-sm-12 col-lg-3">
+                                <div class="card mb-2">
+                                    <div class="card-header">
+                                        <h5 class="card-title">{{ service.getNom }}</h5>
+                                    </div>
+                                    <div class="card-body">                                
+                                        <p class="card-text">{{ service.getDescription }}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="{{ path('app_services_showService', {'id': service.getId}) }}" class="btn btn-primary">Voir</a>
+                                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editServiceModal" data-service-id="{{service.id}}">Modifier  </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
-
+                        {% endfor %}
+                    </div>
                     <div class="modal fade" id="editServiceModal" tabindex="-1" aria-labelledby="editServiceModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editServiceModalLabel">Modifier</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="editServiceForm">
-                                        <label for="nom">Nom</label>
-                                        <input type="text" id="nom" name="nom" class="form-control">
-                                        <label for="description">Description</label>
-                                        <textarea id="description" name="description" class="form-control"></textarea>
-                                        <input type="hidden" id="serviceId" name="serviceId">
-                                        <button type="button" class="btn btn-primary mt-2 mb-2" id="btnConfirmEditService">Modifier</button>
-                                        <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
-                                    </form>
-                                </div>
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editServiceModalLabel">Modifier</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editServiceForm">
+                                    <label for="nom">Nom</label>
+                                    <input type="text" id="nom" name="nom" class="form-control">
+                                    <label for="description">Description</label>
+                                    <textarea id="description" name="description" class="form-control"></textarea>
+                                    <input type="hidden" id="serviceId" name="serviceId">
+                                    <button type="button" class="btn btn-primary mt-2 mb-2" id="btnConfirmEditService">Modifier</button>
+                                    <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
+                                </form>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>
             
+            {# food container #}
             <div class=" mt-5 d-none" id="foodContainer">
                 <div class="container-header">
                     <div class="container-title">
@@ -157,6 +176,65 @@
                 </div>           
             </div>    
             
+            {# contact container #}
+            <div class="mt-5 d-none" id="contactContainer">
+                <div class="custom-container">
+                    <div class="container-header">
+                        <div class="container-title">
+                            <H5>Demandes de contact</H5>
+                        </div>
+                    </div>
+                    <div class="container-body mt-3 scrollable-container">
+                        <div class="row">
+                            {% if demandes|length == 0 %}
+                                <p>Aucune demande de contact actuellement</p>
+                            {% else %}
+                                {% for demande in demandes %}
+                                    <div class="col-sm-12 col-lg-6 px-2">
+                                        <div class="card mb-2 ">
+                                            <div class="card-header">
+                                                <h5 class="card-title">{{ demande.getTitre }}</h5>
+                                            </div>
+                                            <div class="card-body">  
+                                                <p class="text-muted">{{ demande.mail }}</p>                             
+                                                <p class="card-text">{{ demande.getMessage }}</p>
+                                            </div>
+                                            <div class="card-footer">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#repondreModal" data-demande-id="{{demande.id}}">Répondre</button>
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="{{demande.id}}">Supprimer</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                    </div>
+                </div>
+                {# modal repondre #}
+                <div class="modal fade" tabindex="-1" id="repondreModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Répondre</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="repondreForm">
+                                    <label for="reponse">Réponse</label>
+                                    <textarea id="reponse" name="reponse" class="form-control"></textarea>
+                                    <input type="hidden" id="demandeId" name="demandeId">
+                                    
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary mt-2 mb-2" id="btnConfirmRepondre">Envoyer</button>
+                                <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

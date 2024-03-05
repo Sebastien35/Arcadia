@@ -19,6 +19,7 @@ use App\Entity\Animal;
 use App\Repository\AnimalRepository;
 use App\Entity\Repas;
 use App\Repository\RepasRepository;
+use App\Entity\DemandeContact;
 
 use App\Form\RepasType;
 use PHPUnit\Util\Json;
@@ -41,6 +42,7 @@ class EmployeController extends AbstractController
         $services = $this->entityManager->getRepository(Service::class)->findAll();
         $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
         $nourritures = $this->entityManager->getRepository(Repas::class)->findAll();
+        $demandes = $this->entityManager->getRepository(DemandeContact::class)->findAll();
         $form = $this->createForm(RepasType::class);
         return $this->render('employe/index.html.twig', [
             'controller_name' => 'EmployeController',
@@ -48,6 +50,7 @@ class EmployeController extends AbstractController
             'services'=>$services,
             'animaux'=>$animaux,
             'nourritures'=>$nourritures,
+            'demandes'=>$demandes,
             'form' => $form->createView()
             
         ]);

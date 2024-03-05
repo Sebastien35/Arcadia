@@ -179,16 +179,26 @@ function showNourriture(){
 
 
 
+/*-----------demandes de contact 05/03/2024 ------------------ */
+const contactContainer = document.getElementById('contactContainer');
+const contactBtn = document.getElementById('contactBtn');
 
+contactBtn.addEventListener('click', showContact);
+function showContact(){
+    flushFeatures();
+    FlushActive();
+    contactBtn.classList.add('active');
+    contactContainer.classList.remove('d-none');
+
+}
 
 /* Affichage des fonctionnalités de l'employé 14/02/2024 ------------------ */
 
 function flushFeatures(){
-    console.log('flushFeatures'); // debug
     avisContainer.classList.add('d-none');
     servicesContainer.classList.add('d-none');
     nourritureContainer.classList.add('d-none');
-
+    contactContainer.classList.add('d-none');
 }
 flushFeatures();
 
@@ -196,5 +206,7 @@ function FlushActive(){
     avisBtn.classList.remove('active');
     servicesBtn.classList.remove('active');
     nourritureBtn.classList.remove('active');
+    contactBtn.classList.remove('active');
 }
 FlushActive();
+
