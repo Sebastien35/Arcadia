@@ -9,6 +9,8 @@ use App\Entity\DemandeContact;
 use App\Form\DemandeContactType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use DateTimeImmutable;
+use App\Service\Sanitizer;
 
 
 #[Route('/contact', name: 'app_contact_')]
@@ -17,9 +19,11 @@ class ContactController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private sanitizer $sanitizer
         )
     {
         $this->entityManager=$entityManager;
+        $this->sanitizer=$sanitizer;
     }
 
     
@@ -34,16 +38,26 @@ public function index(Request $request): Response
         // Vérifier si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $demandeContact = $form->getData();
+                // Enregistrer la demande de contact
+                $demandeContact = new DemandeContact();
+                $demandeContact -> setTitre(
+                    $this->sanitizer->sanitizeHtml($form->get('titre')->getData()));
+                $demandeContact -> setMessage(
+                    $this->sanitizer->sanitizeHtml($form->get('message')->getData()));
+                $demandeContact -> setmail(
+                    $this->sanitizer->sanitizeHtml($form->get('mail')->getData()));
+                $demandeContact->setCreatedAt(new DateTimeImmutable());
+                
                 $this->entityManager->persist($demandeContact);
                 $this->entityManager->flush();
                 
-                $this->addFlash('success', 'Votre demande a bien été enregistrée');
-                
+                $this->addFlash('success', 'Votre demande a bien été enregistrée.
+                Nous vous répondrons dans les plus brefs délais. Merci!');
+            
                 // Rediriger vers la page de contact
                 return $this->redirectToRoute('app_contact_index');
             } catch (\Exception $e) {
-                $this->addFlash('error', 'Une erreur est survenue: '.$e->getMessage());
+                $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage() );
             }
         }
     }
@@ -51,5 +65,10 @@ public function index(Request $request): Response
         'controller_name' => 'ContactController',
         'form' => $form->createView(),
     ]);
+
+
+    
+
+
 }
 }

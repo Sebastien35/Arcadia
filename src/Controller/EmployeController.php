@@ -20,19 +20,20 @@ use App\Repository\AnimalRepository;
 use App\Entity\Repas;
 use App\Repository\RepasRepository;
 use App\Entity\DemandeContact;
-
 use App\Form\RepasType;
 use PHPUnit\Util\Json;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use App\Service\MailerService;
 
 #[Route('/employe', name: 'app_employe_')]
 class EmployeController extends AbstractController
 {
 
     private EntityManagerInterface $entityManager;
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager,)
     {
-        $this->entityManager=$entityManager;
+        $this->entityManager=$entityManager;   
     }
 
     #[Route('/', name: 'index')]
@@ -102,5 +103,28 @@ public function newRepas(Request $request, SerializerInterface $serializer):Resp
     
     return new Response('Invalid data.', Response::HTTP_BAD_REQUEST);
 }
+
+    #[Route('/demande/repondre/{id}', name: 'repondre_demande', methods:['POST'])]
+    public function repondreDemande(Request $request, MailerService $mailerService): Response
+    {
+    try {
+    
+        $data = json_decode($request->getContent(), true);
+        $text = $data['response'];
+        $id = $request->attributes->get('id');
+        $destinataire = $this->entityManager->getRepository(DemandeContact::class)->find($id)->getMail();
+        $mailerService->sendResponseMail($destinataire, $text);
+        $demande=$this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
+        $demande->setAnsweredAt(new \DateTimeImmutable());
+        $this->addFlash('success', 'Votre réponse a bien été envoyée.');
+        $this->entityManager->persist($demande);
+        $this->entityManager->flush();dqdzdqdzdqzdzqsdqdsszzqqdzzqqzddddszqdqsszZQszd 
+    } catch (\Exception $e) {
+        $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage());
+    }
+
+    return new RedirectResponse($this->generateUrl('app_employe_index'));
+    }
+
 
 }

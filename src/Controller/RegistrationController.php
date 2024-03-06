@@ -15,6 +15,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Entity\Zoo;
 use App\Repository\ZooRepository;
 use App\Repository\UserRepository;
+use App\Service\MailerService;
 
 class RegistrationController extends AbstractController
 {
@@ -25,17 +26,19 @@ class RegistrationController extends AbstractController
         UserAuthenticatorInterface $userAuthenticator, 
         AppCustomAuthAuthenticator $authenticator, 
         EntityManagerInterface $entityManager,
-        UserRepository $userRepo
-        ): Response
+        UserRepository $userRepo,
+        MailerService $mailerService,
+    ): Response
     {
-        $user = new User(
-            $request->request->get('email'),
-            $request->request->get('plainPassword'),
-            [$request->request->get('Roles')],
-            new \DateTimeImmutable(),
-            null,
-        );
-    
+    $user = new User(
+        $request->request->get('email'),
+        $request->request->get('plainPassword'),
+        [$request->request->get('Roles')],
+        new \DateTimeImmutable(),
+        null,
+    );
+    $email = $request->request->get('email');
+    $context = ['user'=>$user];
     $plainPassword = $request->request->get('plainPassword');
     $hashedPassword = $userPasswordHasher->hashPassword($user, $plainPassword);
     $user->setPassword($hashedPassword);
@@ -43,7 +46,7 @@ class RegistrationController extends AbstractController
     $entityManager->flush();
     
     // Envoyer Email de confirmation
-
+    $mailerService->sendWelcomeEmail($email, $context);
     return $this->redirectToRoute('app_admin_index');
 }
 

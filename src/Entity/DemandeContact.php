@@ -23,6 +23,12 @@ class DemandeContact
     #[ORM\Column(length: 255)]
     private ?string $mail = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $answered_at = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +66,30 @@ class DemandeContact
     public function setMail(string $mail): static
     {
         $this->mail = $mail;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getAnsweredAt(): ?\DateTimeImmutable
+    {
+        return $this->answered_at;
+    }
+
+    public function setAnsweredAt(?\DateTimeImmutable $answered_at): static
+    {
+        $this->answered_at = $answered_at;
 
         return $this;
     }
