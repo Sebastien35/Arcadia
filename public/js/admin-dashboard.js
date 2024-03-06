@@ -239,6 +239,43 @@ infoAnimalBtn.addEventListener('click', function(){
     infoAnimalBtn.classList.add('active');
 });
 
+const btndelteinfoAnimals = document.querySelectorAll('[data-infoAnimal-id]');
+btndelteinfoAnimals.forEach(button=>{
+    button.addEventListener('click', function(){
+        const infoAnimalId = button.getAttribute('data-infoAnimal-id');
+        const infoAnimalIdContainer = document.getElementById('infoAnimal-id');
+        infoAnimalIdContainer.value = infoAnimalId;
+    });
+});
+
+const confirmDeleteinfoAnimalBtn = document.getElementById('confirm-delete-infoAnimal-btn');
+confirmDeleteinfoAnimalBtn.addEventListener('click', deleteInfoAnimal);
+
+async function deleteInfoAnimal() {
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        let targetId = document.getElementById('infoAnimal-id').value;        
+        const response = await fetch(`/admin/infoAnimals/delete/${targetId}`, {
+            method: 'DELETE',
+            headers: myHeaders,
+        });
+        if (response.ok) {
+            const result = await response.json();
+            window.location.reload();
+            return result;
+        } else {
+            throw new Error('Erreur');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+
+
 /*----------------- Filtrer infoAnimals ----------------- */
 
 function applyFilters() {

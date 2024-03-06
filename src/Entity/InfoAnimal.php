@@ -41,6 +41,10 @@ class InfoAnimal
     #[ORM\JoinColumn(nullable: false)]
     private ?Animal $animal = null;
 
+    #[ORM\ManyToOne(inversedBy: 'infoAnimals')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $auteur = null;
+
 
     public function getId(): ?int
     {
@@ -120,6 +124,18 @@ class InfoAnimal
     public function setAnimal(?animal $animal): static
     {
         $this->animal = $animal;
+
+        return $this;
+    }
+
+    public function getAuteur(): ?User
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(?User $auteur): static
+    {
+        $this->auteur = $auteur;
 
         return $this;
     }

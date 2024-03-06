@@ -1,0 +1,50 @@
+.page-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 94vh;
+    width: 100%;
+    background-color: #f5f5f5;
+    overflow: hidden !important;
+}
+
+#chouette{
+    clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+    box-shadow: #f5f5f5;
+}
+
+@media (max-width: 768px){
+    body{
+        background-image: url(../images/parc/bg_logo.webp);
+    }
+}
+
+.container-header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+.container-header h1,
+.container-header p {
+    font-size: 1.5rem;
+}
+.custom-container {
+    margin: 0 auto;
+    max-width: 600px; /* Ajustez la largeur selon vos besoins */
+}
+
+.container-body{
+    caret-color: #EF7301;
+    margin-bottom: 1rem;
+}
+
+.alert {
+    height: auto;
+    padding: 0.75rem 1rem;
+    margin-top: 0%;
+    margin-bottom: 0%;
+}

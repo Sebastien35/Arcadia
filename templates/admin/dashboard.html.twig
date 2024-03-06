@@ -14,9 +14,7 @@
                 <ul class="mt-5">
                     <li class="mt-2 mb-3">
                         <H5 class="nav-item"><i class="fa-solid fa-user-tie"></i></i> Espace administrateur </H5>
-                        
                     </li>
-
                     <li class="mt-5 mb-3">
                         <p class="nav-item" id="userBtn" role="button"><i class="fa-regular fa-user"></i> Utilisateurs</p>
                     </li>
@@ -418,6 +416,8 @@
                                 <th scope="col">ID</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Animal</th>
+                                <th scope="col">Vétérinaire</th>
+                                <th scope="col">Action</th>
                                 
                             </tr>
                         </thead>
@@ -427,14 +427,35 @@
                                 <td>{{ infoAnimal.id }}</td>
                                 <td>{{ infoAnimal.createdAt|date('Y-m-d') }}</td>
                                 <td>{{ infoAnimal.getAnimal.prenom }}</td>
+                                <td>{{ infoAnimal.getAuteur.email }}</td>
                                 <td>
                                     <a type="button" class="btn btn-info" href="/admin/infoAnimal/show/{{infoAnimal.id}}"><i class="fa-regular fa-eye"></i></button>
+                                    <a type="button" class="btn btn-danger" id="delete-infoAnimal" data-bs-toggle="modal" data-bs-target="#deleteInfoAnimalModal" data-infoAnimal-id="{{ infoAnimal.id }}"><i class="fa-solid fa-trash"></i></a>
                                 </td>
                             </tr>
                             {% endfor %}
 
                         </tbody>
                     </table>
+                </div>
+                {# Modal for deleting infoAnimal #}
+                <div class="modal modal-fade" tabindex="-1" id="deleteInfoAnimalModal" aria-labelledby="deleteInfoAnimalModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteInfoAnimalModalLabel">Supprimer un compte-rendu vétérinaire</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body  d-flex justify-content-center">
+                                <h1>Êtes-vous sûr de vouloir supprimer ce compte-rendu vétérinaire?</h1>
+                                <input type="hidden" id="infoAnimal-id" value="">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="confirm-delete-infoAnimal-btn">Supprimer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
