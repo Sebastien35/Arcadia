@@ -9,6 +9,7 @@ use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use DateTimeImmutable;
@@ -30,6 +31,9 @@ use App\Form\EditAnimalType;
 use App\Entity\InfoAnimal;
 use App\Form\animalFormType;
 use App\Entity\CommentaireHabitat;
+use App\Entity\DemandeContact;
+
+use App\Service\MailerService;
 
 
 #[Route('/admin', name: 'app_admin_')]
@@ -57,6 +61,7 @@ class AdminController extends AbstractController
         $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
         $infoAnimals = $this->entityManager->getRepository(infoAnimal::class)->findAll();
         $commentaires= $this->entityManager->getRepository(CommentaireHabitat::class)->findAll();
+        $demandes = $this->entityManager->getRepository(DemandeContact::class)->findAll();
         $createAnimalForm=$this->createForm(animalFormType::class);
         $createHabitatForm=$this->createForm(habitatFormType::class);
 
@@ -71,6 +76,7 @@ class AdminController extends AbstractController
             'infoAnimals'=>$infoAnimals,
             'createAnimalForm'=>$createAnimalForm->createView(),
             'createHabitatForm'=>$createHabitatForm->createView(),
+            'demandes'=>$demandes,
             'commentaires'=>$commentaires
 
 
@@ -488,4 +494,28 @@ class AdminController extends AbstractController
         }
         
     }
+
+    #[Route('/demande/repondre/{id}', name: 'repondre_demande', methods:['POST'])]
+    public function repondreDemande(Request $request, MailerService $mailerService): Response
+    {
+    try {
+    
+        $data = json_decode($request->getContent(), true);
+        $text = $data['response'];
+        $id = $request->attributes->get('id');
+        $destinataire = $this->entityManager->getRepository(DemandeContact::class)->find($id)->getMail();
+        $mailerService->sendResponseMail($destinataire, $text);
+        $demande=$this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
+        $demande->setAnsweredAt(new \DateTimeImmutable());
+        $demande->setAnswered(true);
+        $this->addFlash('success', 'Votre réponse a bien été envoyée.');
+        $this->entityManager->persist($demande);
+        $this->entityManager->flush();
+    } catch (\Exception $e) {
+        $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage());
+    }
+
+    return new RedirectResponse($this->generateUrl('app_employe_index'));
+    }
+    
 }

@@ -73,3 +73,7 @@ a:visited{ text-decoration: none !important;}
     align-items: center;
     max-width:66%
 }
+
+.service-card{
+    height:0vh;
+}

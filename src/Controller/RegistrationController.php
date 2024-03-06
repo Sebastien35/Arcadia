@@ -46,6 +46,7 @@ class RegistrationController extends AbstractController
     $entityManager->flush();
     
     // Envoyer Email de confirmation
+    
     $mailerService->sendWelcomeEmail($email, $context);
     return $this->redirectToRoute('app_admin_index');
 }

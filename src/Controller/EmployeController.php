@@ -116,9 +116,10 @@ public function newRepas(Request $request, SerializerInterface $serializer):Resp
         $mailerService->sendResponseMail($destinataire, $text);
         $demande=$this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
         $demande->setAnsweredAt(new \DateTimeImmutable());
+        $demande->setAnswered(true);
         $this->addFlash('success', 'Votre réponse a bien été envoyée.');
         $this->entityManager->persist($demande);
-        $this->entityManager->flush();dqdzdqdzdqzdzqsdqdsszzqqdzzqqzddddszqdqsszZQszd 
+        $this->entityManager->flush();
     } catch (\Exception $e) {
         $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage());
     }

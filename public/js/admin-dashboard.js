@@ -278,7 +278,7 @@ async function deleteInfoAnimal() {
 
 /*----------------- Filtrer infoAnimals ----------------- */
 
-function applyFilters() {
+function applyinfoAnimalFilters() {
     const animalId = animalSelect.value;
     const date = dateSelect.value;
     const infoAnimalRow = document.querySelectorAll('.infoAnimalRow');
@@ -296,9 +296,9 @@ function applyFilters() {
 }
 const animalSelect = document.getElementById('animal-select');
 const dateSelect = document.getElementById('date-select');
-animalSelect.addEventListener('change', applyFilters);
-dateSelect.addEventListener('change', applyFilters);
-applyFilters();
+animalSelect.addEventListener('change', applyinfoAnimalFilters);
+dateSelect.addEventListener('change', applyinfoAnimalFilters);
+applyinfoAnimalFilters();
 
 
 /*--------------------------Services--------------------------*/
@@ -482,10 +482,89 @@ function editHoraire(){
 }
 
 
+/*-----------demandes de contact 05/03/2024 ------------------ */
+const contactContainer = document.getElementById('contactContainer');
+const contactBtn = document.getElementById('contactBtn');
 
+contactBtn.addEventListener('click', showContact);
+function showContact(){
+    FlushFeatures();
+    FlushActive();
+    contactBtn.classList.add('active');
+    contactContainer.classList.remove('d-none');
+}
 
+// Répondre à une demande de contact
+const contactResponseBtns = document.querySelectorAll('[data-demande-id]');
+contactResponseBtns.forEach(button => {
+    button.addEventListener('click', function() {
+        const demandeId = button.getAttribute('data-demande-id');
+        const demandeIdContainer = document.getElementById('demandeId');
+        demandeIdContainer.value = demandeId; // Utilize .value for form elements
+    });
+});
 
+const sendResponseBtn = document.getElementById('btnConfirmRepondre');
+sendResponseBtn.addEventListener('click', sendResponse);
 
+async function sendResponse() {
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    let dataForm = new FormData(repondreForm);
+    let targetId = document.getElementById('demandeId').value;
+    console.log('targetId', targetId)
+    let raw = JSON.stringify({
+        "response": dataForm.get('reponse')
+    });
+    console.log('raw', raw);
+    let requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    };
+    try {
+        let response = await fetch(`/employe/demande/repondre/${targetId}`, requestOptions);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        // Handle success
+        console.log('Response sent successfully');
+        window.location.reload();
+    } catch (error) {
+        // Handle error
+        console.error('Error:', error);
+    }
+}
+
+// Filtrer les demandes de contact
+function applyDemandeContactFilter(){
+    const targetedStatus = document.getElementById('demandeStatusSelect').value;
+    const targetedDate = document.getElementById('demande-date-select').value;
+    const demandeEntry = document.querySelectorAll('.demande-card');    
+    demandeEntry.forEach(item => {
+        const status = item.getAttribute('data-demande-status') === 'true' || item.getAttribute('data-demande-status') === ''; // Modifier cette ligne
+        let statusMatch;
+        if (targetedStatus === '*') {
+            statusMatch = true; // Si '*' est sélectionné, toutes les demandes sont considérées comme correspondantes
+        } else {
+            statusMatch = (targetedStatus === '1' && status) || (targetedStatus === '0' && !status); // Inverser la comparaison
+        }
+        const dateMatch = (targetedDate === '') || (item.getAttribute('data-demande-date') === targetedDate);
+        if (statusMatch && dateMatch) {
+            item.classList.remove('d-none');
+        } else {
+            item.classList.add('d-none');
+        }
+    });
+}
+const demandeStatusSelect = document.getElementById('demandeStatusSelect');
+demandeStatusSelect.addEventListener('change', applyDemandeContactFilter);
+
+const demandeDateSelect = document.getElementById('demande-date-select');
+demandeDateSelect.addEventListener('change', applyDemandeContactFilter);
+
+applyDemandeContactFilter();
 
 
 /*----------------- Display / Hide Features -----------------*/
@@ -501,6 +580,7 @@ function FlushFeatures(){
     infoAnimalContainer.classList.add('d-none');
     servicesContainer.classList.add('d-none');
     horairesContainer.classList.add('d-none');
+    contactContainer.classList.add('d-none');
     
 }
 
@@ -515,5 +595,6 @@ function FlushActive(){
     infoAnimalBtn.classList.remove('active');
     servicesBtn.classList.remove('active');
     horairesBtn.classList.remove('active');
+    contactBtn.classList.remove('active');
 
 }
