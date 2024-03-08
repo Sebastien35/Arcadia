@@ -3,28 +3,32 @@
 {% block title %}Hello HabitatController!{% endblock %}
 
 {% block body %}
-
-<div class="mt-5" id="habitat-container">
+<link rel="stylesheet" href="{{asset('css/habitat.css')}}">
+<div class="mt-5 mb-5" id="habitat-container" style="background-image:url( {{ asset('images/parc/9348.svg') }} )">
     <div class="container-header d-flex">
-        <div class="container-header-title">
-            <p>Les habitats</p>
+        <div class="container-header-title text-center primary text-white w-100">
+            <H1> Nos habitats </H1>
         </div>
     </div>
     
     <div class="container-body mt-2">
-        <div class="row">
-            {% for habitat in habitats %}
-            <div class="col col-lg-4 col-sm-12">
-                <div class="card mb-2 habitatCard" role="button" onClick="window.location=('/habitats/show/'+ {{ habitat.id }} )" >
-                    <div class="card-header">
-                        <h5 class="card-title">{{ habitat.getNom }}</h5>
-                        <img src="{{ asset('images/habitat/' ~ habitat.imageName) }}" class="card-img-top habitat-img" alt="image_{{ habitat.getNom }}" >
-
-                    </div>
+        <div class="container">
+            <div class="row">
+                {% for habitat in habitats %}
+                <div class="col-lg-4 col-sm-12">
+                    <a href="/habitats/show/{{habitat.id}}">
+                        <div class="card mb-2 habitatCard">
+                            <div class="card-header">
+                                <h5 class="card-title text-center text-dark">{{ habitat.getNom }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <img src="{{ asset('images/habitat/' ~ habitat.imageName) }}" class="card-img-top habitat-img" alt="image_{{ habitat.getNom }}" >
+                            </div>
+                        </div>
+                    </a>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-                    
         </div>
     </div>
 

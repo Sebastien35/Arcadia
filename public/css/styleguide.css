@@ -2,11 +2,33 @@
     --primary :rgba(144,159,67,1);
     --secondary :rgba(95,111,58,1);
     --dark: rgba(73,86,53,1);
+    --darker: #131D00;
     --bg-dark:rgba(19,29,0,1);
     --white:rgba(255,255,255,1);
     
 }
+.bg-dark{
+    background-color:var(--bg-dark);
+    color:var(--white);
+}
+.dark{
+    background-color: var(--dark);
+    color:var(--white);
 
+}
+.darker{
+    background-color:var(--darker);
+    color:var(--white);
+}
+.white{
+    background-color:var(--white);
+    color:var(--dark);
+}
+.primary{
+    background-color:var(--primary);
+    color:var(--white);
+
+}
 .btn-secondary{
     color:var(--white);
     background-color: var(--secondary);

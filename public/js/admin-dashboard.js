@@ -126,41 +126,38 @@ deleteHabitatBtns.forEach(button=>{
 
 const confirmDeleteHabitatBtn = document.getElementById('confirm-delete-habitat-btn');
 confirmDeleteHabitatBtn.addEventListener('click', deleteHabitat);
-function deleteHabitat(){
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    let targetId = document.getElementById('habitat-id').value;
-    fetch(`/admin/habitats/delete/${targetId}`, {
-        method: 'DELETE',
-        headers: myHeaders,
-        
-    })
-    .then(response => {
-        if(response.ok){
+async function deleteHabitat() {
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        let targetId = document.getElementById('habitat-id').value;      
+        const response = await fetch(`/admin/habitats/delete/${targetId}`, {
+            method: 'DELETE',
+            headers: myHeaders,
+        });
+        if (response.ok) {
             window.location.reload();
-            return response.json();
+            const result = await response.json();
         } else {
             throw new Error('Erreur');
         }
-    })
-    .then(result => {
-        window.location.reload();
-    })
-    .catch(error => console.log(error));
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 //Afficher commentaires
 
 document.addEventListener('DOMContentLoaded', function() {
     // Récupérer tous les boutons "Commentaires"
-    var commentButtons = document.querySelectorAll('.commentsBt');
+    let commentButtons = document.querySelectorAll('.commentsBt');
     // Ajouter un gestionnaire d'événements à chaque bouton "Commentaires"
     commentButtons.forEach(function(button) {
         button.addEventListener('click', function() {
             // Récupérer la section des commentaires correspondante
-            var commentsDiv = button.nextElementSibling;
+            let commentsDiv = button.nextElementSibling;
             // Vérifier si la section des commentaires est actuellement visible ou non
-            var isVisible = commentsDiv.classList.contains('d-none');
+            let isVisible = commentsDiv.classList.contains('d-none');
             // Afficher ou masquer la section des commentaires en fonction de son état actuel
             if (isVisible) {
                 // Si la section des commentaires est masquée, la rendre visible
@@ -312,39 +309,6 @@ servicesBtn.addEventListener('click', function(){
     servicesBtn.classList.add('active');
 });
 
-//Créer un service:
-const createServiceBtn = document.getElementById('create-service-btn');
-createServiceBtn.addEventListener('click', createService);
-function createService(){
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    let form = new FormData(document.getElementById('create-service-form'));
-    let raw= JSON.stringify(
-        {
-            "nom" : sanitizeHTML(form.get('nom')), 
-            "description" : sanitizeHTML(form.get('description')),
-        }
-    );
-    
-    fetch('/admin/services/create', {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw
-    })
-    .then(response => {
-        if(response.ok){
-            window.location.reload();
-            return response.json();
-        } else {
-            throw new Error('Erreur');
-        }
-    })
-    .then(result => {
-        window.location.reload();
-    })
-    .catch(error => alert('Une erreur est survenue', error));
-}
-
 // Supprimer un service:
 
 const deleteServiceBtns = document.querySelectorAll('[data-service-id]');
@@ -380,47 +344,6 @@ function deleteService(){
     .catch(error => alert('Une erreur est survenue', error));
 }
 
-// Modifier un service:
-const editserviceBtns = document.querySelectorAll('[data-service-id]');
-editserviceBtns.forEach(button=>{
-    button.addEventListener('click', function(){
-        const serviceId = button.getAttribute('data-service-id');
-        const serviceIdContainer = document.getElementById('edit-service-id');
-        serviceIdContainer.value = serviceId;
-    });
-});
-const confirmEditServiceBtn = document.getElementById('confirm-edit-service-btn');
-confirmEditServiceBtn.addEventListener('click', editService);
-function editService(){
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    let targetId = document.getElementById('edit-service-id').value;
-    let form = new FormData(document.getElementById('edit-service-form'));
-    let raw= JSON.stringify(
-        {
-            "nom" : sanitizeHTML(form.get('edit-nom')), 
-            "description" : sanitizeHTML(form.get('edit-description')),
-        }
-    );
-    fetch(`/admin/services/edit/${targetId}`, {
-        method: 'PUT',
-        headers: myHeaders,
-        body: raw
-    })
-    .then(response => {
-        if(response.ok){
-            window.location.reload();
-            return response.json();
-        } else {
-            throw new Error('Erreur');
-        }
-    })
-    .then(result => {
-        window.location.reload();
-    })
-    .catch(error => alert('Une erreur est survenue', error));
-
-}
 
 /*----------------- Horaires ----------------- */
 const horairesContainer = document.getElementById('horaires-container');   
@@ -451,7 +374,6 @@ function editHoraire(){
     myHeaders.append('Content-Type', 'application/json');
     let targetId = document.getElementById('edit-horaire-id').value;
     //console.log(targetId); DEBUG
-    let form = new FormData(document.getElementById('edit-horaire-form'));
     let isOuvert=$('#isOuvert').is(':checked')  ? true:false;
     let raw=JSON.stringify({
         "ouverture": document.getElementById('HOuverture').value,

@@ -11,9 +11,6 @@ a:visited{ text-decoration: none !important;}
     transition:all 0.3s;
 }
 
-
-
-
 .header-btn{
     background-color: var(--white);
     border-color:#f4f4f4;
@@ -67,3 +64,13 @@ a:visited{ text-decoration: none !important;}
 }
 
 
+.pagination a, .pagination a:hover, .pagination a:visited{
+    color:var(--dark)!important
+}
+.pagination a:active{
+    color:var(--primary)!important
+}
+.pagination{
+    padding-right: 2vh !important;
+    margin-right: 2vh !important;
+}

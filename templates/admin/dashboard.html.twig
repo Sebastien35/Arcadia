@@ -204,7 +204,7 @@
                 <div class="container-body mt-2 scrollable-container">
                     <div class="row">
                         {% for singlehabitat in habitats %}
-                        <div class="col col-lg-6 col-sm-12">
+                        <div class="col col-lg-3 col-sm-12">
                             <div class="card mb-2 habitatCard">
                                 <div class="card-header d-flex justify-content-between">
                                     <div class="card-header-title">
@@ -489,7 +489,8 @@
                                 <td>{{service.description}}</td>
                                 <td>
                                     <button class="btn btn-danger" id="delete-service" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" data-service-id="{{ service.id }}"><i class="fa-solid fa-trash"></i></button>
-                                    <button class="btn btn-primary" id="edit-service" data-bs-toggle="modal" data-bs-target="#editServiceModal" data-service-id="{{ service.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                    <a class="btn btn-primary" href="/admin/services/edit/{{service.id}}"><i class="fa-solid fa-pencil"></i></a>
+                                    <a class="btn btn-info" href="/services/show/{{service.id}}"><i class="fa-regular fa-eye"></i></a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -526,45 +527,29 @@
                             </div>
                             <div class="modal-body">
                                 <h1>Créer un nouveau service:</h1>
-                                <form action="/admin/services/create" method="POST" id="create-service-form">
-                                    <label for="nom">Nom:</label><br>
-                                    <input type="text" name="nom" id="nom" required><br>
-                                    <label for="description">Description:</label><br>
-                                    <textarea name="description" id="description" required></textarea><br>
+                                {{ form_start(serviceForm, {'action':('/admin/services/create')}) }}
+                                {{ form_errors(serviceForm)}}
+                                <div class="mb-3">
+                                    {{ form_label(serviceForm.nom) }}</br>
+                                    {{ form_widget(serviceForm.nom) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(serviceForm.description) }}</br>
+                                    {{ form_widget(serviceForm.description) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_row(serviceForm.imageFile, {'label': 'Image'}) }}
+                                </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" id="create-service-btn">Enregistrer</button>
+                                <button type="submit" class="btn btn-primary mb-2">Ajouter</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                </form>
+                                {{ form_end(serviceForm) }}
                             </div>
                         </div>
                     </div>
                 </div>
-                {# Modal for editing service #}
-                <div class="modal modal-fade" tabindex="-1" id="editServiceModal" aria-labelledby="editServiceModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editServiceModalLabel">Modifier un service</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <h1>Modifier les informations du service:</h1>
-                                <form id="edit-service-form">
-                                    <input type="hidden" id="edit-service-id" value="">
-                                    <label for="edit-nom">Nom:</label><br>
-                                    <input type="text" name="edit-nom" id="edit-nom" required><br>
-                                    <label for="edit-description">Description:</label><br>
-                                    <textarea name="edit-description" id="edit-description" required></textarea><br>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" id="confirm-edit-service-btn">Enregistrer</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
 
             {# Horaires Container #}
@@ -666,7 +651,7 @@
                             {% else %}
                                 {% for demande in demandes %}
                                     <div class="col-12 px-2">
-                                        <div class="card demande-card mb-2 " data-demande-status="{{ demande.answered }}" data-demande-date="{{ demande.createdAt|date('Y-m-d') }}">
+                                        <div class="card demande-card mb-5 " data-demande-status="{{ demande.answered }}" data-demande-date="{{ demande.createdAt|date('Y-m-d') }}">
                                             <div class="card-header d-flex justify-content-between">
                                                 <h5 class="card-title">{{ demande.getTitre }}</h5>
                                                 <p class="text-muted">{{ demande.createdAt|date('d/m/Y') }}</p>
@@ -680,7 +665,7 @@
                                                     <p class="text-muted">Traitée le {{ demande.getAnsweredAt|date('Y-m-d') }}</p>
                                                 {% endif %}
                                             </div>
-                                            <div class="card-footer">
+                                            <div class="card-footer mb-5">
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#repondreModal" data-demande-id="{{ demande.id }}">Répondre</button>
                                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="{{demande.id}}">Supprimer</button>
                                             </div>
