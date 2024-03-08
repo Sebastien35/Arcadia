@@ -9,7 +9,9 @@
 <body>
     <h1> Bienvenue chez Arcadia !</h1>
     <p> Toute l'équipe vous souhaite la bienvenue dans notre zoo!</p>
-    <p> Vous pouvez dès à présent vous connecter à votre espace personnel</p>
+    <p> Vous pouvez dès à présent vous connecter à votre espace personnel avec votre adresse email suivante:
+        {{ user.getEmail }}
+    </p>
     <p> Ne pas répondre à ce mail.</p>
 
 </body>

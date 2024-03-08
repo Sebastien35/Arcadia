@@ -47,7 +47,7 @@ public function index(Request $request): Response
                 $demandeContact -> setmail(
                     $this->sanitizer->sanitizeHtml($form->get('mail')->getData()));
                 $demandeContact->setCreatedAt(new DateTimeImmutable());
-                
+                $demandeContact->setAnswered(false);
                 $this->entityManager->persist($demandeContact);
                 $this->entityManager->flush();
                 

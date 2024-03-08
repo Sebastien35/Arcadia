@@ -1,10 +1,15 @@
 /* Card */
-
 .card-service{
-    height:20vh !important;
-    border-radius:0px;
+    border-radius:15%;
     border: 1px solid var(--dark);
+    overflow:hidden;
+    height: 30vh;
 }
+
+.card-body{
+    background-size: 120%;
+}
+
 
 .btn-primary{
     border-radius: 0px;

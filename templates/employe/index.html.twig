@@ -106,25 +106,24 @@
                         <H5>Services</H5>
                     </div>
                 </div>
-                <div class="container-body mt-3 scrollable-container">
-                    <div class="row">
-                        {% for service in services %}
-                            <div class="col-sm-12 col-lg-3">
-                                <div class="card mb-2">
-                                    <div class="card-header">
-                                        <h5 class="card-title">{{ service.getNom }}</h5>
-                                    </div>
-                                    <div class="card-body">                                
-                                        <p class="card-text">{{ service.getDescription }}</p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <a href="{{ path('app_services_showService', {'id': service.getId}) }}" class="btn btn-primary">Voir</a>
-                                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editServiceModal" data-service-id="{{service.id}}">Modifier  </button>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+                <div class="container-body mt-3">
+                    <table class="table table-striped" aria-labelledby="services">
+                        <thead> 
+                            <th>Service</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            {% for service in services %}
+                                <tr>
+                                    <td>{{ service.getNom }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" onclick="window.location=('/services/show/'+{{ service.id }})"><i class="fa-regular fa-eye"></i></button>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editServiceModal" data-service-id="{{ service.id }}">Modifier</button>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" data-service-id="{{ service.id }}">Supprimer</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                    </table>
                     <div class="modal fade" id="editServiceModal" tabindex="-1" aria-labelledby="editServiceModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">

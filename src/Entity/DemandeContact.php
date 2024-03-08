@@ -29,6 +29,9 @@ class DemandeContact
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $answered_at = null;
 
+    #[ORM\Column]
+    private ?bool $answered = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +93,18 @@ class DemandeContact
     public function setAnsweredAt(?\DateTimeImmutable $answered_at): static
     {
         $this->answered_at = $answered_at;
+
+        return $this;
+    }
+
+    public function isAnswered(): ?bool
+    {
+        return $this->answered;
+    }
+
+    public function setAnswered(bool $answered): static
+    {
+        $this->answered = $answered;
 
         return $this;
     }

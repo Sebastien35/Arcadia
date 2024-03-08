@@ -126,41 +126,38 @@ deleteHabitatBtns.forEach(button=>{
 
 const confirmDeleteHabitatBtn = document.getElementById('confirm-delete-habitat-btn');
 confirmDeleteHabitatBtn.addEventListener('click', deleteHabitat);
-function deleteHabitat(){
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    let targetId = document.getElementById('habitat-id').value;
-    fetch(`/admin/habitats/delete/${targetId}`, {
-        method: 'DELETE',
-        headers: myHeaders,
-        
-    })
-    .then(response => {
-        if(response.ok){
+async function deleteHabitat() {
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        let targetId = document.getElementById('habitat-id').value;      
+        const response = await fetch(`/admin/habitats/delete/${targetId}`, {
+            method: 'DELETE',
+            headers: myHeaders,
+        });
+        if (response.ok) {
             window.location.reload();
-            return response.json();
+            const result = await response.json();
         } else {
             throw new Error('Erreur');
         }
-    })
-    .then(result => {
-        window.location.reload();
-    })
-    .catch(error => console.log(error));
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 //Afficher commentaires
 
 document.addEventListener('DOMContentLoaded', function() {
     // Récupérer tous les boutons "Commentaires"
-    var commentButtons = document.querySelectorAll('.commentsBt');
+    let commentButtons = document.querySelectorAll('.commentsBt');
     // Ajouter un gestionnaire d'événements à chaque bouton "Commentaires"
     commentButtons.forEach(function(button) {
         button.addEventListener('click', function() {
             // Récupérer la section des commentaires correspondante
-            var commentsDiv = button.nextElementSibling;
+            let commentsDiv = button.nextElementSibling;
             // Vérifier si la section des commentaires est actuellement visible ou non
-            var isVisible = commentsDiv.classList.contains('d-none');
+            let isVisible = commentsDiv.classList.contains('d-none');
             // Afficher ou masquer la section des commentaires en fonction de son état actuel
             if (isVisible) {
                 // Si la section des commentaires est masquée, la rendre visible
@@ -278,7 +275,7 @@ async function deleteInfoAnimal() {
 
 /*----------------- Filtrer infoAnimals ----------------- */
 
-function applyFilters() {
+function applyinfoAnimalFilters() {
     const animalId = animalSelect.value;
     const date = dateSelect.value;
     const infoAnimalRow = document.querySelectorAll('.infoAnimalRow');
@@ -296,9 +293,9 @@ function applyFilters() {
 }
 const animalSelect = document.getElementById('animal-select');
 const dateSelect = document.getElementById('date-select');
-animalSelect.addEventListener('change', applyFilters);
-dateSelect.addEventListener('change', applyFilters);
-applyFilters();
+animalSelect.addEventListener('change', applyinfoAnimalFilters);
+dateSelect.addEventListener('change', applyinfoAnimalFilters);
+applyinfoAnimalFilters();
 
 
 /*--------------------------Services--------------------------*/
@@ -311,39 +308,6 @@ servicesBtn.addEventListener('click', function(){
     servicesContainer.classList.remove('d-none');
     servicesBtn.classList.add('active');
 });
-
-//Créer un service:
-const createServiceBtn = document.getElementById('create-service-btn');
-createServiceBtn.addEventListener('click', createService);
-function createService(){
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    let form = new FormData(document.getElementById('create-service-form'));
-    let raw= JSON.stringify(
-        {
-            "nom" : sanitizeHTML(form.get('nom')), 
-            "description" : sanitizeHTML(form.get('description')),
-        }
-    );
-    
-    fetch('/admin/services/create', {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw
-    })
-    .then(response => {
-        if(response.ok){
-            window.location.reload();
-            return response.json();
-        } else {
-            throw new Error('Erreur');
-        }
-    })
-    .then(result => {
-        window.location.reload();
-    })
-    .catch(error => alert('Une erreur est survenue', error));
-}
 
 // Supprimer un service:
 
@@ -380,47 +344,6 @@ function deleteService(){
     .catch(error => alert('Une erreur est survenue', error));
 }
 
-// Modifier un service:
-const editserviceBtns = document.querySelectorAll('[data-service-id]');
-editserviceBtns.forEach(button=>{
-    button.addEventListener('click', function(){
-        const serviceId = button.getAttribute('data-service-id');
-        const serviceIdContainer = document.getElementById('edit-service-id');
-        serviceIdContainer.value = serviceId;
-    });
-});
-const confirmEditServiceBtn = document.getElementById('confirm-edit-service-btn');
-confirmEditServiceBtn.addEventListener('click', editService);
-function editService(){
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    let targetId = document.getElementById('edit-service-id').value;
-    let form = new FormData(document.getElementById('edit-service-form'));
-    let raw= JSON.stringify(
-        {
-            "nom" : sanitizeHTML(form.get('edit-nom')), 
-            "description" : sanitizeHTML(form.get('edit-description')),
-        }
-    );
-    fetch(`/admin/services/edit/${targetId}`, {
-        method: 'PUT',
-        headers: myHeaders,
-        body: raw
-    })
-    .then(response => {
-        if(response.ok){
-            window.location.reload();
-            return response.json();
-        } else {
-            throw new Error('Erreur');
-        }
-    })
-    .then(result => {
-        window.location.reload();
-    })
-    .catch(error => alert('Une erreur est survenue', error));
-
-}
 
 /*----------------- Horaires ----------------- */
 const horairesContainer = document.getElementById('horaires-container');   
@@ -451,7 +374,6 @@ function editHoraire(){
     myHeaders.append('Content-Type', 'application/json');
     let targetId = document.getElementById('edit-horaire-id').value;
     //console.log(targetId); DEBUG
-    let form = new FormData(document.getElementById('edit-horaire-form'));
     let isOuvert=$('#isOuvert').is(':checked')  ? true:false;
     let raw=JSON.stringify({
         "ouverture": document.getElementById('HOuverture').value,
@@ -482,10 +404,89 @@ function editHoraire(){
 }
 
 
+/*-----------demandes de contact 05/03/2024 ------------------ */
+const contactContainer = document.getElementById('contactContainer');
+const contactBtn = document.getElementById('contactBtn');
 
+contactBtn.addEventListener('click', showContact);
+function showContact(){
+    FlushFeatures();
+    FlushActive();
+    contactBtn.classList.add('active');
+    contactContainer.classList.remove('d-none');
+}
 
+// Répondre à une demande de contact
+const contactResponseBtns = document.querySelectorAll('[data-demande-id]');
+contactResponseBtns.forEach(button => {
+    button.addEventListener('click', function() {
+        const demandeId = button.getAttribute('data-demande-id');
+        const demandeIdContainer = document.getElementById('demandeId');
+        demandeIdContainer.value = demandeId; // Utilize .value for form elements
+    });
+});
 
+const sendResponseBtn = document.getElementById('btnConfirmRepondre');
+sendResponseBtn.addEventListener('click', sendResponse);
 
+async function sendResponse() {
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    let dataForm = new FormData(repondreForm);
+    let targetId = document.getElementById('demandeId').value;
+    console.log('targetId', targetId)
+    let raw = JSON.stringify({
+        "response": dataForm.get('reponse')
+    });
+    console.log('raw', raw);
+    let requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    };
+    try {
+        let response = await fetch(`/employe/demande/repondre/${targetId}`, requestOptions);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        // Handle success
+        console.log('Response sent successfully');
+        window.location.reload();
+    } catch (error) {
+        // Handle error
+        console.error('Error:', error);
+    }
+}
+
+// Filtrer les demandes de contact
+function applyDemandeContactFilter(){
+    const targetedStatus = document.getElementById('demandeStatusSelect').value;
+    const targetedDate = document.getElementById('demande-date-select').value;
+    const demandeEntry = document.querySelectorAll('.demande-card');    
+    demandeEntry.forEach(item => {
+        const status = item.getAttribute('data-demande-status') === 'true' || item.getAttribute('data-demande-status') === ''; // Modifier cette ligne
+        let statusMatch;
+        if (targetedStatus === '*') {
+            statusMatch = true; // Si '*' est sélectionné, toutes les demandes sont considérées comme correspondantes
+        } else {
+            statusMatch = (targetedStatus === '1' && status) || (targetedStatus === '0' && !status); // Inverser la comparaison
+        }
+        const dateMatch = (targetedDate === '') || (item.getAttribute('data-demande-date') === targetedDate);
+        if (statusMatch && dateMatch) {
+            item.classList.remove('d-none');
+        } else {
+            item.classList.add('d-none');
+        }
+    });
+}
+const demandeStatusSelect = document.getElementById('demandeStatusSelect');
+demandeStatusSelect.addEventListener('change', applyDemandeContactFilter);
+
+const demandeDateSelect = document.getElementById('demande-date-select');
+demandeDateSelect.addEventListener('change', applyDemandeContactFilter);
+
+applyDemandeContactFilter();
 
 
 /*----------------- Display / Hide Features -----------------*/
@@ -501,6 +502,7 @@ function FlushFeatures(){
     infoAnimalContainer.classList.add('d-none');
     servicesContainer.classList.add('d-none');
     horairesContainer.classList.add('d-none');
+    contactContainer.classList.add('d-none');
     
 }
 
@@ -515,5 +517,6 @@ function FlushActive(){
     infoAnimalBtn.classList.remove('active');
     servicesBtn.classList.remove('active');
     horairesBtn.classList.remove('active');
+    contactBtn.classList.remove('active');
 
 }

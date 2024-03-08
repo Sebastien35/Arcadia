@@ -9,8 +9,11 @@ use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Knp\Component\Pager\PaginatorInterface;
+
 use DateTimeImmutable;
 
 use App\Entity\Service;
@@ -23,13 +26,22 @@ use App\Entity\Horaire;
 use App\Repository\HoraireRepository;
 use App\Entity\Habitat;
 use App\Repository\HabitatRepository;
-use App\Form\habitatFormType;
+
 use App\Entity\Animal;
 use App\Repository\AnimalRepository;
 use App\Form\EditAnimalType;
 use App\Entity\InfoAnimal;
-use App\Form\animalFormType;
+
 use App\Entity\CommentaireHabitat;
+use App\Entity\DemandeContact;
+
+use App\Form\animalFormType;
+use App\Form\habitatFormType;
+use App\Form\ServiceType;
+
+
+
+use App\Service\MailerService;
 
 
 #[Route('/admin', name: 'app_admin_')]
@@ -41,24 +53,28 @@ class AdminController extends AbstractController
         private EntityManagerInterface $entityManager,
         private SerializerInterface $serializer,
         private HoraireRepository  $horaireRepository
+
         )
     {
         $this->entityManager=$entityManager;
     }
 
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function dashboard(): Response
+    public function dashboard(Request $request, PaginatorInterface $paginator): Response
     {
+        $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
+        $demandes = $this->entityManager->getRepository(DemandeContact::class)->findAll();
         $services = $this->entityManager->getRepository(Service::class)->findAll();
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $zoos = $this->entityManager->getRepository(Zoo::class)->findAll();
         $horaires = $this->entityManager->getRepository(Horaire::class)->findAll();
         $habitats = $this->entityManager->getRepository(Habitat::class)->findAll();
-        $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
         $infoAnimals = $this->entityManager->getRepository(infoAnimal::class)->findAll();
         $commentaires= $this->entityManager->getRepository(CommentaireHabitat::class)->findAll();
         $createAnimalForm=$this->createForm(animalFormType::class);
         $createHabitatForm=$this->createForm(habitatFormType::class);
+        $serviceForm=$this->createForm(ServiceType::class);
+
 
         return $this->render('admin/dashboard.html.twig', [
             'controller_name' => 'AdminController',
@@ -69,9 +85,11 @@ class AdminController extends AbstractController
             'habitats'=>$habitats,
             'animaux'=>$animaux,
             'infoAnimals'=>$infoAnimals,
+            'demandes'=>$demandes,
+            'commentaires'=>$commentaires,
             'createAnimalForm'=>$createAnimalForm->createView(),
             'createHabitatForm'=>$createHabitatForm->createView(),
-            'commentaires'=>$commentaires
+            'serviceForm'=>$serviceForm->createView(),
 
 
 
@@ -92,42 +110,70 @@ class AdminController extends AbstractController
     }
 
     #[Route('/services/create', name: 'createService', methods: 'POST')]
-    public function createService(Request $request): JsonResponse
+    public function createService(Request $request): Response
     {
         try{
-            $service = $this->serializer->deserialize($request->getContent(), Service::class, 'json');
-            $service->setCreatedAt(new DateTimeImmutable());
-
-            $this->entityManager->persist($service);
-            $this->entityManager->flush();
-            $this->addFlash('success', 'Service created successfully');
-            return new JsonResponse(['message' => 'Service created successfully'], Response::HTTP_CREATED);
-
-        }
-        catch (\Exception $e) {
-            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            $service = new Service();
+            $form = $this->createForm(ServiceType::class, $service);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $service->setNom($form->get('nom')->getData());
+                $service->setDescription($form->get('description')->getData());
+                $service->setCreatedAt(new \DateTimeImmutable());
+                $service->setImageFile($form->get('imageFile')->getData());
+                $this->entityManager->persist($service);
+                $this->entityManager->flush();
+                $this->addFlash('success', 'Service created successfully');
+                return $this->redirectToRoute('app_admin_index');
+            }
+        }catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage());
+            return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
         }
     }
 
-    #[Route('/services/edit/{id}', name: 'edit_service', methods:['PUT'])]
-    public function editService(Request $request, $id): JsonResponse
+    #[Route('/services/edit/{id}', name: 'editService', methods:['GET','POST'])]
+    public function editService(Request $request,int $id): Response
     {
-        $data = json_decode($request->getContent(), true);
+    try {
         $service = $this->entityManager->getRepository(Service::class)->find($id);
-        if(isset($data['nom']) && !empty($data['nom'])){
-            $service->setNom($data['nom']);
-        }else{
-            $service->setNom($service->getNom());
+        if (!$service) {
+            return new JsonResponse(['status' => 'Service not found'], Response::HTTP_NOT_FOUND);
         }
-        if(isset($data['description']) && !empty($data['description'])){
-            $service->setDescription($data['description']);
+        $form = $this->createForm(ServiceType::class, $service);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if(isset($form['nom'])){
+                $service->setNom($form['nom']->getData());
+            }else{
+                $service->setNom($service->getNom());
+            }
+            if(isset($form['description'])){
+                $service->setDescription($form['description']->getData());
+            }else{
+                $service->setDescription($service->getDescription());
+            }
+            if(isset($form['imageFile'])){
+                $service->setImageFile($form['imageFile']->getData());
+            }else{
+                $service->setImageFile($service->getImageFile());
+            }
+            $this->entityManager->persist($service);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Service updated successfully');
+            return $this->redirectToRoute('app_admin_index');
         }else{
-            $service->setDescription($service->getDescription());
+            return $this->render('admin/editService.html.twig', [
+                'controller_name' => 'AdminController',
+                'service' => $service,
+                'editServiceForm' => $form->createView(),
+                'form'=>$form
+            ]);
         }
-        $this->entityManager->persist($service);
-        $this->entityManager->flush();
-        $this->addFlash('success', 'Service updated!');
-        return new JsonResponse(['status' => 'Service updated!'], Response::HTTP_OK);
+    } catch (\Exception $e) {
+        $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage());
+        return $this->redirectToRoute('app_admin_index');
+        }
     }
 
     #[Route('/services/delete/{id}',name: 'deleteService', methods: 'DELETE')]
@@ -488,4 +534,28 @@ class AdminController extends AbstractController
         }
         
     }
+
+    #[Route('/demande/repondre/{id}', name: 'repondre_demande', methods:['POST'])]
+    public function repondreDemande(Request $request, MailerService $mailerService): Response
+    {
+    try {
+    
+        $data = json_decode($request->getContent(), true);
+        $text = $data['response'];
+        $id = $request->attributes->get('id');
+        $destinataire = $this->entityManager->getRepository(DemandeContact::class)->find($id)->getMail();
+        $mailerService->sendResponseMail($destinataire, $text);
+        $demande=$this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
+        $demande->setAnsweredAt(new \DateTimeImmutable());
+        $demande->setAnswered(true);
+        $this->addFlash('success', 'Votre réponse a bien été envoyée.');
+        $this->entityManager->persist($demande);
+        $this->entityManager->flush();
+    } catch (\Exception $e) {
+        $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage());
+    }
+
+    return new RedirectResponse($this->generateUrl('app_employe_index'));
+    }
+    
 }

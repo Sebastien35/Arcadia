@@ -30,7 +30,7 @@ class CommentaireHabitat
 
     #[ORM\ManyToOne(inversedBy: 'commentaireHabitats')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?user $auteur = null;
+    private ?User $auteur = null;
 
     
 
@@ -88,12 +88,12 @@ class CommentaireHabitat
         return $this;
     }
 
-    public function getAuteur(): ?user
+    public function getAuteur(): ?User
     {
         return $this->auteur;
     }
 
-    public function setAuteur(?user $auteur): static
+    public function setAuteur(?User $auteur): static
     {
         $this->auteur = $auteur;
 
