@@ -1,16 +1,23 @@
 /* Card */
+
+body{
+    background-color:var(--white);
+}
 .card-service{
     border-radius:15%;
     border: 1px solid var(--dark);
     overflow:hidden;
     height: 30vh;
 }
-
-.card-body{
-    background-size: 120%;
+.service-list{
+    background-color:var(--darker);
+    min-height: 100vh;
 }
 
-
-.btn-primary{
-    border-radius: 0px;
+.service-text{
+    border: 1px solid var(--primary);
+    background-color: var(--dark);
+    text-align:center;
+    vertical-align: center;
+    color: var(--white);
 }

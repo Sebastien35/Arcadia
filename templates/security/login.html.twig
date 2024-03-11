@@ -3,56 +3,35 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-    
-
-<link rel="stylesheet" href="{{asset('css/admin.css')}}">
-    <div class="container center-vertically">
-        
-            <div class="card" id="login-card">
-                <div class="card-header d-flex justify-content-between">  
-                    <div class="card-title-text">
-                        <h1 class="card-title h3 mb-3 font-weight-normal">Please sign in</h1>
+<link rel="stylesheet" href="{{asset('css/login.css')}}">
+<div>
+    <div class="row">
+        <div class="form-container mt-5">
+            <div class="form-title">
+                <h1 class="text-center">Connexion</h1>
+            </div>
+            <div class="form-body">
+                <form method="post">
+                    <div class="mb-5 mt-5 mb-5">
+                        <label for="inputEmail" class="form-label">Email</label></br>
+                        <input type="email" id="inputEmail" name="email" class="form-control" required>
                     </div>
-                    <div class="card-title-icon">
-                        
-                        <button class="button" id="maximizeBtn"><i class="fa-regular fa-window-maximize"></i></button>
-                        <button class="button" id="closeBtn" onclick="window.location=('/')"><i class="fa-solid fa-x"></i></button>
-                        
-                    
+                    <div class="mb-3">
+                        <label for="inputPassword" class="form-label">Mot de passe</label></br>
+                        <input type="password" id="inputPassword" name="password" class="form-control" required>
                     </div>
-                    
-                        
-                    
-                </div>
-                <form method="post" id="loginForm">
-                    
-                    {% if app.user %}
-                        <div class="mb-3">
-                            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-                        </div>
-                    {% endif %}
-                    <div class="form-container">
-                        <label for="inputEmail">Email</label>
-                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-                        <label for="inputPassword">Password</label>
-                        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                    <div class="mb-3 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary">Se connecter</button>
                     </div>
                     <input type="hidden" name="_csrf_token"
                         value="{{ csrf_token('authenticate') }}"
                     >
-
-                    
-                    {% if error %}
-                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                    {% endif %}
-                    <div class="text-center mt-2 mb-5">
-                        <button class="submit_cancel" type="submit" id="submitBtn">Connection</button>
-                        <button class="submit_cancel" type="button" id="cancelBtn" onclick="window.location=('/')">Annuler</button>
-                    </div>   
-                        
                 </form>
             </div>
-           
+        </div>
     </div>
-    <script src="{{asset('js/login.js')}}"> </script>
+</div>
+
+
+
 {% endblock %}
