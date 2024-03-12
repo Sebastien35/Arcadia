@@ -54,7 +54,11 @@
                     <div class="carousel-inner">
                         {% for animal in animaux %}
                             <div class="carousel-item {% if loop.first %} active {% endif %} " role="button" onclick="window.location=('/animal/show/'+ {{animal.id}} )">
+                                {% if animal.imageName == null %}
+                                    <img src="{{ asset('images/parc/default.jpg') }}" alt="image_{{ animal.prenom }}" style="max-height:20vh" >
+                                {% else %}
                                 <img src="{{ asset('images/animal/' ~ animal.imageName) }}" alt="image_{{ animal.prenom }}" style="max-height:20vh" >
+                                {% endif %}
                                 <div class="carousel-caption d-md-block">
                                     <h5>{{ animal.prenom }}</h5>  
                                 </div>

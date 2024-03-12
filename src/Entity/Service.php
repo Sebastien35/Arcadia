@@ -118,16 +118,13 @@ class Service
 
         return $this;
     }
-
     public function getZoo(): ?Zoo
     {
         return $this->Zoo;
     }
-
     public function setZoo(?Zoo $Zoo): static
     {
         $this->Zoo = $Zoo;
-
         return $this;
     }
 

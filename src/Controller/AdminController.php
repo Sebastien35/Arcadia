@@ -31,6 +31,7 @@ use App\Entity\Animal;
 use App\Repository\AnimalRepository;
 use App\Form\EditAnimalType;
 use App\Entity\InfoAnimal;
+use App\Entity\Repas;
 
 use App\Entity\CommentaireHabitat;
 use App\Entity\DemandeContact;
@@ -125,6 +126,9 @@ class AdminController extends AbstractController
                 $this->entityManager->flush();
                 $this->addFlash('success', 'Service created successfully');
                 return $this->redirectToRoute('app_admin_index');
+            }else{
+                $this->addFlash('error', 'Une erreur est survenue', 500);
+                return new RedirectResponse($this->generateUrl('app_admin_index'));
             }
         }catch (\Exception $e) {
             $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage());
@@ -471,6 +475,26 @@ class AdminController extends AbstractController
             $this->addFlash('error', 'An error occured');
             return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
         }
+    }
+    #[Route('/animal/show/{id}', name: 'showAnimal', methods: ['GET'])]
+    public function showAnimal(int $id, AnimalRepository $animalRepo):Response
+    {
+        $animal = $animalRepo->find($id);
+        if (!$animal) {
+            return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
+        }
+        $repas = $this->entityManager->getRepository(repas::class)->findBy(['animal' => $id], ['datetime' => 'DESC']);
+        if (!$repas){
+            $repas = null;
+        }
+        $infoAnimal = $this->entityManager->getRepository(InfoAnimal::class)->findBy
+            (['animal' => $id], ['createdAt' => 'DESC']);
+        return $this->render('admin/showAnimal.html.twig', [
+            'controller_name' => 'AdminController',
+            'animal' => $animal,
+            'repas'=>$repas,
+            'infoAnimals'=>$infoAnimal
+        ]);
     }
     
     #[Route('/animal/update/{id}', name: 'updateAnimal', methods: ['GET','POST'])]
