@@ -35,8 +35,9 @@
                     <li class="my-2">
                         <p role="button" id="contactBtn" class="sidebar-item"><i class="fa-solid fa-envelope"></i> Contact</p>
                     </li>
-                    <li class="my-2" id="consultationsBtn" class="sodebar-item">
-                        <p role="button" id="consultationsBtn" class="sidebar-item"><i class="fa-solid fa-chart-simple"></i> Consultations</p>
+                    <li class="my-2">
+                        <p role="button" id="consultationContainerBtn" class="sidebar-item"><i class="fa-solid fa-chart-simple"></i> Consultations</p>
+                    </li>
                     <li class="mt-2 mb-3">
                         <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</a>
                     </li>
@@ -59,7 +60,6 @@
                     </div>
                 {% endfor %}
             </div>
-
             {# User Container #}
             <div class="custom-container mt-5 d-none" id="user-container" style="height:90vh">
                 <div class="container-header d-flex">
@@ -290,7 +290,6 @@
                 </div>
 
             </div>
-
             {# Animal Container #}
             <div class="custom-container mt-5 mb-3 d-none" id="animal-container">
                 <div class="container-header d-flex">
@@ -386,7 +385,6 @@
 
 
             </div>
-
             {# InfoAnimal Container #}
             <div class="custom-container mt-5 mb-3 d-none" id="info-animal-container">
                 <div class="container-header d-flex">
@@ -459,7 +457,6 @@
                     </div>
                 </div>
             </div>
-
             {# Services Container #}
             <div class="custom-container mt-5 mb-3 d-none" id="services-container">
                 <div class="container-header d-flex">
@@ -549,7 +546,6 @@
                 </div>
                 
             </div>
-
             {# Horaires Container #}
             <div class="custom-container mt-5 mb-3 d-none" id="horaires-container">
                 <div class="container-header d-flex">
@@ -619,7 +615,6 @@
                     </div>
                 </div>
             </div>
-
             {# Contact container #}
             <div class="mt-5 d-none" id="contactContainer">
                 <div class="custom-container">
@@ -698,39 +693,26 @@
                     </div>
                 </div>
             </div>
-
-            {# Consultations Container #}
-            <div class="mt-5 d-none" id="consultationContainer">
-                <div class="container header">
-                    <div class="container-title">
-                        <h5>Les consultations</h5>
-                    </div>
-                    <div class="container-body scrollable-container">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr scope="col"> Animal </tr>
-                                <tr scope="col"> Habitat</tr>
-                                <tr scope="col"> Consultations</tr>
-                            </thead>
-                            <tbody>
-                                {% for animal in animaux %}
-                                    <tr>
-                                        <td>{{ animal.prenom }}</td>
-                                        <td>{{ animal.getHabitat.getNom }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
-            </div>
             
+            {# Consultations Container #}
+            <div class="mt-5 d-none custom-container" id="consultationContainer">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td scope="col">Animal</td>
+                            <td scope="col">Clics</td>
+                        </tr>
+                    </thead>
+                    <tbody id="visitTable">
+                    </tbody>
+                </table>   
+            </div>
             
     </div>
 </div>
 
 <script src="{{ asset('js/admin-dashboard.js') }}"></script>
+<script src="{{ asset('js/admin_dashboard_allVisits.js') }}"></script>
 <script src="{{ asset('js/sanitizer.js') }}"></script>
 {% endblock %}
 

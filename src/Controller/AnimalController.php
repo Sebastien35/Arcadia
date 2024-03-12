@@ -55,6 +55,7 @@ class AnimalController extends AbstractController
         if(!$visit){
             $visit = new AnimalVisit();
             $visit->setAnimalId($id);
+            $visit->setAnimalName($this->entityManager->getRepository(Animal::class)->find($id)->getPrenom());
         }
         $visit->incrementVisits();
 

@@ -488,6 +488,22 @@ demandeDateSelect.addEventListener('change', applyDemandeContactFilter);
 
 applyDemandeContactFilter();
 
+/*----------------- Consultations des animaux -----------------*/
+
+const consultationContainer = document.getElementById('consultationContainer');
+const consultationContainerbtn = document.getElementById('consultationContainerBtn')
+
+consultationContainerbtn.addEventListener('click', showConsultation);
+function showConsultation(){
+    FlushFeatures();
+    FlushActive();
+    consultationContainerbtn.classList.add('active');
+    consultationContainer.classList.remove('d-none');
+}
+
+
+
+
 
 /*----------------- Display / Hide Features -----------------*/
 
@@ -503,6 +519,7 @@ function FlushFeatures(){
     servicesContainer.classList.add('d-none');
     horairesContainer.classList.add('d-none');
     contactContainer.classList.add('d-none');
+    consultationContainer.classList.add('d-none');
     
 }
 
@@ -518,5 +535,6 @@ function FlushActive(){
     servicesBtn.classList.remove('active');
     horairesBtn.classList.remove('active');
     contactBtn.classList.remove('active');
+    consultationContainerbtn.classList.remove('active');
 
 }

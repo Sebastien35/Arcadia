@@ -74,3 +74,8 @@ a:visited{ text-decoration: none !important;}
     padding-right: 2vh !important;
     margin-right: 2vh !important;
 }
+
+.top3-img{
+    max-height:25vh;
+    
+}

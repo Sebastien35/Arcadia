@@ -16,6 +16,9 @@ class AnimalVisit
     #[MongoDB\Field(type: "integer")]
     protected ?int $visits = 0;
 
+    #[MongoDB\Field(type: "string")]
+    protected ?string $animal_name;
+
     public function getId(): ?string
     {
         return $this->id;
@@ -44,4 +47,17 @@ class AnimalVisit
 
         return $this;
     }
+
+    public function getAnimalName(): ?string
+    {
+        return $this->animal_name;
+    }
+
+    public function setAnimalName(string $animal_name): self
+    {
+        $this->animal_name = $animal_name;
+
+        return $this;
+    }
+
 }
