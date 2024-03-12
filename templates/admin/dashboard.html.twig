@@ -8,12 +8,11 @@
 
 <div class="container-fluid page-container">
     <div class="row flex-nowrap">
-        
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+        <div class="col-lg-3 col-xl-2 px-sm-2 px-0 bg-dark">
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 <ul class="mt-5">
                     <li class="mt-2 mb-3">
-                        <H5 class="nav-item"><i class="fa-solid fa-user-tie"></i></i> Espace administrateur </H5>
+                        <H5 class="nav-item"><i class="fa-solid fa-user-tie"></i>Espace administrateur</H5>
                     </li>
                     <li class="mt-5 mb-3">
                         <p class="nav-item" id="userBtn" role="button"><i class="fa-regular fa-user"></i> Utilisateurs</p>
@@ -21,8 +20,6 @@
                     <li class="mt-2 mb-3">
                         <p class="nav-item" id="habitatBtn" role="button"><i class="fa-solid fa-igloo"></i></i> Habitats</p>
                     </li>
-                    <li class="mt-2 mb-3 d-none">
-                        <p class="nav-item" id="commentairesBtn" role="button"><i class="fa-solid fa-comment"></i> Commentaires</p>
                     <li class="mt-2 mb-3">
                         <p class="nav-item" id="animalBtn" role="button"><i class="fa-solid fa-dog"></i> Animaux</p>
                     </li>
@@ -39,12 +36,11 @@
                         <p role="button" id="contactBtn" class="sidebar-item"><i class="fa-solid fa-envelope"></i> Contact</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-regular fa-sign-out"></i> Se déconnecter</a>
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
                     </li>
                 </ul>
             </div>
         </div>
-
         <div class="col py-3" >
             {# Error and success messages #}
             <div>
@@ -320,7 +316,7 @@
                                 <td>{{ animal.prenom }}</td>
                                 <td>{{ animal.getHabitat.getNom }}</td> 
                                 <td>
-                                    <a type="button" class="btn btn-info" href="/veterinaire/animal/show/{{animal.id}}"><i class="fa-regular fa-eye"></i></a>
+                                    <a type="button" class="btn btn-info" href="{{ path('app_admin_showAnimal', {'id': animal.id}) }}"><i class="fa-regular fa-eye"></i></a>
                                     <button class="btn btn-primary" id="edit-animal-btn"onclick="window.location=('/admin/animal/update/'+ {{ animal.id }} )"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <button class="btn btn-danger" id="delete-animal-btn"data-bs-toggle="modal" data-bs-target="#delete-animal-Modal" data-animal-id="{{ animal.id }}"><i class="fa-solid fa-user-minus"></i></button>
                                 </td>         

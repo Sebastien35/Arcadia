@@ -26,14 +26,9 @@
                     <li class="my-2 mt-2">
                         <p role="button" id="habitatsBtn" class="sidebdar-item"><i class="fa-solid fa-home"></i>Habitats</p>
                     </li>
-                    <div class="user-info" style="position:relative; bottom:0">
-                        <li class="mt-5">
-                            <p> Bonjour {{ app.user.email }} </p>
-                        </li>
-                        <li class="text-danger btn btn-danger">
-                            <a href="{{ path('app_logout') }}" class="sidebar-item"><i class="fa-solid fa-sign-out"></i>Se déconnecter</a>
-                        </li>
-                    </div>
+                    <li class="mt-2 mb-3">
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -301,7 +296,11 @@
                                     <h5 class="card-title">{{ animal.getPrenom }}</h5>
                                 </div>
                                 <div class="card-image">
+                                    {% if animal.imageName == null %}
+                                    <img src="{{ asset('images/parc/default.jpg') }}" class="card-img-top animal-img" alt="image_{{ animal.getPrenom }}" >
+                                    {% else %}
                                     <img src="{{ asset('images/animal/' ~ animal.imageName) }}" class="card-img-top animal-img" alt="image_{{ animal.getPrenom }}" >
+                                    {% endif %}
                                 </div>               
                             </div>   
                     </div>

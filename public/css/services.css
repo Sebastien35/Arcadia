@@ -2,6 +2,9 @@
 
 body{
     background-color:var(--white);
+    background-size: 70%;
+    background-repeat: repeat;
+    background-position: center;
 }
 .card-service{
     border-radius:15%;
@@ -20,4 +23,8 @@ body{
     text-align:center;
     vertical-align: center;
     color: var(--white);
+}
+
+.service-image{
+    height: 100%;
 }

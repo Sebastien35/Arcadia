@@ -15,7 +15,7 @@
     }
 </style>
 <div class="nav navbar mt-5 animal-navbar">
-        <a class="navbar-brand" href="{{ path('app_animal_index') }}">Tous les animaux</a>  
+        <a class="navbar-brand mx-3" href="{{ path('app_habitat_index') }}">Voir les Habitats</a>  
 </div>
 
 <div class="container mt-5 mb-5">
@@ -26,9 +26,9 @@
         <div class="row">
             <div class="col-4"> 
                 {% if animal.imageName == null %}
-                    <img src="{{ asset('images/animal/default.jpg') }}" alt="image_{{ animal.getPrenom }}" style="max-width: 100%;" >
+                <img src="{{ asset('images/parc/default.jpg') }}" alt="image_{{ animal.prenom }}" style="max-height:20vh" >
                 {% else %}
-                <img src="{{ asset('images/animal/' ~ animal.imageName) }}" alt="image_{{ animal.getPrenom }}" style="max-width: 100%; height:100%" >
+                <img src="{{ asset('images/animal/' ~ animal.imageName) }}" alt="image_{{ animal.prenom }}" style="max-height:20vh" >
                 {% endif %}
             </div>
             <div class="col-8">

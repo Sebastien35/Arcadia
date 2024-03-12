@@ -4,28 +4,28 @@
 
 {% block body %}
 <link rel="stylesheet" href="{{asset('css/services.css')}}">
+<style>
+    body{
+        background-image: url( {{ asset('images/parc/birds.webp') }} )
+    }
+</style>
 
 <div class="container service-list mt-5">
     <h1 class="mb-3 text-dark w-100 primary text-white px-0 text-center"> Les services proposés au zoo:</h1>
     <div class="row">
         {% for service in services %}
-            {% if loop.index is even %}
-                <div class="col-md-6 col-sm-12 service-image">
-                    <image src="{{asset('images/service/' ~ service.imageName)}}" alt="{{service.nom}}" class="img-fluid service-image">
-                </div>
-                <div class="col-md-6 col-sm-12 service-text">
+                <div class="col-md-6 mb-5 px-0 col-sm-12 service-text">
                     <h2>{{service.nom}}</h2>
                     <p>{{service.description}}</p>
                 </div>
-            {% else %}
-                <div class="col-md-6 col-sm-12 service-text">
-                    <h2>{{service.nom}}</h2>
-                    <p>{{service.description}}</p>
-                </div>
-                <div class="col-md-6 col-sm-12 service-image">
+                <div class="col-md-6 mb-5 col-sm-12 service-image d-flex justify-content-center">
+                    {% if service.imageName == null %}
+                    <image src="{{asset('images/service/default.jpg')}}" alt="{{service.nom}}" class="img-fluid service-image">
+                    {% else %}
                     <image src="{{asset('images/service/' ~ service.imageName)}}" alt="{{service.nom}}" class="img-fluid service-image">
+                    {% endif %}
                 </div>
-            {% endif %}
+
         {% endfor %}
     </div>
 
