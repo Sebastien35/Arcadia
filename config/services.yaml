@@ -1,6 +1,8 @@
 # config/services.yaml
 parameters:
     admin_email: 'arcadia.bretagne@gmail.com'
+    env(MONGODB_URL): ''
+    env(MONGODB_DB): ''
     
 services:
     # Default configuration for services in this file

@@ -186,29 +186,21 @@ animalBtn.addEventListener('click', function(){
 });
 
 //Supprimer Animal --------------------------------------------------------
-
-const deleteAnimalBtns = document.querySelectorAll('[data-animal-id]');
-deleteAnimalBtns.forEach(button=>{
-    button.addEventListener('click', function(){
-        const animalId = button.getAttribute('data-animal-id');
-        const animalIdContainer = document.getElementById('animal-id');
-        animalIdContainer.value = animalId;
-    });
-});
-
+// Le passage d'id animal est assuré par le bouton de suppression, logique dans allAnimals.js
 const confirmDeleteAnimalBtn = document.getElementById('confirm-delete-animal-btn');
 confirmDeleteAnimalBtn.addEventListener('click', deleteAnimal);
-function deleteAnimal(){
+
+function deleteAnimal() {
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
-    let targetId = document.getElementById('animal-id').value;
+    let targetId = document.getElementById('delete-animal-id').value;
+    console.log('Target ID:', targetId); // Debug log
     fetch(`/admin/animal/delete/${targetId}`, {
         method: 'DELETE',
         headers: myHeaders,
-        
     })
     .then(response => {
-        if(response.ok){
+        if (response.ok) {
             window.location.reload();
             return response.json();
         } else {
@@ -219,7 +211,6 @@ function deleteAnimal(){
         window.location.reload();
     })
     .catch(error => console.log(error));
-
 }
 
 
@@ -459,6 +450,31 @@ async function sendResponse() {
     }
 }
 
+async function deleteDemande($id){
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    let requestOptions = {
+        method: 'DELETE',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+    try {
+        let response = await fetch(`/admin/demande/delete/${$id}`, requestOptions);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        let result = await response.json();
+        console.log(result);
+        window.location.reload();
+    } catch (error) {
+        window.location.reload();
+        console.error('Error:', error);
+        
+    }
+
+}
+
+
 // Filtrer les demandes de contact
 function applyDemandeContactFilter(){
     const targetedStatus = document.getElementById('demandeStatusSelect').value;
@@ -488,6 +504,22 @@ demandeDateSelect.addEventListener('change', applyDemandeContactFilter);
 
 applyDemandeContactFilter();
 
+/*----------------- Consultations des animaux -----------------*/
+
+const consultationContainer = document.getElementById('consultationContainer');
+const consultationContainerbtn = document.getElementById('consultationContainerBtn')
+
+consultationContainerbtn.addEventListener('click', showConsultation);
+function showConsultation(){
+    FlushFeatures();
+    FlushActive();
+    consultationContainerbtn.classList.add('active');
+    consultationContainer.classList.remove('d-none');
+}
+
+
+
+
 
 /*----------------- Display / Hide Features -----------------*/
 
@@ -503,6 +535,7 @@ function FlushFeatures(){
     servicesContainer.classList.add('d-none');
     horairesContainer.classList.add('d-none');
     contactContainer.classList.add('d-none');
+    consultationContainer.classList.add('d-none');
     
 }
 
@@ -518,5 +551,6 @@ function FlushActive(){
     servicesBtn.classList.remove('active');
     horairesBtn.classList.remove('active');
     contactBtn.classList.remove('active');
+    consultationContainerbtn.classList.remove('active');
 
 }

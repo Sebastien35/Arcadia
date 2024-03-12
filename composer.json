@@ -12,6 +12,7 @@
         "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
+        "doctrine/mongodb-odm-bundle": "^5.0",
         "doctrine/orm": "^2.17",
         "knplabs/knp-paginator-bundle": "^6.3",
         "lorenzo/pinky": "^1.0",

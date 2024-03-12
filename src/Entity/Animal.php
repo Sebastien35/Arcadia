@@ -8,24 +8,30 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\HttpFoundation\File\File;
 use App\Entity\InfoAnimal;
+
 
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 class Animal
-{
+{   
+    #[Groups("animal:read")]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups("animal:read")]
     #[ORM\Column(length: 255)]
     private ?string $prenom = null;
 
+    #[Groups("animal:read")]
     #[ORM\Column]
     private ?string $race = null;
 
+    
     #[ORM\ManyToOne(inversedBy: 'animals')]
     private ?Habitat $Habitat = null;
 

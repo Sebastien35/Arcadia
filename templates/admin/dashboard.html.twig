@@ -35,8 +35,11 @@
                     <li class="my-2">
                         <p role="button" id="contactBtn" class="sidebar-item"><i class="fa-solid fa-envelope"></i> Contact</p>
                     </li>
+                    <li class="my-2">
+                        <p role="button" id="consultationContainerBtn" class="sidebar-item"><i class="fa-solid fa-chart-simple"></i> Consultations</p>
+                    </li>
                     <li class="mt-2 mb-3">
-                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</a>
                     </li>
                 </ul>
             </div>
@@ -57,7 +60,6 @@
                     </div>
                 {% endfor %}
             </div>
-
             {# User Container #}
             <div class="custom-container mt-5 d-none" id="user-container" style="height:90vh">
                 <div class="container-header d-flex">
@@ -288,7 +290,6 @@
                 </div>
 
             </div>
-
             {# Animal Container #}
             <div class="custom-container mt-5 mb-3 d-none" id="animal-container">
                 <div class="container-header d-flex">
@@ -305,23 +306,11 @@
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Nom</th>
-                                <th scope="col">Habitat</th>
+                                <th scope="col">Race</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {% for animal in animaux %}
-                            <tr>
-                                <td>{{ animal.id }}</td>
-                                <td>{{ animal.prenom }}</td>
-                                <td>{{ animal.getHabitat.getNom }}</td> 
-                                <td>
-                                    <a type="button" class="btn btn-info" href="{{ path('app_admin_showAnimal', {'id': animal.id}) }}"><i class="fa-regular fa-eye"></i></a>
-                                    <button class="btn btn-primary" id="edit-animal-btn"onclick="window.location=('/admin/animal/update/'+ {{ animal.id }} )"><i class="fa-solid fa-pen-to-square"></i></button>
-                                    <button class="btn btn-danger" id="delete-animal-btn"data-bs-toggle="modal" data-bs-target="#delete-animal-Modal" data-animal-id="{{ animal.id }}"><i class="fa-solid fa-user-minus"></i></button>
-                                </td>         
-                            </tr>
-                            {% endfor %}
+                        <tbody id="animalTableBody">
                         </tbody>
                     </table>
                 </div>
@@ -361,7 +350,6 @@
                         </div>
                     </div>
                 </div> 
-
                 {# Modal for deleting animal #}
                 <div class="modal modal-fade" id="delete-animal-Modal" tabindex="-1" aria-labelledby="delete-animal-Modal-label" aria-hidden="true">
                     <div class="modal-dialog">
@@ -371,7 +359,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <p class="d-none" id="animal-id" ></p>
+                                <input type="hidden" id="delete-animal-id">
                                 <p>Voulez-vous vraiment supprimer cet animal?</p>   
                             </div>
                             <div class="modal-footer">
@@ -384,7 +372,6 @@
 
 
             </div>
-
             {# InfoAnimal Container #}
             <div class="custom-container mt-5 mb-3 d-none" id="info-animal-container">
                 <div class="container-header d-flex">
@@ -457,7 +444,6 @@
                     </div>
                 </div>
             </div>
-
             {# Services Container #}
             <div class="custom-container mt-5 mb-3 d-none" id="services-container">
                 <div class="container-header d-flex">
@@ -547,7 +533,6 @@
                 </div>
                 
             </div>
-
             {# Horaires Container #}
             <div class="custom-container mt-5 mb-3 d-none" id="horaires-container">
                 <div class="container-header d-flex">
@@ -617,7 +602,6 @@
                     </div>
                 </div>
             </div>
-
             {# Contact container #}
             <div class="mt-5 d-none" id="contactContainer">
                 <div class="custom-container">
@@ -667,6 +651,25 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {# Modal for deleting demande #}
+                                    <div class="modal modal-fade" tabindex="-1" id="deleteDemandeModal" aria-labelledby="deleteDemandeModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteDemandeModalLabel">Supprimer une demande</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body  d-flex justify-content-center">
+                                                    <h1>Êtes-vous sûr de vouloir supprimer cette demande?</h1>
+                                                    <input type="hidden" id="demande-id" value="">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" id="confirm-delete-demande-btn" onclick="deleteDemande( {{demande.id}} )">Supprimer</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 {% endfor %}
                             {% endif %}
                         </div>   
@@ -695,13 +698,30 @@
                         </div>
                     </div>
                 </div>
+
+                
             </div>
             
+            {# Consultations Container #}
+            <div class="mt-5 d-none custom-container" id="consultationContainer">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td scope="col">Animal</td>
+                            <td scope="col">Clics</td>
+                        </tr>
+                    </thead>
+                    <tbody id="visitTable">
+                    </tbody>
+                </table>   
+            </div>
             
     </div>
 </div>
 
-<script src="{{ asset('js/admin-dashboard.js') }}"></script>
+<script src="{{ asset('js//admin/admin-dashboard.js') }}"></script>
+<script src="{{ asset('js/admin/admin_dashboard_allVisits.js') }}"></script>
+<script src="{{ asset('js/allAnimals.js') }}"></script>
 <script src="{{ asset('js/sanitizer.js') }}"></script>
 {% endblock %}
 

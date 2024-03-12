@@ -39,76 +39,82 @@ use App\Entity\DemandeContact;
 use App\Form\animalFormType;
 use App\Form\habitatFormType;
 use App\Form\ServiceType;
-
-
-
 use App\Service\MailerService;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use App\Document\AnimalVisit;
+use stdClass;
+
+
+
+
 
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
 {
-
-    
     public function __construct(
         private EntityManagerInterface $entityManager,
         private SerializerInterface $serializer,
-        private HoraireRepository  $horaireRepository
+        private HoraireRepository  $horaireRepository,
+        private DocumentManager $dm,
 
         )
     {
         $this->entityManager=$entityManager;
+        $this->dm = $dm;
     }
 
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function dashboard(Request $request, PaginatorInterface $paginator): Response
+public function dashboard(Request $request, PaginatorInterface $paginator): Response
+{
+    // Fetch data for other entities
+    $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
+    $demandes = $this->entityManager->getRepository(DemandeContact::class)->findAll();
+    $services = $this->entityManager->getRepository(Service::class)->findAll();
+    $users = $this->entityManager->getRepository(User::class)->findAll();
+    $zoos = $this->entityManager->getRepository(Zoo::class)->findAll();
+    $horaires = $this->entityManager->getRepository(Horaire::class)->findAll();
+    $habitats = $this->entityManager->getRepository(Habitat::class)->findAll();
+    $infoAnimals = $this->entityManager->getRepository(InfoAnimal::class)->findAll();
+    $commentaires = $this->entityManager->getRepository(CommentaireHabitat::class)->findAll();
+
+    $createAnimalForm = $this->createForm(AnimalFormType::class);
+    $createHabitatForm = $this->createForm(HabitatFormType::class);
+    $serviceForm = $this->createForm(ServiceType::class);
+
+
+    return $this->render('admin/dashboard.html.twig', [
+        'controller_name' => 'AdminController',
+        'services' => $services,
+        'users' => $users,
+        'zoos' => $zoos,
+        'horaires' => $horaires,
+        'habitats' => $habitats,
+        'animaux' => $animaux,
+        'infoAnimals' => $infoAnimals,
+        'demandes' => $demandes,
+        'commentaires' => $commentaires,
+        'createAnimalForm' => $createAnimalForm->createView(),
+        'createHabitatForm' => $createHabitatForm->createView(),
+        'serviceForm' => $serviceForm->createView(),
+
+    ]);
+}
+
+
+
+    #[Route('/visites/all', name: 'getVisites', methods: ['GET'])]
+    public function getVisites(): JsonResponse
     {
-        $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
-        $demandes = $this->entityManager->getRepository(DemandeContact::class)->findAll();
-        $services = $this->entityManager->getRepository(Service::class)->findAll();
-        $users = $this->entityManager->getRepository(User::class)->findAll();
-        $zoos = $this->entityManager->getRepository(Zoo::class)->findAll();
-        $horaires = $this->entityManager->getRepository(Horaire::class)->findAll();
-        $habitats = $this->entityManager->getRepository(Habitat::class)->findAll();
-        $infoAnimals = $this->entityManager->getRepository(infoAnimal::class)->findAll();
-        $commentaires= $this->entityManager->getRepository(CommentaireHabitat::class)->findAll();
-        $createAnimalForm=$this->createForm(animalFormType::class);
-        $createHabitatForm=$this->createForm(habitatFormType::class);
-        $serviceForm=$this->createForm(ServiceType::class);
-
-
-        return $this->render('admin/dashboard.html.twig', [
-            'controller_name' => 'AdminController',
-            'services'=>$services,
-            'users'=>$users,
-            'zoos'=>$zoos,
-            'horaires'=>$horaires,
-            'habitats'=>$habitats,
-            'animaux'=>$animaux,
-            'infoAnimals'=>$infoAnimals,
-            'demandes'=>$demandes,
-            'commentaires'=>$commentaires,
-            'createAnimalForm'=>$createAnimalForm->createView(),
-            'createHabitatForm'=>$createHabitatForm->createView(),
-            'serviceForm'=>$serviceForm->createView(),
-
-
-
-        ]);
+        try{
+        $visites = $this->dm->getRepository(AnimalVisit::class)->findAll();
+        return JsonResponse::fromJsonString($this->serializer->serialize($visites, 'json'), Response::HTTP_OK);
+        }catch (\Exception $e) {
+            return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /*-------------------------Services ------------------------*/
-
-
-    #[Route('/services', name: 'servicesAdmin', methods: ['GET'])]
-    public function indexServices(ServiceRepository $servRepo): Response
-    {
-        $services = $servRepo->findAll();
-        return $this->render('admin/services.html.twig', [
-            'controller_name' => 'AdminController',
-            'services'=>$services
-        ]);
-    }
 
     #[Route('/services/create', name: 'createService', methods: 'POST')]
     public function createService(Request $request): Response
@@ -238,8 +244,6 @@ class AdminController extends AbstractController
         }
     }
 
-    
-
     #[Route('/user/edit/{id}', name: 'editUser', methods: ['PUT'])]
     public function editUser(int $id, Request $request): JsonResponse
     {
@@ -268,8 +272,6 @@ class AdminController extends AbstractController
         $this->entityManager->flush();
         return new JsonResponse(['message' => 'User updated successfully'], Response::HTTP_OK);
     }
-
-
 
     /* ------------------------Horaires------------------------ */
 
@@ -350,18 +352,6 @@ class AdminController extends AbstractController
 
 /* ------------------------Habitat------------------------ */
 
-    #[Route('/habitats', name: 'habitatsIndex', methods: ['GET'])]
-    public function indexHabitats(HabitatRepository $habitatRepo): Response
-    {
-    $habitats = $habitatRepo->findAll();
-    $createForm = $this->createForm(habitatFormType::class);
-    return $this->render('admin/habitats.html.twig', [
-        'controller_name' => 'AdminController',
-        'habitats'=>$habitats,
-        'createForm' => $createForm->createView(),
-
-    ]);
-    }
 
     #[Route('/habitats/create', name: 'createHabitat', methods: 'POST')]
     public function createHabitat(Request $request): Response
@@ -453,6 +443,22 @@ class AdminController extends AbstractController
 
     /* ------------------------Animal------------------------ */
     
+    #[Route('/animal/all', name: 'getAnimals', methods: ['GET'])]
+    public function getAnimals(): JsonResponse
+    {
+        try{
+        $animals = $this->entityManager->getRepository(Animal::class)->findAll();
+        $context = ['groups' => 'animal:read'];
+        return JsonResponse::fromJsonString($this->serializer->serialize(
+            $animals, 'json', $context),
+            Response::HTTP_OK);
+        
+        }catch (\Exception $e) {
+            return new JsonResponse(['error' => 'An error occured', $e->getMessage() ],
+                Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     #[Route('/animal/create', name: 'createAnimal', methods: ['POST'])]
     public function createAnimal(Request $request){
         try{
@@ -578,8 +584,21 @@ class AdminController extends AbstractController
     } catch (\Exception $e) {
         $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage());
     }
-
     return new RedirectResponse($this->generateUrl('app_employe_index'));
+    }
+
+    #[Route('/demande/delete/{id}', name: 'delete_demande', methods:['DELETE'])]
+    public function deleteDemande(Request $request): Response
+    {
+        $demande=$this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
+        if (!$demande){
+            $this->addFlash('error', 'Demande not found');
+            throw $this->createNotFoundException("No demande found for {$id} id");
+        }
+        $this->entityManager->remove($demande);
+        $this->entityManager->flush();
+        $this->addFlash('success', 'Demande deleted successfully');
+        return new Response('Demande deleted successfully', 200);
     }
     
 }
