@@ -35,8 +35,10 @@
                     <li class="my-2">
                         <p role="button" id="contactBtn" class="sidebar-item"><i class="fa-solid fa-envelope"></i> Contact</p>
                     </li>
+                    <li class="my-2" id="consultationsBtn" class="sodebar-item">
+                        <p role="button" id="consultationsBtn" class="sidebar-item"><i class="fa-solid fa-chart-simple"></i> Consultations</p>
                     <li class="mt-2 mb-3">
-                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</a>
                     </li>
                 </ul>
             </div>
@@ -693,6 +695,33 @@
                             </form>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Consultations Container #}
+            <div class="mt-5 d-none" id="consultationContainer">
+                <div class="container header">
+                    <div class="container-title">
+                        <h5>Les consultations</h5>
+                    </div>
+                    <div class="container-body scrollable-container">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr scope="col"> Animal </tr>
+                                <tr scope="col"> Habitat</tr>
+                                <tr scope="col"> Consultations</tr>
+                            </thead>
+                            <tbody>
+                                {% for animal in animaux %}
+                                    <tr>
+                                        <td>{{ animal.prenom }}</td>
+                                        <td>{{ animal.getHabitat.getNom }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
             </div>
