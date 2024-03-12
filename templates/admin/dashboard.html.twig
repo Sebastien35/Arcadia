@@ -306,23 +306,11 @@
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Nom</th>
-                                <th scope="col">Habitat</th>
+                                <th scope="col">Race</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {% for animal in animaux %}
-                            <tr>
-                                <td>{{ animal.id }}</td>
-                                <td>{{ animal.prenom }}</td>
-                                <td>{{ animal.getHabitat.getNom }}</td> 
-                                <td>
-                                    <a type="button" class="btn btn-info" href="{{ path('app_admin_showAnimal', {'id': animal.id}) }}"><i class="fa-regular fa-eye"></i></a>
-                                    <button class="btn btn-primary" id="edit-animal-btn"onclick="window.location=('/admin/animal/update/'+ {{ animal.id }} )"><i class="fa-solid fa-pen-to-square"></i></button>
-                                    <button class="btn btn-danger" id="delete-animal-btn"data-bs-toggle="modal" data-bs-target="#delete-animal-Modal" data-animal-id="{{ animal.id }}"><i class="fa-solid fa-user-minus"></i></button>
-                                </td>         
-                            </tr>
-                            {% endfor %}
+                        <tbody id="animalTableBody">
                         </tbody>
                     </table>
                 </div>
@@ -362,7 +350,6 @@
                         </div>
                     </div>
                 </div> 
-
                 {# Modal for deleting animal #}
                 <div class="modal modal-fade" id="delete-animal-Modal" tabindex="-1" aria-labelledby="delete-animal-Modal-label" aria-hidden="true">
                     <div class="modal-dialog">
@@ -372,7 +359,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <p class="d-none" id="animal-id" ></p>
+                                <input type="hidden" id="delete-animal-id">
                                 <p>Voulez-vous vraiment supprimer cet animal?</p>   
                             </div>
                             <div class="modal-footer">
@@ -664,6 +651,25 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {# Modal for deleting demande #}
+                                    <div class="modal modal-fade" tabindex="-1" id="deleteDemandeModal" aria-labelledby="deleteDemandeModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteDemandeModalLabel">Supprimer une demande</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body  d-flex justify-content-center">
+                                                    <h1>Êtes-vous sûr de vouloir supprimer cette demande?</h1>
+                                                    <input type="hidden" id="demande-id" value="">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" id="confirm-delete-demande-btn" onclick="deleteDemande( {{demande.id}} )">Supprimer</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 {% endfor %}
                             {% endif %}
                         </div>   
@@ -692,6 +698,8 @@
                         </div>
                     </div>
                 </div>
+
+                
             </div>
             
             {# Consultations Container #}
@@ -711,8 +719,9 @@
     </div>
 </div>
 
-<script src="{{ asset('js/admin-dashboard.js') }}"></script>
-<script src="{{ asset('js/admin_dashboard_allVisits.js') }}"></script>
+<script src="{{ asset('js//admin/admin-dashboard.js') }}"></script>
+<script src="{{ asset('js/admin/admin_dashboard_allVisits.js') }}"></script>
+<script src="{{ asset('js/allAnimals.js') }}"></script>
 <script src="{{ asset('js/sanitizer.js') }}"></script>
 {% endblock %}
 

@@ -116,17 +116,6 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
 
     /*-------------------------Services ------------------------*/
 
-
-    #[Route('/services', name: 'servicesAdmin', methods: ['GET'])]
-    public function indexServices(ServiceRepository $servRepo): Response
-    {
-        $services = $servRepo->findAll();
-        return $this->render('admin/services.html.twig', [
-            'controller_name' => 'AdminController',
-            'services'=>$services
-        ]);
-    }
-
     #[Route('/services/create', name: 'createService', methods: 'POST')]
     public function createService(Request $request): Response
     {
@@ -255,8 +244,6 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         }
     }
 
-    
-
     #[Route('/user/edit/{id}', name: 'editUser', methods: ['PUT'])]
     public function editUser(int $id, Request $request): JsonResponse
     {
@@ -285,8 +272,6 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         $this->entityManager->flush();
         return new JsonResponse(['message' => 'User updated successfully'], Response::HTTP_OK);
     }
-
-
 
     /* ------------------------Horaires------------------------ */
 
@@ -458,6 +443,22 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
 
     /* ------------------------Animal------------------------ */
     
+    #[Route('/animal/all', name: 'getAnimals', methods: ['GET'])]
+    public function getAnimals(): JsonResponse
+    {
+        try{
+        $animals = $this->entityManager->getRepository(Animal::class)->findAll();
+        $context = ['groups' => 'animal:read'];
+        return JsonResponse::fromJsonString($this->serializer->serialize(
+            $animals, 'json', $context),
+            Response::HTTP_OK);
+        
+        }catch (\Exception $e) {
+            return new JsonResponse(['error' => 'An error occured', $e->getMessage() ],
+                Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     #[Route('/animal/create', name: 'createAnimal', methods: ['POST'])]
     public function createAnimal(Request $request){
         try{
