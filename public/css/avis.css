@@ -1,10 +1,39 @@
+body{
+    background-color: #FAF9F6 !important;
+}
+
+@media (max-width: 1280px) {
+    .custom-container{
+        min-width:80vw !important;
+        margin-left:0 !important;
+    }
+}
+
+
+.scrollable-container{ 
+    height: 80vh;
+    overflow-y: scroll;
+    overflow-x:hidden;
+    background-color: #fff;
+}
+
 /* -------------------------------  texte  ----------------------------- */
 
 
-H1{ color:var(--primary)}
+H1{ 
+    color:var(--primary);
+    font-size: 2.8vh;
+
+}
+
+.active{
+    color:var(--active);
+}
 
 
 /* -------------------------------  Containers  ------------------------ */
+
+
 
 .avis-list-container{
     width:50vw;
@@ -13,18 +42,16 @@ H1{ color:var(--primary)}
     top:15vh;
     padding:0%;
     margin:0%;
+    max-height:80vh;
 
 
 }
 
-.bg-dark-box{
-    background-color: var(--bg-dark);
+.see-post-container{
+    background-color: rgba(0,0,0,0.8);
 }
 
-.Bg-white-box{
-    background-color: var(--white);
-}
-
-.avis-form-container{
-    border:1px solid var(--bg-dark);
+.page-container{
+    max-height:100vh;
+    overflow-y: hidden;
 }

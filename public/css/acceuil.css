@@ -1,4 +1,8 @@
 /*ACCEUIL.CSS*/
+
+html{
+  scroll-behavior: smooth;
+}
 .top-container{
   height: 40vh;
   background-position:   40% 55%;
@@ -93,4 +97,10 @@
   .animal-image{
     height: 30vh;
   }
+}
+
+
+.carousel-item.active{
+  z-index: 0;
+  overflow-y: hidden;
 }
