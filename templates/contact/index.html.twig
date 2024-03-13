@@ -5,12 +5,13 @@
 {% block body %}
 <link rel="stylesheet" href="{{ asset('css/contact.css') }}">
 <div class="mt-5 page-container">
+    <img src="{{ asset('images/parc/chouette.webp') }}" class="img-fluid d-lg-none top-img" alt="L'image n'a pas chargé">
     <div class="row">
         <div class="col-lg-6 col-sm-12">
             {# Form #}
             <div class="container custom-container  mb-5">
                 <div class="container-header">
-                    <h1 class="text-center mt-5">Demande de contact</h1>
+                    <h1 class="text-center mt-5 d-none d-lg-block">Demande de contact</h1>
                     <p class="text-center text-muted d-none d-lg-block">Laissez un message à nos employés, ils se chargeront de vous recontacter</p>
                 </div>
                 <div class="container-body">
@@ -32,7 +33,7 @@
                         {{ form_errors(form.message) }}
                     </div>
                 </div>
-                <div class="container-footer mb-3">
+                <div class="container-footer mb-3 d-flex justify-content-center">
                     <button type="submit" class="btn btn-primary">Envoyer</button>
                     {{ form_end(form) }}
                 </div>

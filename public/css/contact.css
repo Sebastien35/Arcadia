@@ -9,16 +9,20 @@
     overflow: hidden !important;
 }
 
+@media (max-width: 768px) {
+    .custom-container{
+        min-width:80vw !important;
+        margin-left:0 !important;
+    }
+}
+
+
 #chouette{
     clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
     box-shadow: #f5f5f5;
+    min-height:100vh;
 }
 
-@media (max-width: 768px){
-    body{
-        background-image: url(../images/parc/bg_logo.webp);
-    }
-}
 
 .container-header{
     display: flex;
@@ -34,7 +38,8 @@
 }
 .custom-container {
     margin: 0 auto;
-    max-width: 600px; /* Ajustez la largeur selon vos besoins */
+    max-width: 66vw;
+    margin-left: 5vw;
 }
 
 .container-body{
@@ -47,4 +52,10 @@
     padding: 0.75rem 1rem;
     margin-top: 0%;
     margin-bottom: 0%;
+}
+
+.top-img{
+    min-width:80vw;
+    min-height:10vh;
+    clip-path: polygon(0 15%, 100% 15%, 100% 70%, 0 70%);
 }

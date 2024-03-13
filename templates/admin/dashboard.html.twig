@@ -109,7 +109,7 @@
                 {% endfor %}
             </div>
             {# User Container #}
-            <div class="custom-container mt-5 d-none" id="user-container" style="height:90vh">
+            <div class="custom-container mt-5 d-none" id="user-container">
                 <div class="container-header d-flex">
                     <div class="container-header-title">
                         <p> Comptes utilisateurs</p>
@@ -119,33 +119,35 @@
                     </div>
                 </div>
                 <div class="container-body">
-                    <table class="table table-striped" aria-label="user accounts table">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Mail</th>
-                                <th scope="col">Role</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for user in users %}
-                                {% if user.roles[0] != "ROLE_ADMIN" %}
-                                    <tr>
-                                        <td>{{ user.id }}</td>
-                                        <td>{{ user.email }}</td>
-                                        <td>{{ user.roles[0] }}</td>
-                                        <td>
-                                            <button class="btn btn-danger" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="{{ user.id }}"><i class="fa-solid fa-user-xmark"></i></i></button>
-                                            <button class="btn btn-primary" id="edit-user" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="{{ user.id }}"><i class="fa-solid fa-user-edit"></i></i></button>
-                                        </td>
-                                    
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>                 
+                    <div class="table-responsive">
+                        <table class="table table-striped" aria-label="user accounts table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Mail</th>
+                                    <th scope="col">Role</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                    {% if user.roles[0] != "ROLE_ADMIN" %}
+                                        <tr>
+                                            <td>{{ user.id }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td>{{ user.roles[0] }}</td>
+                                            <td>
+                                                <button class="btn btn-danger" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="{{ user.id }}"><i class="fa-solid fa-user-xmark"></i></button>
+                                                <button class="btn btn-primary" id="edit-user" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="{{ user.id }}"><i class="fa-solid fa-user-edit"></i></button>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+                
             
                 
                 {# Modal for creating user #}
@@ -250,7 +252,7 @@
                 <div class="container-body mt-2 scrollable-container">
                     <div class="row">
                         {% for singlehabitat in habitats %}
-                        <div class="col col-lg-3 col-sm-12">
+                        <div class="col-lg-3 col-sm-12">
                             <div class="card mb-2 habitatCard">
                                 <div class="card-header d-flex justify-content-between">
                                     <div class="card-header-title">
@@ -444,7 +446,8 @@
                     </div>              
                 </div>
                 <div class="container-body mt-2 scrollable-container">
-                    <table class="table table-striped" aria-labelledby="Comptes-rendus">
+                    <div class="table-responsive">
+                    <table class="table table-striped " aria-labelledby="Comptes-rendus">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
@@ -471,6 +474,7 @@
 
                         </tbody>
                     </table>
+                    </div>
                 </div>
                 {# Modal for deleting infoAnimal #}
                 <div class="modal modal-fade" tabindex="-1" id="deleteInfoAnimalModal" aria-labelledby="deleteInfoAnimalModalLabel" aria-hidden="true">
@@ -503,6 +507,7 @@
                     </div>
                 </div>
                 <div class="container-body mt-2 scrollable-container">
+                    <div class="table-responsive">
                     <table class="table table-striped" aria-labelledby="services">
                         <thead>
                             <tr>
@@ -526,6 +531,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    </div>
                 </div>
 
                 {# Modal for deleting service #}
@@ -651,8 +657,7 @@
                 </div>
             </div>
             {# Contact container #}
-            <div class="mt-5 d-none" id="contactContainer">
-                <div class="custom-container">
+                <div class="custom-container mt-5 d-none" id="contactContainer">
                     <div class="container-header">
                         <div class="container-title">
                             <H5>Demandes de contact</H5>
@@ -722,7 +727,7 @@
                             {% endif %}
                         </div>   
                     </div>
-                </div>
+                
                 {# modal repondre #}
                 <div class="modal fade" tabindex="-1" id="repondreModal">
                     <div class="modal-dialog">
@@ -752,6 +757,11 @@
             
             {# Consultations Container #}
             <div class="mt-5 d-none custom-container" id="consultationContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <H5>Populairté des animaux</H5>
+                    </div>
+                </div>
                 <table class="table table-striped">
                     <thead>
                         <tr>

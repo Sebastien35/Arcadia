@@ -7,34 +7,67 @@
 
 
 <div class="container-fluid page-container">
-    <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+    <div class="row flex-nowrap" id="agencement">
+
+
+
+        <div class="collapse d-lg-none  px-sm-2 px-0 bg-dark" id="sidebarCollapse" aria-hidden="true">
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 <ul class="mt-5">
                     <li class="mt-2 mb-3">
-                        <H5 class="nav-item"><i class="fa-solid fa-user-doctor"></i> Espace vétérinaire </H5>
+                        <H5 class="nav-item" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-user-doctor"></i> Espace vétérinaire </H5>
                     </li>
                     <li class="my-2 mt-2">
-                        <p role="button" id="animal-btn"class="sidebar-item"><i class="fa-solid fa-otter"></i>Animaux</p>
+                        <p class="sidebar-item  animal-btn" role="button" id="animal-btn"data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-otter"></i>Animaux</p>
                     </li>
                     <li class="my-2 mt-2">
-                        <p role="button" id="nourriture-btn" class="sidebar-item"><i class="fa-solid fa-utensils"></i>Nourriture</p>
+                        <p class="sidebar-item nourriture-btn" role="button" id="nourriture-btn"data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ><i class="fa-solid fa-utensils"></i>Nourriture</p>
                     </li> 
                     <li class="my-2 mt-2">
-                        <p role="button" id="repasBtn" class="sidebar-item"><i class="fa-solid fa-utensils"></i>Repas des animaux</p>
+                        <p class="sidebar-item repasBtn"  role="button" id="repasBtn" class="sidebar-item" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-utensils"></i>Repas des animaux</p>
                     </li>
                     <li class="my-2 mt-2">
-                        <p role="button" id="habitatsBtn" class="sidebdar-item"><i class="fa-solid fa-home"></i>Habitats</p>
+                        <p class="sidebdar-item  habitatsBtn" role="button" id="habitatsBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-home"></i>Habitats</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                        <a class="nav-item btn btn-danger" href="/logout" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="d-lg-none  px-sm-2 px-0 mt-5">
+            <button class="btn btn-primary w-100 toggle-btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse">
+                Menu
+            </button>
+        </div>
+
+        <div class="d-none d-lg-block col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="mt-5">
+                    <li class="mt-2 mb-3">
+                        <H5 class="nav-item" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-user-doctor"></i> Espace vétérinaire </H5>
+                    </li>
+                    <li class="my-2 mt-2">
+                        <p class="sidebar-item  animal-btn" role="button" id="animal-btn"data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-otter"></i>Animaux</p>
+                    </li>
+                    <li class="my-2 mt-2">
+                        <p class="sidebar-item nourriture-btn" role="button" id="nourriture-btn"data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ><i class="fa-solid fa-utensils"></i>Nourriture</p>
+                    </li> 
+                    <li class="my-2 mt-2">
+                        <p class="sidebar-item repasBtn"  role="button" id="repasBtn" class="sidebar-item" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-utensils"></i>Repas des animaux</p>
+                    </li>
+                    <li class="my-2 mt-2">
+                        <p class="sidebdar-item  habitatsBtn" role="button" id="habitatsBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-home"></i>Habitats</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <a class="nav-item btn btn-danger" href="/logout" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
                     </li>
                 </ul>
             </div>
         </div>
         
         
-        <div class="col py-3">
+        <div class="col py-3" id="#content">
             
             {# Error and success messages #}
             <div>
@@ -51,7 +84,8 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="mt-5 d-none" id="animal-container">
+            {# Container animaux #}
+            <div class="custom-container mt-5 d-none" id="animal-container">
                 <div class="container-header d-flex">
                     <div class="container-header-title">
                         <p>Les animaux</p>
@@ -62,6 +96,7 @@
                 </div>
                 <div class="animal-container-body">
                     <div class="table-div">
+                        <div class="table-responsive">
                         <table id="animal-table" class="table table-striped" aria-label="animals table">
                             <thead>
                                 <tr>
@@ -87,6 +122,7 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                        </div>
                     </div>
                     
                     {# Modal d'ajout d'animal #}
@@ -191,7 +227,7 @@
             </div>
             
             
-            <div class="mt-5" id="nourriture-container">
+            <div class="custom-container mt-5" id="nourriture-container">
                 <div class="container-header d-flex">
                     <div class="container-header-title">
                         <p>Nourriture disponible</p>
@@ -285,31 +321,35 @@
             
             
             
-            <div class="mt-5 d-none" id="repas-container">
-                <H1> Consulter les repas des animaux:</H1>
-                
-                <div class="row">
-                    {% for animal in animaux %}
-                    <div class="col-3">
-                            <div class="card mb-2 animalRepasCard" role="button" onClick="window.location=('/veterinaire/animal/show/'+ {{ animal.id }} )" >
-                                <div class="card-header">
-                                    <h5 class="card-title">{{ animal.getPrenom }}</h5>
-                                </div>
-                                <div class="card-image">
-                                    {% if animal.imageName == null %}
-                                    <img src="{{ asset('images/parc/default.jpg') }}" class="card-img-top animal-img" alt="image_{{ animal.getPrenom }}" >
-                                    {% else %}
-                                    <img src="{{ asset('images/animal/' ~ animal.imageName) }}" class="card-img-top animal-img" alt="image_{{ animal.getPrenom }}" >
-                                    {% endif %}
-                                </div>               
-                            </div>   
+            <div class="custom-container mt-5 d-none" id="repas-container">
+                <div class="container-header">
+                    <div class="container-header-title">
+                        <p>Repas des animaux</p>
                     </div>
-                    {% endfor %}                   
                 </div>
-                
+                <div class="container-body scrollable-container">
+                    <div class="row">
+                        {% for animal in animaux %}
+                        <div class="col-lg-3 col-sm-12">
+                                <div class="card mb-2 mt-1 animalRepasCard" role="button" onClick="window.location=('/veterinaire/animal/show/'+ {{ animal.id }} )" >
+                                    <div class="card-header">
+                                        <h5 class="card-title">{{ animal.getPrenom }}</h5>
+                                    </div>
+                                    <div class="card-image">
+                                        {% if animal.imageName == null %}
+                                        <img src="{{ asset('images/parc/default.jpg') }}" class="card-img-top animal-img" alt="image_{{ animal.getPrenom }}" >
+                                        {% else %}
+                                        <img src="{{ asset('images/animal/' ~ animal.imageName) }}" class="card-img-top animal-img" alt="image_{{ animal.getPrenom }}" >
+                                        {% endif %}
+                                    </div>               
+                                </div>   
+                        </div>
+                        {% endfor %}                   
+                    </div>
+                </div>
             </div>
 
-            <div class="mt-5 d-none" id="habitat-container">
+            <div class="custom-container mt-5 d-none" id="habitat-container">
                 <div class="container-header d-flex">
                     <div class="container-header-title">
                         <p>Les habitats</p>
@@ -319,7 +359,7 @@
                 <div class="container-body mt-2">
                     <div class="row">
                         {% for habitat in habitats %}
-                        <div class="col col-lg-4 col-sm-12">
+                        <div class="col-lg-4 col-sm-12">
                             <div class="card mb-2 habitatCard" >
                                 <div class="card-header d-flex">
                                     <div class="card-header-title">

@@ -59,6 +59,7 @@
     
 }
 
-.footer{
-    z-index: 100000;
+footer{
+    min-width: 100vh;
+    --bs-gutter-x: 0 !important;
 }
