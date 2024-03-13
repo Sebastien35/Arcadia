@@ -1,7 +1,8 @@
-const btnAnimal = document.getElementById('animalBtn');
-btnAnimal.addEventListener('click', getAnimals);
+const btnAnimals = document.querySelectorAll('.animalBtn');
+btnAnimals.forEach(button=>button.addEventListener('click', getAnimals));
 
 async function getAnimals(){
+    console.log('Fetching animals...');
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     let requestOptions = {

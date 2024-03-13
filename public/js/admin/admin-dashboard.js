@@ -2,16 +2,15 @@
 
 /*---------------- Display User Container ------------------*/
 const userContainer = document.getElementById('user-container');
-const userBtn = document.getElementById('userBtn');
+const userBtns = document.querySelectorAll('.userBtn');
 
-userBtn.addEventListener('click', function(){
+userBtns.forEach(button => button.addEventListener('click', function() {
     FlushFeatures();
     FlushActive();
     
     userContainer.classList.remove('d-none');
-    userBtn.classList.add('active');
-    
-});
+    button.classList.add('active'); // Use 'button' instead of 'userBtn' because 'button' is the current button being clicked
+}));
 
 // Delete User:
 document.addEventListener('DOMContentLoaded', function(){
@@ -104,16 +103,14 @@ function editUser(){
 
 /* ----------------- Habitat Container ----------------- */
 const habitatContainer = document.getElementById('habitat-container');
-const habitatBtn = document.getElementById('habitatBtn');
+const habitatBtns = document.querySelectorAll('.habitatBtn');
 
-const commentairesBtn = document.getElementById('commentairesBtn');
-
-habitatBtn.addEventListener('click', function(){
+habitatBtns.forEach(button => button.addEventListener('click', function(){
     FlushFeatures();
     FlushActive();
     habitatContainer.classList.remove('d-none');
-    habitatBtn.classList.add('active');
-});
+    button.classList.add('active');
+}));
 
 const deleteHabitatBtns = document.querySelectorAll('[data-habitat-id]');
 deleteHabitatBtns.forEach(button=>{
@@ -176,14 +173,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* -----------------Animal Container ----------------- */
 const animalContainer = document.getElementById('animal-container');
-const animalBtn = document.getElementById('animalBtn');
+const animalBtns = document.querySelectorAll('.animalBtn');
 
-animalBtn.addEventListener('click', function(){
+animalBtns.forEach(button => button.addEventListener('click', function(){
     FlushFeatures();
     FlushActive();
     animalContainer.classList.remove('d-none');
-    animalBtn.classList.add('active');
-});
+    button.classList.add('active');
+}));
 
 //Supprimer Animal --------------------------------------------------------
 // Le passage d'id animal est assuré par le bouton de suppression, logique dans allAnimals.js
@@ -218,14 +215,14 @@ function deleteAnimal() {
 
 /*-----------------infoAnimal Container ----------------- */
 const infoAnimalContainer = document.getElementById('info-animal-container');
-const infoAnimalBtn = document.getElementById('infoAnimalBtn');
+const infoAnimalBtns  = document.querySelectorAll('.infoAnimalBtn');
 
-infoAnimalBtn.addEventListener('click', function(){
+infoAnimalBtns .forEach(button => button.addEventListener('click', function(){
     FlushFeatures();
     FlushActive();
     infoAnimalContainer.classList.remove('d-none');
-    infoAnimalBtn.classList.add('active');
-});
+    button.classList.add('active');
+}));
 
 const btndelteinfoAnimals = document.querySelectorAll('[data-infoAnimal-id]');
 btndelteinfoAnimals.forEach(button=>{
@@ -291,14 +288,14 @@ applyinfoAnimalFilters();
 
 /*--------------------------Services--------------------------*/
 const servicesContainer  = document.getElementById('services-container');
-const servicesBtn = document.getElementById('servicesBtn');
+const servicesBtns = document.querySelectorAll('.servicesBtn');
 
-servicesBtn.addEventListener('click', function(){
+servicesBtns.forEach(button => button.addEventListener('click', function(){
     FlushFeatures();
     FlushActive();
     servicesContainer.classList.remove('d-none');
-    servicesBtn.classList.add('active');
-});
+    button.classList.add('active');
+}));
 
 // Supprimer un service:
 
@@ -338,14 +335,14 @@ function deleteService(){
 
 /*----------------- Horaires ----------------- */
 const horairesContainer = document.getElementById('horaires-container');   
-const horairesBtn = document.getElementById('horairesBtn'); 
+const horairesBtns = document.querySelectorAll('.horairesBtn'); 
 
-horairesBtn.addEventListener('click', function(){
+horairesBtns.forEach(button => button.addEventListener('click', function(){
     FlushFeatures();
     FlushActive();
     horairesContainer.classList.remove('d-none');
-    horairesBtn.classList.add('active');
-});
+    button.classList.add('active');
+}));
 
 //Modifier les horaires:
 const editHoraireBtns = document.querySelectorAll('[data-horaire-id]');
@@ -397,15 +394,15 @@ function editHoraire(){
 
 /*-----------demandes de contact 05/03/2024 ------------------ */
 const contactContainer = document.getElementById('contactContainer');
-const contactBtn = document.getElementById('contactBtn');
+const contactBtns = document.querySelectorAll('.contactBtn');
 
-contactBtn.addEventListener('click', showContact);
-function showContact(){
+contactBtns.forEach(button => button.addEventListener('click', function(){
     FlushFeatures();
     FlushActive();
-    contactBtn.classList.add('active');
     contactContainer.classList.remove('d-none');
-}
+    button.classList.add('active');
+}));
+
 
 // Répondre à une demande de contact
 const contactResponseBtns = document.querySelectorAll('[data-demande-id]');
@@ -437,7 +434,7 @@ async function sendResponse() {
         redirect: 'follow'
     };
     try {
-        let response = await fetch(`/employe/demande/repondre/${targetId}`, requestOptions);
+        let response = await fetch(`/admin/demande/repondre/${targetId}`, requestOptions);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -507,15 +504,14 @@ applyDemandeContactFilter();
 /*----------------- Consultations des animaux -----------------*/
 
 const consultationContainer = document.getElementById('consultationContainer');
-const consultationContainerbtn = document.getElementById('consultationContainerBtn')
+const consultationContainerBtns = document.querySelectorAll('.consultationContainerBtn')
 
-consultationContainerbtn.addEventListener('click', showConsultation);
-function showConsultation(){
+consultationContainerBtns.forEach(button => button.addEventListener('click', function(){
     FlushFeatures();
     FlushActive();
-    consultationContainerbtn.classList.add('active');
+    button.classList.add('active');
     consultationContainer.classList.remove('d-none');
-}
+}));
 
 
 
@@ -544,13 +540,20 @@ function FlushFeatures(){
 /* Remove .active class from the sidebar */
 
 function FlushActive(){
-    userBtn.classList.remove('active');
-    habitatBtn.classList.remove('active');
-    animalBtn.classList.remove('active');
-    infoAnimalBtn.classList.remove('active');
-    servicesBtn.classList.remove('active');
-    horairesBtn.classList.remove('active');
-    contactBtn.classList.remove('active');
-    consultationContainerbtn.classList.remove('active');
-
+    userBtns.forEach(button => button.classList.remove('active'));
+    habitatBtns.forEach(button => button.classList.remove('active'));
+    animalBtns.forEach(button => button.classList.remove('active'));
+    infoAnimalBtns.forEach(button => button.classList.remove('active'));
+    servicesBtns.forEach(button => button.classList.remove('active'));
+    horairesBtns.forEach(button => button.classList.remove('active'));
+    contactBtns.forEach(button => button.classList.remove('active'));
+    consultationContainerBtns.forEach(button => button.classList.remove('active'));
 }
+
+
+/* Hide Phone Menu */
+const sidebarCollapse = document.getElementById('sidebarCollapse');
+
+sidebarCollapse.addEventListener('hidden.bs.collapse', function () {
+    this.setAttribute('aria-hidden', 'true');
+});

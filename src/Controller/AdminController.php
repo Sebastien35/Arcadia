@@ -45,10 +45,6 @@ use App\Document\AnimalVisit;
 use stdClass;
 
 
-
-
-
-
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
 {
@@ -437,10 +433,6 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         }
     }
     
-
-
-
-
     /* ------------------------Animal------------------------ */
     
     #[Route('/animal/all', name: 'getAnimals', methods: ['GET'])]

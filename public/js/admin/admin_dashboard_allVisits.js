@@ -1,6 +1,6 @@
-const visitContainerbtn = document.getElementById('consultationContainerBtn')
+const visitContainerBtns = document.querySelectorAll('.consultationContainerBtn')
 
-visitContainerbtn.addEventListener('click', getConsultations);
+visitContainerBtns.forEach(button=>button.addEventListener('click', getConsultations));
 async function getConsultations(){
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
@@ -15,9 +15,7 @@ async function getConsultations(){
             throw new Error('Network response was not ok');
         }
         let result = await response.json();
-        console.log(result);
         let visits = result; // Assuming result directly contains the visits array
-        console.log(visits);
         let visitTableBody = document.getElementById('visitTable');
         // Clear existing table rows
         visitTableBody.innerHTML = '';

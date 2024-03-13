@@ -1,4 +1,22 @@
 /* Style for the admin dashboard */
+@media(max-width: 768px){
+    .page-container{
+        overflow-x: hidden;
+        max-width:100vw;
+    }
+    #agencement{
+        flex-wrap: wrap !important;
+    }
+    .custom-container{
+        margin-top: 2vh !important;
+        overflow-x: hidden;
+    }
+}
+
+.page-container{
+    max-height:100vh;
+    overflow-y: hidden;
+}
 
 ul{ list-style: none;}
 .active{ color:#ffcb00}

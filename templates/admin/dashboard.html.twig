@@ -7,44 +7,92 @@
 
 
 <div class="container-fluid page-container">
-    <div class="row flex-nowrap">
-        <div class="col-lg-3 col-xl-2 px-sm-2 px-0 bg-dark">
+    <div class="row flex-nowrap" id="agencement">
+        
+        <!-- Collapsible Content and Toggle Button (visible on small screens) -->
+        <div class="collapse d-lg-none  px-sm-2 px-0 bg-dark" id="sidebarCollapse" aria-hidden="true">
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 <ul class="mt-5">
-                    <li class="mt-2 mb-3">
-                        <H5 class="nav-item"><i class="fa-solid fa-user-tie"></i>Espace administrateur</H5>
+                    <li class="mt-2 mb-3" >
+                        <H5 class="nav-item" role="button" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse"><i class="fa-solid fa-user-tie"></i>Espace administrateur</H5>
                     </li>
                     <li class="mt-5 mb-3">
-                        <p class="nav-item" id="userBtn" role="button"><i class="fa-regular fa-user"></i> Utilisateurs</p>
+                        <p class="nav-item userBtn" id="userBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-user"></i> Utilisateurs</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item" id="habitatBtn" role="button"><i class="fa-solid fa-igloo"></i></i> Habitats</p>
+                        <p class="nav-item habitatBtn" id="habitatBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-igloo"></i></i> Habitats</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item" id="animalBtn" role="button"><i class="fa-solid fa-dog"></i> Animaux</p>
+                        <p class="nav-item animalBtn" id="animalBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-dog"></i> Animaux</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item" id="infoAnimalBtn" role="button"><i class="fa-regular fa-clipboard"></i> Comptes-rendus vétérinaires</p>
+                        <p class="nav-item infoAnimalBtn" id="infoAnimalBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-clipboard"></i> Comptes-rendus vétérinaires</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item" id="servicesBtn" role="button"><i class="fa-solid fa-shop"></i> Services</p>
+                        <p class="nav-item servicesBtn" id="servicesBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ><i class="fa-solid fa-shop"></i> Services</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item" id="horairesBtn" role="button"><i class="fa-regular fa-clock"></i> Horaires</p>
+                        <p class="nav-item horairesBtn" id="horairesBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ><i class="fa-regular fa-clock"></i> Horaires</p>
                     </li>
                     <li class="my-2">
-                        <p role="button" id="contactBtn" class="sidebar-item"><i class="fa-solid fa-envelope"></i> Contact</p>
+                        <p class="nav-item contactBtn" id="contactBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-envelope"></i> Contact</p>
                     </li>
                     <li class="my-2">
-                        <p role="button" id="consultationContainerBtn" class="sidebar-item"><i class="fa-solid fa-chart-simple"></i> Consultations</p>
-                    </li>
+                        <p class="nav-item consultationContainerBtn" role="button" id="consultationContainerBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-chart-simple"></i> Consultations</p>
+                    </li> 
                     <li class="mt-2 mb-3">
-                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</a>
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ></i>Se déconnecter</a>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="col py-3" >
+        
+        <!-- Sidebar Toggle Button (visible on small screens) -->
+        <div class="d-lg-none  px-sm-2 px-0 mt-5">
+            <button class="btn btn-primary w-100 toggle-btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse">
+                Menu
+            </button>
+        </div>
+
+        <!-- Sidebar Column (visible on large screens) -->
+        <div class="d-none d-lg-block col-lg-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <!-- Sidebar Content -->
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="mt-5">
+                    <li class="mt-2 mb-3" >
+                        <H5 class="nav-item" role="button" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse"><i class="fa-solid fa-user-tie"></i>Espace administrateur</H5>
+                    </li>
+                    <li class="mt-5 mb-3">
+                        <p class="nav-item userBtn" id="userBtn" role="button"><i class="fa-regular fa-user"></i> Utilisateurs</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item habitatBtn" id="habitatBtn" role="button"><i class="fa-solid fa-igloo"></i></i> Habitats</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item animalBtn" id="animalBtn" role="button"><i class="fa-solid fa-dog"></i> Animaux</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item infoAnimalBtn" id="infoAnimalBtn" role="button"><i class="fa-regular fa-clipboard"></i> Comptes-rendus vétérinaires</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item servicesBtn" id="servicesBtn" role="button"><i class="fa-solid fa-shop"></i> Services</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item horairesBtn" id="horairesBtn" role="button"><i class="fa-regular fa-clock"></i> Horaires</p>
+                    </li>
+                    <li class="my-2">
+                        <p class="nav-item contactBtn" id="contactBtn" role="button"><i class="fa-solid fa-envelope"></i> Contact</p>
+                    </li>
+                    <li class="my-2">
+                        <p class="nav-item consultationContainerBtn" role="button" id="consultationContainerBtn"><i class="fa-solid fa-chart-simple"></i> Consultations</p>
+                    </li> 
+                    <li class="mt-2 mb-3">
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class=" py-3" id="content" >
             {# Error and success messages #}
             <div>
                 {% for flashMessage in app.flashes('error') %}
