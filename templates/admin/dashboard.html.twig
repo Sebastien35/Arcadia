@@ -3,13 +3,13 @@
 {% block title %}Espace Admin{% endblock %}
 
 {% block body %}
-<link rel="stylesheet" href="{{ asset('css/admin-dashboard.css') }}">
+<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 
 
 <div class="container-fluid page-container">
     <div class="row flex-nowrap" id="agencement">
         
-        <!-- Collapsible Content and Toggle Button (visible on small screens) -->
+        
         <div class="collapse d-lg-none  px-sm-2 px-0 bg-dark" id="sidebarCollapse" aria-hidden="true">
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 <ul class="mt-5">
@@ -92,7 +92,7 @@
                 </ul>
             </div>
         </div>
-        <div class=" py-3" id="content" >
+        <div class="col py-3" id="content" >
             {# Error and success messages #}
             <div>
                 {% for flashMessage in app.flashes('error') %}
@@ -168,7 +168,6 @@
                                             <option value="ROLE_EMPLOYE">Employé</option>
                                             <option value="ROLE_VET">Vétérinaire</option>
                                         </select></br></br>
-
                                     <label for="plainPassword">Mot de passe:</label></br>
                                     <input type="password" Placeholder="Password" name="plainPassword" id="password" required></br>
                                     <label for="plainPassword">Confirmation mot de passe:</label></br>
@@ -236,7 +235,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             
             {# Habitat Container #}
@@ -351,18 +349,32 @@
                     </div>
                 </div>    
                 <div class="container-body mt-2 scrollable-container">
-                    <table class="table table-striped" aria-labelledby="Animaux">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Nom</th>
-                                <th scope="col">Race</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="animalTableBody">
-                        </tbody>
-                    </table>
+                    <div class="row">
+                        {% for animal in animaux %}
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="card mt-1">
+                                <div class="card-header">
+                                    <h5 class="card-title">{{ animal.getPrenom }}</h5>
+                                </div>
+                                <div class="card-body">
+                                    <img src="{{ asset('images/animal/' ~ animal.imageName) }}" class="card-img-top animal-img" alt="image_{{ animal.getPrenom }}" >
+                                </div>
+                                <div class="card-footer">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <button class="dropdown-item" id="show-animal-btn" data-animal-id="{{ animal.id }}" onclick="goSeeAnimal({{animal.id}})">Voir</button>
+                                            <button class="dropdown-item" id="add-info-animal-btn" data-bs-toggle="modal" data-bs-target="#info-animal-modal" data-animal-id="{{ animal.id }}">Nouveau compte rendu</button>
+                                            <button class="dropdown-item" id="delete-animal-btn" data-bs-toggle="modal" data-bs-target="#delete-animal-Modal" data-animal-id="{{ animal.id }}">Supprimer</button>
+                                            <button class="dropdown-item" id="edit-animal-btn" data-bs-toggle="modal" data-bs-target="#edit-animal-modal" data-animal-id="{{ animal.id }}" onclick="goEditAnimal({{animal.id}})">Modifier</button>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}                        
+                    </div>
                 </div>
                 {# Modal for creating animal #}
                 <div class="modal modal-fade" id="add-animal-modal" tabindex="-1" aria-labelledby="add-animal-modal-label" aria-hidden="true">
@@ -595,32 +607,34 @@
                     </div>
                 </div>
                 <div class="container-body">
-                    <table class="table table-striped"aria-labelledby="horaires">
-                        <thead>
-                            <tr>
-                                <th scope="col">Jour</th>
-                                <th scope="col">Ouverture</th>
-                                <th scope="col">Fermeture</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for horaire in horaires %}
-                            <tr>
-                                <td>{{ horaire.jour }}</td>
-                                {% if horaire.isOuvert %}
-                                <td>{{ horaire.HOuverture|date ('H:i')  }}</td>
-                                <td>{{ horaire.HFermeture|date ('H:i') }}</td>
-                                {% else %}
-                                <td>Fermé</td>
-                                <td>Fermé</td>
-                                {% endif %}
-                                <td>
-                                    <button class="btn btn-primary" id="edit-horaire" data-bs-toggle="modal" data-bs-target="#editHoraireModal" data-horaire-id="{{ horaire.id }}"><i class="fa-solid fa-pencil"></i></button>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-striped"aria-labelledby="horaires">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Jour</th>
+                                    <th scope="col">Ouverture</th>
+                                    <th scope="col">Fermeture</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for horaire in horaires %}
+                                <tr>
+                                    <td>{{ horaire.jour }}</td>
+                                    {% if horaire.isOuvert %}
+                                    <td>{{ horaire.HOuverture|date ('H:i')  }}</td>
+                                    <td>{{ horaire.HFermeture|date ('H:i') }}</td>
+                                    {% else %}
+                                    <td>Fermé</td>
+                                    <td>Fermé</td>
+                                    {% endif %}
+                                    <td>
+                                        <button class="btn btn-primary" id="edit-horaire" data-bs-toggle="modal" data-bs-target="#editHoraireModal" data-horaire-id="{{ horaire.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 {# Modal for editing horaire #}
@@ -660,7 +674,7 @@
                 <div class="custom-container mt-5 d-none" id="contactContainer">
                     <div class="container-header">
                         <div class="container-title">
-                            <H5>Demandes de contact</H5>
+                            <p> Demandes de contact </p>
                         </div>
                     </div>
                     <div class="toolbar d-flex justify-content-around">
@@ -759,19 +773,24 @@
             <div class="mt-5 d-none custom-container" id="consultationContainer">
                 <div class="container-header">
                     <div class="container-title">
-                        <H5>Populairté des animaux</H5>
+                        <p> Popularité des animaux </p>
                     </div>
                 </div>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <td scope="col">Animal</td>
-                            <td scope="col">Clics</td>
-                        </tr>
-                    </thead>
-                    <tbody id="visitTable">
-                    </tbody>
-                </table>   
+                <div class="toolbar px-1 mt-1">
+                    <input type="text" id="searchAnimal" class="form-control" placeholder="Rechercher un animal">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <td scope="col">Animal</td>
+                                <td scope="col">Clics</td>
+                            </tr>
+                        </thead>
+                        <tbody id="visitTable">
+                        </tbody>
+                    </table>  
+                </div> 
             </div>
             
     </div>

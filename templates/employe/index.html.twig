@@ -3,37 +3,72 @@
 {% block title %}Hello EmployeController!{% endblock %}
 
 {% block body %}
-<link rel="stylesheet" href="{{ asset('css/employe.css') }}">
-<div class="container-fluid">
-    <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+
+
+<div class="container-fluid page-container">
+    <div class="row flex-nowrap" id="agencement">
+        
+        <!-- Mobile navigation -->
+        <div class="collapse d-lg-none  px-sm-2 px-0 bg-dark" id="sidebarCollapse" aria-hidden="true">
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 <ul class="mt-5">
                     <li class="mt-2 mb-3">
-                        <H5 class="nav-item"><i class="fa-solid fa-user-tie"></i>Espace Employé </H5>
+                        <H5 class="nav-item" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"> <i class="fa-solid fa-user-tie" ></i>Espace Employé </H5>
                     </li>
                     <li class="my-2 mt-2">
-                        <p role="button" id="avisBtn" class="sidebar-item"><i class="fa-regular fa-comment"></i> Avis</p>
+                        <p role="button" id="avisBtn" class="sidebar-item avisBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-comment"></i> Avis</p>
                     </li>
                     <li class="my-2">
-                        <p role="button" id="servicesBtn"class="sidebar-item"><i class="fa-solid fa-shop"     ></i> Services</p>
+                        <p role="button" id="servicesBtn"class="sidebar-item servicesBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-shop"     ></i> Services</p>
                     </li>
                     <li class="my-2">
-                        <p role="button" id="foodBtn" class="sidebar-item"><i class="fa-solid fa-drumstick-bite"></i>Repas des animaux</p>
+                        <p role="button" id="foodBtn" class="sidebar-item foodBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-drumstick-bite"></i>Repas des animaux</p>
                     </li>
                     <li class="my-2">
-                        <p role="button" id="contactBtn" class="sidebar-item"><i class="fa-solid fa-envelope"></i> Contact</p>
+                        <p role="button" id="contactBtn" class="sidebar-item contactBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-envelope"></i> Contact</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                        <a class="nav-item btn btn-danger" href="/logout" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
                     </li>
-                    
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Sidebar Toggle Button (visible on small screens) -->
+        <div class="d-lg-none  px-sm-2 px-0 mt-5">
+            <button class="btn btn-primary w-100 toggle-btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse">
+                Menu
+            </button>
+        </div>
+
+        <div class="d-none d-lg-block col-lg-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="mt-5">
+                    <li class="mt-2 mb-3">
+                        <H5 class="nav-item"><i class="fa-solid fa-user-tie" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"></i>Espace Employé </H5>
+                    </li>
+                    <li class="my-2 mt-2">
+                        <p role="button" id="avisBtn" class="sidebar-item avisBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-comment"></i> Avis</p>
+                    </li>
+                    <li class="my-2">
+                        <p role="button" id="servicesBtn"class="sidebar-item servicesBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-shop"     ></i> Services</p>
+                    </li>
+                    <li class="my-2">
+                        <p role="button" id="foodBtn" class="sidebar-item foodBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-drumstick-bite"></i>Repas des animaux</p>
+                    </li>
+                    <li class="my-2">
+                        <p role="button" id="contactBtn" class="sidebar-item contactBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-envelope"></i> Contact</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <a class="nav-item btn btn-danger" href="/logout" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                    </li>
                 </ul>
             </div>
         </div>
         
         
-        <div class="col py-3">
+        <div class="col py-3" id="content">
             {# error & success messages #}
             <div class="alerts">
                 {% for flashMessage in app.flashes('error') %}
@@ -52,8 +87,12 @@
 
             {# avis container #}
             <div class="custom-container mt-5 d-none" id="avisContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <p>Avis</p>
+                    </div>
+                </div>
                 <div class="row">
-                    <h1 class="text-center">Avis en attente de validation:</h1>
                     <div class="col-12 avis-scroll-container" style="max-height: 400px; overflow-y: auto;">
                         <div id="avisList">
                             {% for singleAvis in avisList %}
@@ -109,7 +148,7 @@
             <div class=" custom-container mt-5 d-none" id="servicesContainer">
                 <div class="container-header">
                     <div class="container-title">
-                        <H5>Services</H5>
+                        <p>Services</p>
                     </div>
                 </div>
                 <div class="container-body mt-3">
@@ -123,9 +162,15 @@
                                 <tr>
                                     <td>{{ service.getNom }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-info" onclick="window.location=('/services/show/'+{{ service.id }})"><i class="fa-regular fa-eye"></i></button>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editServiceModal" data-service-id="{{ service.id }}">Modifier</button>
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" data-service-id="{{ service.id }}">Supprimer</button>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                <li><button class="dropdown-item" onClick='showService( {{service.id}} )'>Voir</button></li>
+                                                <li><button class="dropdown-item " href="#" data-bs-toggle="modal" data-bs-target="#editServiceModal" data-service-id="{{ service.id }}">Modifier</button></li>
+                                            </ul>
+                                        </div>                           
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -155,10 +200,10 @@
             </div>
             
             {# food container #}
-            <div class=" mt-5 d-none" id="foodContainer">
+            <div class="custom-container mt-5 d-none" id="foodContainer">
                 <div class="container-header">
                     <div class="container-title">
-                        <H5>Repas des animaux</H5>
+                        <p>Je nourris un animal</p>
                     </div>
                 </div>
                 <div class="container-body mt-3">
@@ -182,18 +227,18 @@
             </div>    
             
             {# Contact container #}
-            <div class="mt-5 d-none" id="contactContainer">
+            <div class="custom-container mt-5 d-none" id="contactContainer">
                 <div class="custom-container">
                     <div class="container-header">
                         <div class="container-title">
-                            <H5>Demandes de contact</H5>
+                            <p>Demandes de contact</p>
                         </div>
                     </div>
                     <div class="toolbar d-flex justify-content-around">
                         <div class="col">
                             <label for="réponseSelect">Filtrer par statut</label>
                             <select id="demandeStatusSelect" class="form-select">
-                                <option value="*">Toutes les demandes</option>
+                                <option value="*">Toutes</option>
                                 <option value="1">Non Traitées</option>
                                 <option value="0">Traitées</option>
                             </select>
@@ -210,7 +255,7 @@
                             {% else %}
                                 {% for demande in demandes %}
                                     <div class="col-12 px-2">
-                                        <div class="card demande-card mb-5 " data-demande-status="{{ demande.answered }}" data-demande-date="{{ demande.createdAt|date('Y-m-d') }}">
+                                        <div class="card demande-card mb-5 mt-2 " data-demande-status="{{ demande.answered }}" data-demande-date="{{ demande.createdAt|date('Y-m-d') }}">
                                             <div class="card-header d-flex justify-content-between">
                                                 <h5 class="card-title">{{ demande.getTitre }}</h5>
                                                 <p class="text-muted">{{ demande.createdAt|date('d/m/Y') }}</p>
@@ -254,6 +299,25 @@
                                 <button type="button" class="btn btn-primary mt-2 mb-2" id="btnConfirmRepondre">Envoyer</button>
                                 <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
                             </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# modal delete demande #}
+                <div class="modal fade" tabindex="-1" id="deleteDemandeModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirmer la suppression</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="deleteDemandeForm">
+                                    <input type="hidden" id="demandeId" name="demandeId">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="button" class="btn btn-danger" id="btnConfirmDeleteDemande">Supprimer</button>
+                                </form>
                             </div>
                         </div>
                     </div>

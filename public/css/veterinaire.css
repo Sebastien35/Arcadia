@@ -24,6 +24,9 @@
         width: 1.5em !important;
         height: 1.5em !important;
     }
+    .animal-img{
+        max-height:25vh !important;
+    }
 }
 
 .page-container{
@@ -105,5 +108,15 @@ sidebar-item{
     max-height:90%;
     overflow-y: scroll;
     overflow-x:hidden;
-    background-color: #fff;
+    background-color: var(--white);
+}
+
+
+.dropdown-menu{
+    --bs-dropdown-border-color: var(--dark);
+}
+
+.dropdown-item:hover{
+    background-color:var(--secondary);
+    color:var(--white)
 }

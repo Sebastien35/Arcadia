@@ -84,6 +84,34 @@ if(avisList.children.length === 0){
 });
 
 
+
+
+/*-----------Affichage avis 14/02/2024 ------------------ */
+
+const avisBtns = document.querySelectorAll('.avisBtn');
+
+avisBtns.forEach(button=>{button.addEventListener('click', function(){
+    flushFeatures();
+    FlushActive();
+    button.classList.add('active');
+    avisContainer.classList.remove('d-none');
+    });
+});
+
+
+/*-----------Affichage services 14/02/2024 ------------------ */
+const servicesContainer = document.getElementById('servicesContainer');
+const servicesBtns = document.querySelectorAll('.servicesBtn');
+
+servicesBtns.forEach(button=>{
+    button.addEventListener('click', function(){
+        flushFeatures();
+        FlushActive();
+        button.classList.add('active');
+        servicesContainer.classList.remove('d-none');
+    }); 
+});
+
 /*---------------- Mise à jour service ------------------ */
 
 document.addEventListener('DOMContentLoaded', function(){
@@ -131,62 +159,40 @@ function updateService(){
     });
 }
 
+// Afficher le service depuis dropdown
 
-
-/*-----------Affichage avis 14/02/2024 ------------------ */
-
-const avisBtn = document.getElementById('avisBtn');
-
-avisBtn.addEventListener('click', showAvis);
-
-function showAvis(){
-    flushFeatures();
-    FlushActive();
-    avisBtn.classList.add('active')
-    avisContainer.classList.remove('d-none');
-    
+function showService($id){
+    window.location.href = '/services/show/' + $id;
 }
 
-/*-----------Affichage services 14/02/2024 ------------------ */
-const servicesContainer = document.getElementById('servicesContainer');
-const servicesBtn = document.getElementById('servicesBtn');
 
-servicesBtn.addEventListener('click', showServices);
 
-function showServices(){
-    flushFeatures();
-    FlushActive();
-    servicesBtn.classList.add('active')
-    servicesContainer.classList.remove('d-none');
-}
 
 /*-----------Affichage nourriture 15/02/2024 ------------------ */
 
 const nourritureContainer = document.getElementById('foodContainer');
-const nourritureBtn = document.getElementById('foodBtn');
+const nourritureBtns = document.querySelectorAll('.foodBtn');
 
-nourritureBtn.addEventListener('click', showNourriture);
+nourritureBtns.forEach(button=>{
+    button.addEventListener('click', function(){
+        flushFeatures();
+        FlushActive();
+        button.classList.add('active');
+        nourritureContainer.classList.remove('d-none');
+    });
+});
 
-function showNourriture(){
-    flushFeatures();
-    FlushActive();
-    nourritureBtn.classList.add('active');
-    nourritureContainer.classList.remove('d-none');
-}
-
-
-
-/*-----------demandes de contact 05/03/2024 ------------------ */
+/* ------demandes de contact 05/03/2024 ------------------ */
 const contactContainer = document.getElementById('contactContainer');
-const contactBtn = document.getElementById('contactBtn');
-
-contactBtn.addEventListener('click', showContact);
-function showContact(){
-    flushFeatures();
-    FlushActive();
-    contactBtn.classList.add('active');
-    contactContainer.classList.remove('d-none');
-}
+const contactBtns = document.querySelectorAll('.contactBtn');
+contactBtns.forEach(button=>{
+    button.addEventListener('click', function(){
+        flushFeatures();
+        FlushActive();
+        button.classList.add('active');
+        contactContainer.classList.remove('d-none');
+    });
+});
 
 // Répondre à une demande de contact
 const contactResponseBtns = document.querySelectorAll('[data-demande-id]');
@@ -242,10 +248,19 @@ function flushFeatures(){
 flushFeatures();
 
 function FlushActive(){
-    avisBtn.classList.remove('active');
-    servicesBtn.classList.remove('active');
-    nourritureBtn.classList.remove('active');
-    contactBtn.classList.remove('active');
+    avisBtns.forEach(button=>{
+        button.classList.remove('active');
+    });
+    servicesBtns.forEach(button=>{
+        button.classList.remove('active');
+    });
+    nourritureBtns.forEach(button=>{
+        button.classList.remove('active');
+    });
+    contactBtns.forEach(button=>{
+        button.classList.remove('active');
+    });
+    
 }
 FlushActive();
 

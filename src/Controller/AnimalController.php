@@ -32,8 +32,12 @@ class AnimalController extends AbstractController
 
     #[Route('/show/{id}', name: 'show', methods: ['GET'])]
     public function showAnimal(int $id): Response
-    {
+    {   
         $animal = $this->entityManager->getRepository(Animal::class)->find($id);
+        if(!$animal){
+            throw $this->createNotFoundException("No service found for {$id} id");
+        }
+        
         $infoAnimal = $this->entityManager->getRepository(InfoAnimal::class)->findBy(
             ['animal' => $id],
             ['createdAt' => 'DESC'],
@@ -44,7 +48,6 @@ class AnimalController extends AbstractController
             'infoAnimal' => $infoAnimal,
             
         ]);
-
     }
 
     #[Route('/visit/{id}', name: 'visit', methods: ['POST'])]

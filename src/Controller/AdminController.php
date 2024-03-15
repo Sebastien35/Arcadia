@@ -63,7 +63,6 @@ class AdminController extends AbstractController
     #[Route('/', name: 'index', methods: ['GET'])]
 public function dashboard(Request $request, PaginatorInterface $paginator): Response
 {
-    // Fetch data for other entities
     $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
     $demandes = $this->entityManager->getRepository(DemandeContact::class)->findAll();
     $services = $this->entityManager->getRepository(Service::class)->findAll();

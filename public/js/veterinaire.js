@@ -72,6 +72,14 @@ function addInfoAnimal() {
         .catch(error => console.log('error', error));
 }
 
+//Rediriger vers /animal/show/:id
+function goSeeAnimal(id){
+    window.location.href = '/veterinaire/animal/show/'+id;
+}
+//Rediriger vers /animal/edit/:id
+function goEditAnimal(id){
+    window.location.href = '/veterinaire/animal/update/'+id;
+}
 //Supprimer Animal --------------------------------------------------------
 
 const confirmDeleteAnimalBtn = document.getElementById('confirmDeleteAnimalBtn');
@@ -314,14 +322,12 @@ function addComment(){
 function flushFeatures(){
     animalContainer.classList.add('d-none')
     nourritureContainer.classList.add('d-none')
-    repasContainer.classList.add('d-none')
     habitatContainer.classList.add('d-none')
 }
 flushFeatures();
 function flushActive(){
     animalBtns.forEach(button => button.classList.remove('active'));
     nourritureBtns.forEach(button => button.classList.remove('active'));
-    repasBtns.forEach(button => button.classList.remove('active')); 
     habitatBtns.forEach(button => button.classList.remove('active'));
 }
 flushActive();
