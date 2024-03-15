@@ -13,6 +13,15 @@
     .custom-container{
         min-width:80vw !important;
         margin-left:0 !important;
+        position:absolute;
+        top: 40vh;
+        left: 10vw;
+    }
+    .container-header{
+        margin-top: 0!important;
+    }
+    .container-footer{
+        margin-bottom: 10vh !important;
     }
 }
 
@@ -58,4 +67,6 @@
     min-width:80vw;
     min-height:10vh;
     clip-path: polygon(0 15%, 100% 15%, 100% 70%, 0 70%);
+    position:absolute;
+    top: -2vh;
 }

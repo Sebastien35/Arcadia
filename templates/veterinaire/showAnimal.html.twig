@@ -72,48 +72,45 @@
 </div>
 
     
-            <div class="card" id="animalMealCard">
-                <div class="card-header">
-                    <h2>Repas</h2>
-                </div>
-                <div class="card-body">
-                <table class="table table-striped" aria-labelledby="Repas de l'animal">
-                <label for="date">Trier par date</label>
-                <select id="dateInput" class="form-select">
-                    <option value="" disabled selected>Choisir une option</option>"
-                    <option value="0">Tous les repas</option>
-                    <option value="1">Aujourd'hui</option>
-                    <option value="2">Cette semaine</option>
-                    <option value="3">Ce mois</option>
-                </select>
-                    <thead>
-                        <tr>
-                            <th role="button" id="dateBtn"></i> Date</th>
-                            <th>Quantité</th>
-                            <th>Aliment</th>
-                        </tr>
-                    </thead>
-                    <div class="scrollable mb-1">
-                        <tbody class="mb-5">
-                            {% if repas == null %}
-                            <tr>
-                                <td colspan="3">Pas de repas enregistré</td>
+<div class="card mb-5" id="animalMealCard">
+    <div class="card-header">
+        <h2>Repas</h2>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped" aria-labelledby="Repas de l'animal">
+            <label for="date">Trier par date</label>
+            <select id="dateInput" class="form-select">
+                <option value="" disabled selected>Choisir une option</option>"
+                <option value="0">Tous les repas</option>
+                <option value="1">Aujourd'hui</option>
+                <option value="2">Cette semaine</option>
+                <option value="3">Ce mois</option>
+            </select>
+            <thead>
+                <tr>
+                    <th role="button" id="dateBtn"></i> Date</th>
+                    <th>Quantité</th>
+                    <th>Aliment</th>
+                </tr>
+            </thead>
+            <div class="scrollable mb-1">
+                <tbody class="mb-5">
+                    {% if repas == null %}
+                    <tr>
+                        <td colspan="3">Pas de repas enregistré</td>
+                    </tr>
+                    {% else %}
+                        {% for repas in repas %}                    
+                            <tr class="d-none repas">
+                                <td class="repasdate">{{ repas.Datetime | date('d/m') }}</td>
+                                <td>{{ repas.quantite }}g</td>
+                                <td>{{ repas.nourriture.nom }}</td>
                             </tr>
-                            {% else %}
-                                {% for repas in repas %}                    
-                                    <tr class="d-none repas">
-                                        <td class="repasdate">{{ repas.Datetime | date('d/m') }}</td>
-                                        <td>{{ repas.quantite }}g</td>
-                                        <td>{{ repas.nourriture.nom }}</td>
-                                    </tr>
-                                {% endfor %}
-                            {% endif %}
-                        </tbody>
-                    </div>
-                </table>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
             </div>
-            
-        </div>
+        </table>
     </div>
 </div>
 

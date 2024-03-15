@@ -22,7 +22,7 @@ body{
 
 H1{ 
     color:var(--primary);
-    font-size: 2.8vh;
+    font-size: 4vh;
 
 }
 
@@ -54,4 +54,12 @@ H1{
 .page-container{
     max-height:100vh;
     overflow-y: hidden;
+}
+
+
+/* -------------------------------  Image  ----------------------------- */
+
+.default{
+    height: 100vh;
+    width: 100vw;
 }

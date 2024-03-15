@@ -115,6 +115,7 @@ createAvisBtn.addEventListener('click', function(){
     createAvisBtn.classList.add('active');
 });
 
+
 /* Flush Features 13/03/2024 */
 function flushFeatures(){
     createAvisContainer.classList.add('d-none');
@@ -129,3 +130,8 @@ function flushActive(){
 }
 flushActive();
 
+function defaultBehaviour(){
+    seeAvisBtn.classList.add('active');
+    avisListContainer.classList.remove('d-none');
+}
+defaultBehaviour();

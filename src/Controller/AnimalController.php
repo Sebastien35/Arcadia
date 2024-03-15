@@ -8,12 +8,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ODM\MongoDB\DocumentManager;
 
 use App\Entity\Animal;
 use App\Repository\AnimalRepository;
 use App\Document\AnimalVisit;
 use App\Entity\InfoAnimal;
+use PHPUnit\Util\Json;
 
 #[Route('/animal', name: 'app_animal_')]
 class AnimalController extends AbstractController
@@ -51,7 +53,7 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/visit/{id}', name: 'visit', methods: ['POST'])]
-    public function incrementVisit(int $id): Response
+    public function incrementVisit(int $id): JsonResponse
     {
         try{
         $visit = $this->dm->getRepository(AnimalVisit::class)->findOneBy(['animalId' => $id]);
@@ -64,9 +66,9 @@ class AnimalController extends AbstractController
 
         $this->dm->persist($visit);
         $this->dm->flush();
-        return new Response(status: 200);
+        return new JsonResponse(status: 200);
     }catch(\Exception $e){
-        return new Response('error' . $e->getMessage()  , 500);
+        return new JsonResponse('error' . $e->getMessage()  , 500);
     }
     return new Response('error');
     }

@@ -22,13 +22,8 @@
 }
 
 .animal-image{
-    height:100%;
+    height: 50vh;
     width: 100%;
-    
-}
-.animal-image{
-    height: 30vh;
-    width: 20vw;
     margin: 0 auto;
     display: block;
     border-radius: 10px;
@@ -37,7 +32,7 @@
     margin-top: 10vh;
 }
 .card-animal{
-    min-height:30vh;
+    min-height:50vh;
 }
 
 @media screen and (max-width: 1280px) {
