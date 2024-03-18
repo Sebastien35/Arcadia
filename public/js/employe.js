@@ -1,13 +1,6 @@
 /*-----------Validation / Suppression avis 05/02/2024 ------------------ */
 const avisContainer = document.getElementById('avisContainer');
-const BtnValider = avisContainer.querySelectorAll('.BtnValider');
 const BtnSupprimer = avisContainer.querySelectorAll('.BtnSupprimer');
-
-if(BtnValider.length > 0){
-    BtnValider.forEach(button=>{
-        button.addEventListener('click', validateAvis);
-    });
-};
 
 if(BtnSupprimer.length > 0){
     BtnSupprimer.forEach(button=>{
@@ -15,67 +8,52 @@ if(BtnSupprimer.length > 0){
     });
 };
 
-function validateAvis(){
-    let dataForm = new FormData(validateAvisForm);
-    let myHeaders = new Headers();
-    let avisId = dataForm.get('id');
-    
-    myHeaders.append('Content-Type', 'application/json');
-
-    let raw= JSON.stringify({
-        "validation": "true"
-    });
-    let requestOptions = {
-        method:'POST',
-        headers:myHeaders,
-        body:"raw",
-        redirect:'follow'
-    };
-    fetch('/avis/valider/' + avisId, requestOptions)
-    .then(response=>{
-        if(response.status === 200){
+async function validerAvis($id) {
+    try {
+        let myHeaders = new Headers(); 
+        myHeaders.append('Content-Type', 'application/json');
+        let requestOptions = {
+            method:'POST',
+            headers:myHeaders,
+            redirect:'follow'
+        };
+        const response = await fetch('/employe/avis/valider/' + $id, requestOptions);
+        if (response.status === 200) {
             console.log('Avis validé');
             window.location.reload();
-        }else{
+        } else {
             console.log('Avis non validé');
         }
-    })
-    .then(result=>{
-        console.log('result', result)
-        
-    })
-    .catch(error=>{
-        console.log('error', error)
-    });
-    
+        const result = await response.json();
+        console.log('result', result);
+    } catch(error) {
+        console.log('error', error);
+    }
 }
 
-function deleteAvis(){
-    let dataForm = new FormData(DelAvisForm);
-    let avisId = dataForm.get('id');
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    let requestOptions = {
-        method:'DELETE',
-        headers:myHeaders,
-        redirect:'follow'
-    };
-    fetch('/avis/delete/' + avisId, requestOptions)
-    .then(response=>{
-        console.log('avisId', avisId, 'response', response)
-        if(response.status === 200){
+async function supprimerAvis($id) {
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        let requestOptions = {
+            method: 'DELETE',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+        const response = await fetch('/employe/avis/delete/' + $id, requestOptions);
+        if (response.status === 200) {
             console.log('Avis supprimé');
             window.location.reload();
-            
-        }else{
+        } else {
             console.log('Avis non supprimé');
         }
-    })
-    .then(result=>{
-        console.log('result', result)
-        
-    })
+        const result = await response.json();
+        console.log('result', result);
+    } catch(error) {
+        console.log('error', error);
+    }
 }
+
 document.addEventListener('DOMContentLoaded', function(){
 const avisList  = document.getElementById('avisList');
 if(avisList.children.length === 0){

@@ -97,8 +97,6 @@
                         <div id="avisList">
                             {% for singleAvis in avisList %}
                                 {% if singleAvis.isValidation == false %}
-                                    <form id="validateAvisForm">
-                                        <input type="hidden" name="id" value="{{ singleAvis.id }}">
                                         <div class="card mx-5" id="{{ singleAvis.id }}">
 
                                             <div class="stars card-title card-header">
@@ -115,11 +113,10 @@
                                                 <p class="card-text"><small class="text-muted">Posté par {{ singleAvis.pseudo }} le {{ singleAvis.getCreatedAt|date('d/m/Y') }}</small></p>
                                             </div>
                                             <div class="card-footer d-flex justify-content-around">
-                                                <button id='BtnValider' type="button" class="btn btn-primary BtnValider">Valider</button>
+                                                <button id='BtnValider' type="button" class="btn btn-primary BtnValider" onClick="validerAvis({{singleAvis.id }})">Valider</button>
                                                 <button id='BtnSupprimer'type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger delete-btn">Supprimer</button>
                                             </div>
                                         </div>
-                                    </form>
                                     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -131,7 +128,7 @@
                                                     <form id="DelAvisForm">
                                                         <input type="hidden" name="id" value="{{singleAvis.id}}">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                                        <button type="button" class="btn btn-danger BtnSupprimer" id="deleteAvis">Supprimer</button>
+                                                        <button type="button" class="btn btn-danger BtnSupprimer" id="deleteAvis" onClick="supprimerAvis({{ singleAvis.id }})">Supprimer</button>
                                                     </form>
                                                 </div>
                                             </div>

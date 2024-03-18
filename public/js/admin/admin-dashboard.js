@@ -183,31 +183,50 @@ animalBtns.forEach(button => button.addEventListener('click', function(){
 }));
 
 //Supprimer Animal --------------------------------------------------------
-// Le passage d'id animal est assuré par le bouton de suppression, logique dans allAnimals.js
+document.addEventListener('DOMContentLoaded', function(){
+    const deleteAnimalBtns = document.querySelectorAll('[data-animal-id]');
+    deleteAnimalBtns.forEach(button=>{
+        button.addEventListener('click', function(){
+            console.log('Delete button clicked, target ID:', button.getAttribute('data-animal-id'));
+            const animalId = button.getAttribute('data-animal-id');
+            const animalIdContainer = document.getElementById('delete-animal-id');
+            animalIdContainer.value = animalId;
+        });
+    });
+});
+
+
+
 const confirmDeleteAnimalBtn = document.getElementById('confirm-delete-animal-btn');
 confirmDeleteAnimalBtn.addEventListener('click', deleteAnimal);
 
-function deleteAnimal() {
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    let targetId = document.getElementById('delete-animal-id').value;
-    console.log('Target ID:', targetId); // Debug log
-    fetch(`/admin/animal/delete/${targetId}`, {
-        method: 'DELETE',
-        headers: myHeaders,
-    })
-    .then(response => {
+async function deleteAnimal() {
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        let targetId = document.getElementById('delete-animal-id').value;
+        console.log('Target ID:', targetId); // Debug log
+        const response = await fetch(`/admin/animal/delete/${targetId}`, {
+            method: 'DELETE',
+            headers: myHeaders,
+        });
         if (response.ok) {
             window.location.reload();
-            return response.json();
+            return await response.json();
         } else {
             throw new Error('Erreur');
         }
-    })
-    .then(result => {
-        window.location.reload();
-    })
-    .catch(error => console.log(error));
+    } catch (error) {
+        console.log(error);
+    }
+}
+//Rediriger vers /animal/show/:id
+function goSeeAnimal(id){
+    window.location.href = '/admin/animal/show/'+id;
+}
+//Rediriger vers /animal/edit/:id
+function goEditAnimal(id){
+    window.location.href = '/admin/animal/update/'+id;
 }
 
 
@@ -293,9 +312,53 @@ const servicesBtns = document.querySelectorAll('.servicesBtn');
 servicesBtns.forEach(button => button.addEventListener('click', function(){
     FlushFeatures();
     FlushActive();
+    getAllServices();
     servicesContainer.classList.remove('d-none');
     button.classList.add('active');
 }));
+
+async function getAllServices(){
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    await fetch('/services/all')
+    .then(response => {
+        if(response.ok){
+            return response.json();
+        } else {
+            throw new Error('Erreur');
+        }
+    })
+    .then(result => {
+        let servicesList = document.getElementById('servicesList');
+        servicesList.innerHTML = '';
+        let services = result;
+        if(services.length === 0){
+            servicesList.innerHTML = '<p class="text-center">Aucun service à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
+        }
+        services.forEach(service=>{
+            let serviceTableBody = document.getElementById('servicesList');
+            serviceTableBody.innerHTML = '';
+            let row = document.createElement('tr');
+            row.innerHTML = `
+            <td>${service.id}</td>
+            <td>${service.nom}</td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
+                        <li class="btn btn-danger mb-1" id="delete-service" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" data-service-id="${service.id}"><i class="fa-solid fa-trash"></i></li>
+                        <li class="btn btn-primary  mb-1" onClick="goEditService(${service.id})"><i class="fa-solid fa-pencil"></i></li>
+                        <li class="btn btn-info  mb-1" onClick="goSeeService(${service.id})"><i class="fa-regular fa-eye"></i></li>
+                    </div> 
+                </div>
+            </td>
+            `;
+            serviceTableBody.appendChild(row);
+
+        });
+    })
+}
 
 // Supprimer un service:
 
@@ -330,6 +393,13 @@ function deleteService(){
         window.location.reload();
     })
     .catch(error => alert('Une erreur est survenue', error));
+}
+
+function goSeeService($id){
+    window.location.href = '/services/show/'+$id;
+}
+function goEditService($id){
+    window.location.href = '/admin/services/edit/'+$id;
 }
 
 
@@ -399,20 +469,77 @@ const contactBtns = document.querySelectorAll('.contactBtn');
 contactBtns.forEach(button => button.addEventListener('click', function(){
     FlushFeatures();
     FlushActive();
+    getAllDemandes();
     contactContainer.classList.remove('d-none');
     button.classList.add('active');
 }));
 
 
-// Répondre à une demande de contact
-const contactResponseBtns = document.querySelectorAll('[data-demande-id]');
-contactResponseBtns.forEach(button => {
-    button.addEventListener('click', function() {
-        const demandeId = button.getAttribute('data-demande-id');
-        const demandeIdContainer = document.getElementById('demandeId');
-        demandeIdContainer.value = demandeId; // Utilize .value for form elements
+async function getAllDemandes(){
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    await fetch('/contact/all')
+    .then(response => {
+        if(response.ok){
+            return response.json();
+        } else {
+            throw new Error('Erreur');
+        }
+    })
+    .then(result => {
+        let demandesList = document.getElementById('demandesList');
+        demandesList.innerHTML = '';
+        let demandes = result;
+        if(demandes.length === 0){
+            demandesList.innerHTML = '<p class="text-center">Aucune demande à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
+        }
+        let row = document.createElement('div');
+        row.classList.add('row');
+        demandes.forEach(demande=>{
+            let card = document.createElement('div');
+            card.classList.add('col-12');
+            card.classList.add('card');
+            card.classList.add('demande-card');
+            card.classList.add('mb-5')
+            card.setAttribute('data-demande-status', demande.reponse);
+            card.setAttribute('data-demande-date', demande.createdAt);
+            card.setAttribute('data-demande-id', demande.id);
+            card.innerHTML = `
+                <div class="card-header d-flex justify-content-between">
+                <h5 class="card-title">${demande.titre}</h5>
+                <p class="text-muted">${formatDate(demande.createdAt)}</p>
+            </div>
+            <div class="card-body">  
+                <p class="text-muted">${demande.mail}</p>                             
+                <p class="card-text">${demande.message}</p>
+
+            </div>
+            <div class="card-footer mb-5">
+                <button type="button" class="btn btn-primary actionBtn" data-bs-toggle="modal" data-bs-target="#repondreModal" data-demande-id="${demande.id}">Répondre</button>
+                <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
+            </div>
+            `;
+            demandesList.appendChild(card);
+            let actionBtns = card.querySelectorAll('.actionBtn');
+            actionBtns.forEach(button => button.addEventListener('click', function(){
+                const demandeId = button.getAttribute('data-demande-id');
+                const demandeIdContainer = document.getElementById('demandeId');
+                demandeIdContainer.value = demandeId;
+            }));           
+        });
     });
-});
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString().slice(-2);
+    return `${day}-${month}-${year}`;
+}
+
+
+// Répondre à une demande de contact
 
 const sendResponseBtn = document.getElementById('btnConfirmRepondre');
 sendResponseBtn.addEventListener('click', sendResponse);
@@ -447,29 +574,32 @@ async function sendResponse() {
     }
 }
 
-async function deleteDemande($id){
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    let requestOptions = {
-        method: 'DELETE',
-        headers: myHeaders,
-        redirect: 'follow'
-    };
+const deleteDemandeBtn = document.getElementById('btnConfirmDeleteDemande');
+deleteDemandeBtn.addEventListener('click', deleteDemande);
+// Supprimer une demande de contact
+async function deleteDemande() {
     try {
-        let response = await fetch(`/admin/demande/delete/${$id}`, requestOptions);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        let targetId = document.getElementById('demandeId').value;
+        console.log('targetId', targetId);
+        const response = await fetch(`/admin/demande/delete/${targetId}`, {
+            method: 'DELETE',
+            headers: myHeaders,
+        });
+        if (response.ok) {
+            window.location.reload();
+            return await response.json();
+        } else {
+            throw new Error('Erreur');
         }
-        let result = await response.json();
-        console.log(result);
-        window.location.reload();
     } catch (error) {
-        window.location.reload();
-        console.error('Error:', error);
-        
+        console.log(error);
     }
-
 }
+
+
+
 
 
 // Filtrer les demandes de contact
@@ -516,11 +646,122 @@ consultationContainerBtns.forEach(button => button.addEventListener('click', fun
 
 
 
+/*------------------Avis Clients------------------*/
+
+const avisBtns = document.querySelectorAll('.avisBtn');
+const avisContainer = document.getElementById('avisContainer');
+
+avisBtns.forEach(button => button.addEventListener('click', function(){
+    FlushFeatures();
+    FlushActive();
+    button.classList.add('active');
+    avisContainer.classList.remove('d-none');
+    getNonValidatedReviews();
+}));
+
+async function getNonValidatedReviews(){
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        await fetch('/admin/avis/getNonValidated')
+        .then(response => {
+            if(response.ok){
+                return response.json();
+            } else {
+                throw new Error('Erreur');
+            }
+        })
+        .then(result => {
+            let avisContainer = document.getElementById('avisContainer');
+            let avisList = document.getElementById('avisList');
+            let avis = result;
+            avisList.innerHTML = '';
+            if(avis.length === 0){
+                avisList.innerHTML = '<p class="text-center">Aucun avis à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
+            }
+            avis.forEach(avis=>{
+                let card = document.createElement('div');
+                card.classList.add('col-10');
+                card.classList.add('card');
+                card.innerHTML = `
+                <div class="card-header">
+                    ${avis.pseudo}
+                </div>
+                <div class="card-body">
+                    <p class="card-text">${avis.note}</p>
+                    <p class="card-text">${avis.avisContent}</p>
+                    <p class="card-text text-muted">${avis.createdAt}</p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-success" onclick="validerAvis(${avis.id})">Valider</button>
+                    <button class="btn btn-danger" onclick="supprimerAvis(${avis.id})">Supprimer</button>
+                </div>
+                `;
+                avisList.appendChild(card);
+            }
+            )
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function validerAvis($id) {
+    try {
+        let myHeaders = new Headers(); 
+        myHeaders.append('Content-Type', 'application/json');
+        let requestOptions = {
+            method:'POST',
+            headers:myHeaders,
+            redirect:'follow'
+        };
+        const response = await fetch('/admin/avis/valider/' + $id, requestOptions);
+        if (response.status === 200) {
+            console.log('Avis validé');
+            window.location.reload();
+        } else {
+            console.log('Avis non validé');
+        }
+        const result = await response.json();
+        console.log('result', result);
+    } catch(error) {
+        console.log('error', error);
+    }
+}
+
+async function supprimerAvis($id) {
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        let requestOptions = {
+            method: 'DELETE',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+        const response = await fetch('/admin/avis/delete/' + $id, requestOptions);
+        if (response.status === 200) {
+            console.log('Avis supprimé');
+            window.location.reload();
+        } else {
+            console.log('Avis non supprimé');
+        }
+        const result = await response.json();
+        console.log('result', result);
+    } catch(error) {
+        console.log('error', error);
+    }
+}
+
+
+
+
+
 
 /*----------------- Display / Hide Features -----------------*/
 
 //Default container
 const defaultContainer = document.getElementById('default-container');
+
 
 
 function FlushFeatures(){
@@ -532,6 +773,8 @@ function FlushFeatures(){
     horairesContainer.classList.add('d-none');
     contactContainer.classList.add('d-none');
     consultationContainer.classList.add('d-none');
+    avisContainer.classList.add('d-none');
+
     
 }
 
@@ -548,6 +791,7 @@ function FlushActive(){
     horairesBtns.forEach(button => button.classList.remove('active'));
     contactBtns.forEach(button => button.classList.remove('active'));
     consultationContainerBtns.forEach(button => button.classList.remove('active'));
+    avisBtns.forEach(button => button.classList.remove('active'));
 }
 
 

@@ -42,7 +42,7 @@ use App\Form\ServiceType;
 use App\Service\MailerService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Document\AnimalVisit;
-use stdClass;
+use App\Entity\Avis;
 
 
 #[Route('/admin', name: 'app_admin_')]
@@ -65,7 +65,6 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
 {
     $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
     $demandes = $this->entityManager->getRepository(DemandeContact::class)->findAll();
-    $services = $this->entityManager->getRepository(Service::class)->findAll();
     $users = $this->entityManager->getRepository(User::class)->findAll();
     $zoos = $this->entityManager->getRepository(Zoo::class)->findAll();
     $horaires = $this->entityManager->getRepository(Horaire::class)->findAll();
@@ -80,7 +79,6 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
 
     return $this->render('admin/dashboard.html.twig', [
         'controller_name' => 'AdminController',
-        'services' => $services,
         'users' => $users,
         'zoos' => $zoos,
         'horaires' => $horaires,
@@ -591,5 +589,34 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         $this->addFlash('success', 'Demande deleted successfully');
         return new Response('Demande deleted successfully', 200);
     }
+
+
+    #[Route('/avis/getNonValidated', name: 'getAllAvis', methods: ['GET'])]
+    public function getNonValidated(): JsonResponse
+    {
+        $avis = $this->entityManager->getRepository(Avis::class)->findBy(
+            ['validation' => false]
+        );
+        return JsonResponse::fromJsonString($this->serializer->serialize($avis, 'json'), Response::HTTP_OK);
+    }
+    #[Route('/avis/valider/{id}', name: 'validateAvis', methods: ['POST'])]
+    public function validerAvis(int $id): JsonResponse
+    {   
+        try{
+        $avis = $this->entityManager->getRepository(Avis::class)->find($id);
+        if (!$avis) {
+            return new JsonResponse(['error' => 'Avis not found'], Response::HTTP_NOT_FOUND);
+        }
+        $avis->setValidation(true);
+        $this->entityManager->persist($avis);
+        $this->entityManager->flush();
+        return new JsonResponse(['message' => 'Avis validated successfully'], Response::HTTP_OK);
+    }catch(\Exception $e){
+        return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+    }
+
+
+
     
 }

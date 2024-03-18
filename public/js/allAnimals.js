@@ -40,12 +40,7 @@ async function getAnimals(){
             animalTableBody.appendChild(row);
             
             // Attach event listener to the delete button within the current row
-            let deleteBtn = row.querySelector('.delete-animal-btn');
-            deleteBtn.addEventListener('click', function() {
-                const animalId = deleteBtn.getAttribute('data-animal-id');
-                const animalIdContainer = document.getElementById('delete-animal-id');
-                animalIdContainer.value = animalId;
-            });
+            
         });
     }
     catch (error) {

@@ -27,28 +27,31 @@ class AcceuilController extends AbstractController
     }
 
     #[Route('/', name: 'app_acceuil')]
-    public function index(
-        AvisRepository $avisRepository, 
-        HoraireRepository $horaireRepository,
-        HabitatRepository $habitatRepository, 
+public function index(
+    AvisRepository $avisRepository, 
+    HoraireRepository $horaireRepository,
+    HabitatRepository $habitatRepository,
+    ): Response
+{
+    $avis = $avisRepository->findAll();
+    $horaires = $horaireRepository->findAll();
+    $habitats = $this->entityManager->getRepository(Habitat::class)->findAll();
+    $services = $this->entityManager->getRepository(Service::class)->findAll();
+    
+    // Récupérer l'id minimum et maximum des animaux
+    $idQuery = $this->entityManager->createQuery('SELECT MIN(a.id) AS min_id, MAX(a.id) AS max_id FROM App\Entity\Animal a');
+    
+    $animalIds = $idQuery->getResult();
 
-        ): Response
-    {
-        $avis = $avisRepository->findAll();
-        $horaires = $horaireRepository->findAll();
-        $habitats=$this->entityManager->getRepository(Habitat::class)->findAll();
-        $services=$this->entityManager->getRepository(Service::class)->findAll();
-        
-        // Récupérer 4 animaux aléatoires
-        // Récupérer l'id minimum et maximum des animaux
-        $idQuery = $this->entityManager->createQuery('SELECT MIN(a.id) AS min_id, MAX(a.id) AS max_id FROM App\Entity\Animal a');
-        $animalIds = $idQuery->getResult();
+    // Vérifier si les valeurs min_id et max_id sont définies
+    if (!empty($animalIds) && isset($animalIds[0]['min_id']) && isset($animalIds[0]['max_id'])) {
         $minId = $animalIds[0]['min_id'];
         $maxId = $animalIds[0]['max_id'];
+        
         //Initialiser un tableau vide pour stocker les animaux
         $animaux = [];
         $randomIds = [];
-        // Boucle pour récupérer 5 animaux aléatoires
+        // Boucle pour récupérer 4 animaux aléatoires
         for ($i = 0; $i < 4; $i++) {
             // Générer un id aléatoire
             $randomId = rand($minId, $maxId);
@@ -61,19 +64,27 @@ class AcceuilController extends AbstractController
                 // Ajouter l'animal dans le tableau
                 $animaux[] = $animal;
             } else {
-                // Sinon, on décrémente le compteur pour refaire une itération jusqu'à avoir 5 animaux
+                // Sinon, on décrémente le compteur pour refaire une itération jusqu'à avoir 4 animaux
                 $i--;
             }
         }
         // Récupérer les animaux correspondant aux ids aléatoires
         $animaux = $this->entityManager->getRepository(Animal::class)->findBy(['id' => $randomIds]);
-        return $this->render('accueil/index.html.twig', [
-            'controller_name' => 'AcceuilController',
-            'avis' => $avis,
-            'horaires' => $horaires,
-            'habitats' => $habitats,
-            'services' => $services,
-            'animaux' => $animaux,
-        ]);
+    } else {
+        // Si min_id ou max_id sont nuls, ne renvoyer rien ou gérer l'erreur d'une autre manière
+        // Par exemple :
+        $animaux = [];
+        // ou 
+        // throw new \Exception('Les valeurs min_id ou max_id sont nulles.');
     }
+
+    return $this->render('accueil/index.html.twig', [
+        'controller_name' => 'AcceuilController',
+        'avis' => $avis,
+        'horaires' => $horaires,
+        'habitats' => $habitats,
+        'services' => $services,
+        'animaux' => $animaux,
+    ]);
+}
 }

@@ -75,43 +75,6 @@ class AvisController extends AbstractController
             'avis'=>$avis //
         ]);
     }
-
-    #[Route('/valider/{id}',name: 'update', methods: 'POST')]
-    public function update(int $id, Request $request): JsonResponse
-    {
-        $avis=$this->repository->findOneBy(['id'=>$id]);
-        if (!$avis){
-            throw $this->createNotFoundException(
-                'No avis found for id '.$id
-            );
-        }else{
-        $avis->setValidation(true);
-        $this->entityManager->flush();
-        return new JsonResponse(null, Response::HTTP_OK);
-
-        }
-        
-
-        
-    }
-        
-
-
-
-    #[Route('/delete/{id}',name: 'delete', methods: 'DELETE')]
-    public function delete(int $id):Response
-    {
-        $avis = $this->entityManager->getRepository(Avis::class)->find($id);
-        if (!$avis){
-            throw $this->createNotFoundException(
-                'No avis found for id '.$id
-            );
-        }
-        $this->entityManager->remove($avis);
-        $this->entityManager->flush();
-        return new JsonResponse(null, Response::HTTP_OK);
-    }
-
-    
+  
 
 }

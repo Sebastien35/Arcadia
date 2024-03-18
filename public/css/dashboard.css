@@ -193,3 +193,7 @@ a:visited{ text-decoration: none !important;}
     max-height: 15vh;
     object-fit: cover;
 }
+
+.table-responsive{
+    min-height:60vh !important;
+}
