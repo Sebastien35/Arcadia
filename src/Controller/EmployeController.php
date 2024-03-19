@@ -137,6 +137,22 @@ public function newRepas(Request $request, SerializerInterface $serializer):Resp
 
     return new RedirectResponse($this->generateUrl('app_employe_index'));
     }
+    #[Route('/demande/delete/{id}', name: 'delete_demande', methods:['DELETE'])]
+    public function deleteDemande(Request $request): Response
+    {   
+        try{
+        $demande = $this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
+        if (!$demande) {
+            throw $this->createNotFoundException('Demande with id ' . $request->attributes->get('id') . ' does not exist!');
+        }
+        $this->entityManager->remove($demande);
+        $this->entityManager->flush();
+        return new JsonResponse(['status' => 'Demande deleted!'], Response::HTTP_OK);
+        }catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage());
+        }
+    }
+
 
 
     #[Route('/avis/valider/{id}',name: 'validerAvis', methods: 'POST')]

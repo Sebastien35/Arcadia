@@ -225,101 +225,76 @@
             
             {# Contact container #}
             <div class="custom-container mt-5 d-none" id="contactContainer">
-                <div class="custom-container">
-                    <div class="container-header">
-                        <div class="container-title">
-                            <p>Demandes de contact</p>
-                        </div>
-                    </div>
-                    <div class="toolbar d-flex justify-content-around">
-                        <div class="col">
-                            <label for="réponseSelect">Filtrer par statut</label>
-                            <select id="demandeStatusSelect" class="form-select">
-                                <option value="*">Toutes</option>
-                                <option value="1">Non Traitées</option>
-                                <option value="0">Traitées</option>
-                            </select>
-                        </div>
-                        <div class="col">
-                            <label for="dateInput">Filtrer par date:</label>
-                            <input type="date" id="demande-date-select" class="form-control" placeholder="Date">
-                        </div>              
-                    </div>
-                    <div class="container-body mt-3 scrollable-container">
-                        <div class="row">
-                            {% if demandes|length == 0 %}
-                                <p>Aucune demande de contact actuellement</p>
-                            {% else %}
-                                {% for demande in demandes %}
-                                    <div class="col-12 px-2">
-                                        <div class="card demande-card mb-5 mt-2 " data-demande-status="{{ demande.answered }}" data-demande-date="{{ demande.createdAt|date('Y-m-d') }}">
-                                            <div class="card-header d-flex justify-content-between">
-                                                <h5 class="card-title">{{ demande.getTitre }}</h5>
-                                                <p class="text-muted">{{ demande.createdAt|date('d/m/Y') }}</p>
-                                            </div>
-                                            <div class="card-body">  
-                                                <p class="text-muted">{{ demande.mail }}</p>                             
-                                                <p class="card-text">{{ demande.getMessage }}</p>
-                                                {% if demande.answered == false %}
-                                                    <p class="text-muted">Non traitée</p>
-                                                {% else %}
-                                                    <p class="text-muted">Traitée le {{ demande.getAnsweredAt|date('Y-m-d') }}</p>
-                                                {% endif %}
-                                            </div>
-                                            <div class="card-footer mb-5">
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#repondreModal" data-demande-id="{{ demande.id }}">Répondre</button>
-                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="{{demande.id}}">Supprimer</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-                        </div>   
+                <div class="container-header">
+                    <div class="container-title">
+                        <p> Demandes de contact </p>
                     </div>
                 </div>
-                {# modal repondre #}
-                <div class="modal fade" tabindex="-1" id="repondreModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Répondre</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="repondreForm">
-                                    <label for="reponse">Réponse</label>
-                                    <textarea id="reponse" name="reponse" class="form-control"></textarea>
-                                    <input type="hidden" id="demandeId" name="demandeId">
-                                    
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary mt-2 mb-2" id="btnConfirmRepondre">Envoyer</button>
-                                <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
-                            </form>
-                            </div>
-                        </div>
+                <div class="toolbar d-flex justify-content-around">
+                    <div class="col">
+                        <label for="réponseSelect">Filtrer par statut</label>
+                        <select id="demandeStatusSelect" class="form-select">
+                            <option value="*">Toutes les demandes</option>
+                            <option value="1">Non Traitées</option>
+                            <option value="0">Traitées</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="dateInput">Filtrer par date:</label>
+                        <input type="date" id="demande-date-select" class="form-control" placeholder="Date">
+                    </div>              
+                </div>
+                <div class="container-body mt-3 scrollable-container">
+                    <div class="row" id="demandesList">
                     </div>
                 </div>
-
-                {# modal delete demande #}
-                <div class="modal fade" tabindex="-1" id="deleteDemandeModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Confirmer la suppression</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="deleteDemandeForm">
-                                    <input type="hidden" id="demandeId" name="demandeId">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                    <button type="button" class="btn btn-danger" id="btnConfirmDeleteDemande">Supprimer</button>
-                                </form>
-                            </div>
+            
+            {# modal repondre #}
+            <div class="modal fade" tabindex="-1" id="repondreModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Répondre</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="repondreForm">
+                                <label for="reponse">Réponse</label>
+                                <textarea id="reponse" name="reponse" class="form-control"></textarea>
+                                <input type="hidden" id="demandeId" name="demandeId">
+                                
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary mt-2 mb-2" id="btnConfirmRepondre">Envoyer</button>
+                            <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
+                        </form>
                         </div>
                     </div>
                 </div>
             </div>
+            {# modal supprimer #}
+            <div class="modal fade" tabindex="-1" id="deleteDemandeModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Supprimer</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h1>Êtes-vous sûr de vouloir supprimer cette demande?</h1>
+                            <input type="hidden" id="demandeId" name="demandeId">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="btnConfirmDeleteDemande">Supprimer</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            
+        </div>
         </div>
     </div>
 </div>

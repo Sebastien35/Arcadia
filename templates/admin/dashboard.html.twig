@@ -355,30 +355,7 @@
                     </div>
                 </div>    
                 <div class="container-body mt-2 scrollable-container">
-                    <div class="row">
-                        {% for animal in animaux %}
-                        <div class="col-lg-3 col-sm-12">
-                            <div class="card mt-1">
-                                <div class="card-header">
-                                    <h5 class="card-title">{{ animal.getPrenom }}</h5>
-                                </div>
-                                <div class="card-body">
-                                    <img src="{{ asset('images/animal/' ~ animal.imageName) }}" class="card-img-top animal-img" alt="image_{{ animal.getPrenom }}" >
-                                </div>
-                                <div class="card-footer">
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <li class="dropdown-item" id="show-animal-btn" data-animal-id="{{ animal.id }}" onclick="goSeeAnimal({{animal.id}})">Voir</li>
-                                            <li class="dropdown-item" id="delete-animal-btn" data-bs-toggle="modal" data-bs-target="#delete-animal-Modal" data-animal-id="{{ animal.id }}">Supprimer</li>
-                                            <li class="dropdown-item" id="edit-animal-btn" data-bs-toggle="modal" data-bs-target="#edit-animal-modal" data-animal-id="{{ animal.id }}" onclick="goEditAnimal({{animal.id}})">Modifier</li>
-                                        </div> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}                        
+                    <div class="row" id="animalsList">      
                     </div>
                 </div>
                 {# Modal for creating animal #}
@@ -475,20 +452,8 @@
                                 
                             </tr>
                         </thead>
-                        <tbody>
-                            {% for infoAnimal in infoAnimals %}
-                            <tr class="infoAnimalRow" data-animal-id="{{infoAnimal.getAnimal.id}}" data-infoAnimal-date="{{infoAnimal.createdAt|date('Y-m-d')}}"> 
-                                <td>{{ infoAnimal.id }}</td>
-                                <td>{{ infoAnimal.createdAt|date('Y-m-d') }}</td>
-                                <td>{{ infoAnimal.getAnimal.prenom }}</td>
-                                <td>{{ infoAnimal.getAuteur.email }}</td>
-                                <td>
-                                    <a type="button" class="btn btn-info" href="/admin/infoAnimal/show/{{infoAnimal.id}}"><i class="fa-regular fa-eye"></i></button>
-                                    <a type="button" class="btn btn-danger" id="delete-infoAnimal" data-bs-toggle="modal" data-bs-target="#deleteInfoAnimalModal" data-infoAnimal-id="{{ infoAnimal.id }}"><i class="fa-solid fa-trash"></i></a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-
+                        <tbody id="infoAnimalTableBody">
+                            
                         </tbody>
                     </table>
                     </div>
@@ -763,6 +728,11 @@
             
             {# Avis Container #}
             <div class="mt-5 d-none custom-container" id="avisContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <p> Avis </p>
+                    </div>
+                </div>
                 <div class="row" id="avisList">
                     
                 </div>

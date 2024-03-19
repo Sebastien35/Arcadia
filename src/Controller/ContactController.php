@@ -81,9 +81,6 @@ public function index(Request $request): Response
         try{
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         $contacts = $this->entityManager->getRepository(DemandeContact::class)->findAll();
-        if (!$contacts){
-            return JsonResponse::fromJsonString($this->serializer->serialize('No contact found', 'json'), Response::HTTP_NO_CONTENT);
-        }
         return JsonResponse::fromJsonString($this->serializer->serialize($contacts, 'json'), Response::HTTP_OK);
     }   catch(\Exception $e){
         throw new \Exception($e->getMessage());

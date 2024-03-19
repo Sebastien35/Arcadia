@@ -64,14 +64,11 @@ class AdminController extends AbstractController
 public function dashboard(Request $request, PaginatorInterface $paginator): Response
 {
     $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
-    $demandes = $this->entityManager->getRepository(DemandeContact::class)->findAll();
     $users = $this->entityManager->getRepository(User::class)->findAll();
     $zoos = $this->entityManager->getRepository(Zoo::class)->findAll();
     $horaires = $this->entityManager->getRepository(Horaire::class)->findAll();
     $habitats = $this->entityManager->getRepository(Habitat::class)->findAll();
-    $infoAnimals = $this->entityManager->getRepository(InfoAnimal::class)->findAll();
     $commentaires = $this->entityManager->getRepository(CommentaireHabitat::class)->findAll();
-
     $createAnimalForm = $this->createForm(AnimalFormType::class);
     $createHabitatForm = $this->createForm(HabitatFormType::class);
     $serviceForm = $this->createForm(ServiceType::class);
@@ -84,8 +81,6 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         'horaires' => $horaires,
         'habitats' => $habitats,
         'animaux' => $animaux,
-        'infoAnimals' => $infoAnimals,
-        'demandes' => $demandes,
         'commentaires' => $commentaires,
         'createAnimalForm' => $createAnimalForm->createView(),
         'createHabitatForm' => $createHabitatForm->createView(),

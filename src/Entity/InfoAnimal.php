@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: InfoAnimalRepository::class)]
 class InfoAnimal
@@ -15,34 +16,38 @@ class InfoAnimal
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['info_animal'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['info_animal'])]
     private ?string $etat = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['info_animal'])]
     private ?string $details = null;
 
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['info_animal'])]
     private ?int $grammage = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['info_animal'])]
     private ?\DateTimeInterface $createdAt = null;
 
-    /**
-    * @ORM\ManyToOne(targetEntity="Nourriture", inversedBy="infoAnimals")
-    * @ORM\JoinColumn(name="nourriture_id", referencedColumnName="id")
-    */
     #[ORM\ManyToOne(targetEntity: Nourriture::class, inversedBy: 'infoAnimals')]
+    #[Groups(['info_animal'])]
     private ?Nourriture $nourriture = null;
 
     #[ORM\ManyToOne(inversedBy: 'infoAnimals')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['info_animal'])]
     private ?Animal $animal = null;
 
     #[ORM\ManyToOne(inversedBy: 'infoAnimals')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['info_animal'])]
     private ?User $auteur = null;
 
 
