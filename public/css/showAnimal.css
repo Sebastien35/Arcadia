@@ -1,0 +1,52 @@
+.animal-navbar{
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.animal-navbar a:hover{
+    color: var(--active);
+    transition: all 0.3s ease;
+}
+.animal-navbar a, .animal-navbar a.active,  .animal-navbar a:visited{
+    color: var(--white);
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.page-container{
+    height:100vh;
+    width:100vw;
+    overflow:hidden;
+
+}
+
+.animal-image{
+    height: 50vh;
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    border-radius: 10px;
+}
+.animal-presentation{
+    margin-top: 10vh;
+}
+.card-animal{
+    min-height:50vh;
+}
+
+@media screen and (max-width: 1280px) {
+    .animal-image{
+        width: 100vw;
+        height: 50vh;
+    }
+    .page-container{
+        overflow-y:scroll;
+    }
+    .animal-presentation{
+        margin-top: 0vh;
+    }
+    .card-animal{
+        width: 100vw;
+    }
+}

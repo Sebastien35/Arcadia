@@ -1,0 +1,65 @@
+body{
+    background-color: #FAF9F6 !important;
+}
+
+@media (max-width: 1280px) {
+    .custom-container{
+        min-width:80vw !important;
+        margin-left:0 !important;
+    }
+}
+
+
+.scrollable-container{ 
+    height: 80vh;
+    overflow-y: scroll;
+    overflow-x:hidden;
+    background-color: #fff;
+}
+
+/* -------------------------------  texte  ----------------------------- */
+
+
+H1{ 
+    color:var(--primary);
+    font-size: 4vh;
+
+}
+
+.active{
+    color:var(--active);
+}
+
+
+/* -------------------------------  Containers  ------------------------ */
+
+
+
+.avis-list-container{
+    width:50vw;
+    position:relative;
+    left:20vw;
+    top:15vh;
+    padding:0%;
+    margin:0%;
+    max-height:80vh;
+
+
+}
+
+.see-post-container{
+    background-color: rgba(0,0,0,0.8);
+}
+
+.page-container{
+    max-height:100vh;
+    overflow-y: hidden;
+}
+
+
+/* -------------------------------  Image  ----------------------------- */
+
+.default{
+    height: 100vh;
+    width: 100vw;
+}

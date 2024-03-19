@@ -1,6 +1,8 @@
 .navbar-custom{
     background-color: #495635;
-    height:52px
+    height:52px;
+    max-width:100vw;
+    overflow: hidden;
 }
 
 
@@ -11,7 +13,7 @@
     
 }
 
-.navbar-custom a:hover, a:active, a:visited,a {
+.navbar-custom , a:active, a:visited,a {
     text-decoration: none;
     color:#ffffffff;
     font-size: 32 ;
@@ -23,6 +25,10 @@
     font-size: 32;
 }
 
+.nav-link:hover , .navbar-brand:hover{
+    color: #ffcb00;
+    transition: color 0.15s,  ease-in-out, background-color 0.15s ease-in-out;
+}
 
 .navbar-custom-footer {
     color: white;
@@ -39,4 +45,23 @@
 
 .footer-text-wrapper {
     margin-top: 15px; /* Adjust this value to move the text further down */
+}
+
+.navbar-toggle{
+    position:relative;
+    right: 0 !important;
+}
+
+
+
+.navbar{
+    --bs-navbar-color: var(--primary) !important;
+    
+}
+
+footer{
+    position: absolute;
+    z-index: 1000;
+    min-width: 100vh;
+    --bs-gutter-x: 0 !important;
 }

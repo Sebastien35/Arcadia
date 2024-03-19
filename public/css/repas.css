@@ -1,0 +1,8 @@
+#animalMealCard{
+    height: 40vh;
+}
+
+#animalMealCard .card-body{
+    height:100%;
+    overflow-y: scroll;
+}

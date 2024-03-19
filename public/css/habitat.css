@@ -1,0 +1,5 @@
+body{
+    background-color: var(--darker);
+    background-repeat: repeat;
+    background-size: cover;
+}

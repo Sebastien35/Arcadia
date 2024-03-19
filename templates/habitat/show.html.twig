@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{habitat.nom}}{% endblock %}
+
+{% block body %}
+<style>
+    .animal-navbar{
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    body{
+        background-attachment: fixed;
+        background-size: cover;
+        background-image: url( {{asset('images/parc/jungle_bg_.jpg')}} );
+    }
+    ul{
+        list-style-type: none;
+    }
+</style>
+<div class="nav navbar mt-5 habitat-navbar">
+        <a class="navbar-brand" href="{{ path('app_habitat_index') }}">Tous les habitats</a>  
+</div>
+
+<div class="page-container" style="max-height: 100%">
+    <div class="container">
+        <div class="card habitat-card">
+            <div class="card-header">
+                <h1>{{ habitat.nom }}</h1>
+            </div>
+            <div class="row">
+                <div class="col-4"> 
+                    {% if habitat.imageName == null %}
+                        <img src="{{ asset('images/habitat/default.jpg') }}" alt="image_{{ habitat.nom }}" style="max-width: 100%;">
+                    {% else %}
+                        <img src="{{ asset('images/habitat/' ~ habitat.imageName) }}" alt="image_{{ habitat.nom }}" style="max-width: 100%; height: auto;">
+                    {% endif %}
+                </div>
+                <div class="col-8">
+                    <div class="card-body">
+                        <p class="card-text">{{ habitat.description }}</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-2">
+        <div class="card" style="max-height:40vh">
+            <div class="card-header">
+                <h2>Les animaux de cet habitat</h2>
+            </div>
+            <div class="card-body d-flex justify-content-center">
+                <div id="carousel" class="carousel slide" style="max-height:100%">
+                    <div class="carousel-inner">
+                        {% for animal in animaux %}
+                            <div class="carousel-item {% if loop.first %} active {% endif %} " role="button" onclick="window.location=('/animal/show/'+ {{animal.id}} )">
+                                {% if animal.imageName == null %}
+                                    <img src="{{ asset('images/parc/default.jpg') }}" alt="image_{{ animal.prenom }}" style="max-height:20vh" >
+                                {% else %}
+                                <img src="{{ asset('images/animal/' ~ animal.imageName) }}" alt="image_{{ animal.prenom }}" style="max-height:20vh" >
+                                {% endif %}
+                                <div class="carousel-caption d-md-block">
+                                    <h5>{{ animal.prenom }}</h5>  
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

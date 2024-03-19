@@ -1,0 +1,29 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        habitat:
+            uri_prefix: /images/habitat
+            upload_destination: '%kernel.project_dir%/public/images/habitat'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            
+            inject_on_load: false
+            delete_on_remove: true
+            delete_on_update: true
+        animal:
+            uri_prefix: /images/animal
+            upload_destination: '%kernel.project_dir%/public/images/animal'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            
+            inject_on_load: false
+            delete_on_remove: true
+            delete_on_update: true
+        service:
+            uri_prefix: /images/service
+            upload_destination: '%kernel.project_dir%/public/images/service'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            
+            inject_on_load: false
+            delete_on_remove: true
+            delete_on_update: true
+            

@@ -1,164 +1,111 @@
+/*ACCEUIL.CSS*/
 
-.body-container {
-  display: flex;
-  flex-direction: column;
+html{
+  scroll-behavior: smooth;
+}
+.top-container{
+  height: 40vh;
+  background-position:   40% 55%;
+  background-size: 100%;
 }
 
-.overlap-group {
-  display: flex;
-}
-
-.text-wrapper {
-  flex: 1;
-}
-
-.box-big {
-    width: 100%;
-    height: 200px;
-}
-.BIG {
-    
-    width: 100%; /* Adjust as needed */
-    height: 200px;
-    top: 0;
-    left: 0;
-}
-
-.big-overlap-group {
-    position: relative;
-    width: 100%; /* Adjust as needed */
-    height: 200px;
-    top: -4px;
-}
-
-.big {
-    position: absolute;
-    width: 100%; /* Adjust as needed */
-    height: 100%; /* Maintain aspect ratio */
-    object-fit: cover;
-    top: 0;
-    left: 0;
-    filter:blur(1px);
-}
-
-
-
-/* Règles CSS pour les box-image-left, box-image-right*/ 
-/* ------------  Généraliste ----------------------*/ 
-  .image{
-    border-radius:15px;
-    height:40vh;
-    
+@media (max-width: 1280px) {
+  .top-container{
+    background-size:110%;
+    height: 30vh;
   }
-  @media(max-width:1280px){
-    .image{
-      height:20vh;
-      width: 20vh;
-      position: relative !important;
-      top: -12vh !important;
-    }
-    .image-left{
-      top: 8vh !important;
-      left: 5vw !important;
-    }    
-  }
+}
 
+.logo{
+  z-index: 1;
+  max-width: 100%;
+  height: 100%;
+  position:relative;
+  left: 60%;
+  top: 8%;
+}
+@media(max-width: 1280px){
+  .logo{
+    left: 55%;
+    top: 25%;
+    height: 80%;
+
+  }
+}
+
+.image-habitat{
+  height:40vh !important;
+  width: 30vw !important;
+}
+@media(max-width: 1280px){
+  .image-habitat{
+    width: 80vw !important;
+  }
+}
+.carousel-item{
+  height: 100%;
+  width: 100%;
+}
+
+.carousel-item-start, carousel-item-end{
+  height: 40vh;
+  background-position: 50% 50%;
+  background-size: cover;
+}
+
+.carousel-fade .active.carousel-item-start, 
+.carousel-fade .active.carousel-item-end{
+  display: block;
+  opacity: 0;
+  transition: opacity 0s ease;
+}
+
+#services-container{
+  background-size:60%;
+  background-position: 50% 5%;
+}
+.card{
+  height:100%;
+  width:100%  !important;
+  border-radius: 15px;
+  border: 1px solid var(--dark);
   
-  .text{
+}
+.card .card-header{
+  background-color:var(--secondary);
+}
+@media(max-width: 1280px){
+  #services-container{
+    background-size: 100%;
+    background-position: 70% 25%;
 
-    text-align:center;
   }
+}
 
-  p{
-    margin-bottom:0vh;
-  }
-/* -------------box-left-------------------------- */
-  .box-left-image{
-    background-color: var(--bg-dark);
-    width:100%;
-    overflow: hidden;
-    height: 278px;
-    margin-top:0
-  }
+.animal-card{
+  height: 100%;
+  border-radius: 15px;
+  border: 1px solid var(--dark);
+}
 
-  .box-left-image .image-left{
-    position:relative;
-    left:5%;
-    top:3%;
-  }
-
-
-/* ----------------- box-right-image ----------------- */ 
-
-.box-right-image{
-  background-color:var(--white);
+.animal-image{
   width:100%;
-  overflow:hidden;
-  height:278px;
-  margin-top:0px;
-  margin-bottom: 0px;
+  height:20vh;
 }
 
-
-.box-right-image .image-right{
-  position:relative;
-  left:50vw;;
-  top:-15vw;
-}
-
-/* ---------------- 2 images sur la même div ------------------------*/
-
-.double-image-right{
-  position:relative;
-  top:3%;
-  left:30%;
-
-}
-
-.double-image-left{
-  position:relative;
-  top:3%;
-  left:10%;
-
-}
-
-.double-image{
-  width:30vw;
-  height:25vw;
-}
-@media(max-width:1280px){
-  .double-image{
-    width: 50vw !important;
-    height: 35vh !important;
-    top: 3vh !important;
-  }
-  .double-image-left{
-    left:3vw;
-  }
-  .double-image-right{
-    left:10vw;
+@media(max-width: 1280px){
+  .animal-image{
+    height: 30vh;
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* -------------------- Texte au centre d'une div  -------------------*/
-.center-text-container{
-  width: 800px;
-  position:relative;
-  left:20%;
-  color:var(--secondary);
 
+.carousel-item.active{
+  z-index: 0;
+  overflow-y: hidden;
 }
 
-/* -------------------- Carte représentant les avis -------------------*/
-
-.card-avis{
-  width:60%;
-  position:relative;
-  top: 5%;
+.table{
+  --bs-table-color: var(--white);
+  --bs-table-striped-color: var(--primary);
 }
-
-.subtitle{
-  color:var(--secondary);
-}
-H5 { color: var(--dark)}
