@@ -1,16 +1,14 @@
 
 /*----------------------- Animaux -------------------------------------*/
 const animalContainer = document.getElementById('animal-container');
-const animalBtn = document.getElementById('animal-btn');
+const animalBtns = document.querySelectorAll('.animal-btn');
 
-animalBtn.addEventListener('click', showAnimalContainer);
-
-function showAnimalContainer(){
+animalBtns.forEach(button => {button.addEventListener('click', function(){
     flushFeatures();
     flushActive();
     animalContainer.classList.remove('d-none');
-    animalBtn.classList.add('active');
-}
+    button.classList.add('active');
+})});
 
 
 // Ajouter infoAnimal 
@@ -74,6 +72,14 @@ function addInfoAnimal() {
         .catch(error => console.log('error', error));
 }
 
+//Rediriger vers /animal/show/:id
+function goSeeAnimal(id){
+    window.location.href = '/veterinaire/animal/show/'+id;
+}
+//Rediriger vers /animal/edit/:id
+function goEditAnimal(id){
+    window.location.href = '/veterinaire/animal/update/'+id;
+}
 //Supprimer Animal --------------------------------------------------------
 
 const confirmDeleteAnimalBtn = document.getElementById('confirmDeleteAnimalBtn');
@@ -107,16 +113,14 @@ function deleteAnimal(){
 
 /*----------------------- Nourriture -------------------------------------*/
 const nourritureContainer = document.getElementById('nourriture-container');
-const nourritureBtn = document.getElementById('nourriture-btn');
+const nourritureBtns = document.querySelectorAll('.nourriture-btn');
 
-nourritureBtn.addEventListener('click', showNourritureContainer);
-
-function showNourritureContainer(){
-    flushFeatures();
+nourritureBtns.forEach(button => {button.addEventListener('click', function(){
     flushActive();
+    flushFeatures();
     nourritureContainer.classList.remove('d-none');
-    nourritureBtn.classList.add('active');
-}
+    button.classList.add('active');
+})});
 
 //Ajouter Nourriture-------------------------------------------------------
 
@@ -241,31 +245,28 @@ function editNourriture(){
 /*-----------Affichage des repas des animaux 23/02/2024------------ */
 
 const repasContainer = document.getElementById('repas-container');
-const repasBtn = document.getElementById('repasBtn');
+const repasBtns = document.querySelectorAll('.repasBtn');
 
-repasBtn.addEventListener('click', showRepas);
-
-function showRepas(){
-    flushFeatures();
+repasBtns.forEach(button => {button.addEventListener('click', function(){
     flushActive();
-    repasBtn.classList.add('active');
+    flushFeatures();
+    button.classList.add('active');
     repasContainer.classList.remove('d-none');
+})});
 
-}
 /*-----------------------Habitats------------------------------*/
 
 const habitatContainer = document.getElementById('habitat-container');
-const habitatBtn = document.getElementById('habitatsBtn');
+const habitatBtns = document.querySelectorAll('.habitatsBtn');
 
-habitatBtn.addEventListener('click', showHabitatContainer);
-
-function showHabitatContainer(){
+habitatBtns.forEach(button => {button.addEventListener('click', function(){
     flushActive();
     flushFeatures();
-    habitatBtn.classList.add('active');
+    button.classList.add('active');
     habitatContainer.classList.remove('d-none');
+})});
 
-}
+
 // Publier un commentaire sur un habitat
 
 const addCommentBtns = document.querySelectorAll('.add-comment-btn');
@@ -321,14 +322,12 @@ function addComment(){
 function flushFeatures(){
     animalContainer.classList.add('d-none')
     nourritureContainer.classList.add('d-none')
-    repasContainer.classList.add('d-none')
     habitatContainer.classList.add('d-none')
 }
 flushFeatures();
 function flushActive(){
-    animalBtn.classList.remove('active');
-    nourritureBtn.classList.remove('active');
-    repasBtn.classList.remove('active');
-    habitatBtn.classList.remove('active');
+    animalBtns.forEach(button => button.classList.remove('active'));
+    nourritureBtns.forEach(button => button.classList.remove('active'));
+    habitatBtns.forEach(button => button.classList.remove('active'));
 }
 flushActive();

@@ -1,11 +1,15 @@
 /*ACCEUIL.CSS*/
+
+html{
+  scroll-behavior: smooth;
+}
 .top-container{
   height: 40vh;
   background-position:   40% 55%;
   background-size: 100%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1280px) {
   .top-container{
     background-size:110%;
     height: 30vh;
@@ -20,7 +24,7 @@
   left: 60%;
   top: 8%;
 }
-@media(max-width: 768px){
+@media(max-width: 1280px){
   .logo{
     left: 55%;
     top: 25%;
@@ -33,7 +37,7 @@
   height:40vh !important;
   width: 30vw !important;
 }
-@media(max-width: 768px){
+@media(max-width: 1280px){
   .image-habitat{
     width: 80vw !important;
   }
@@ -70,7 +74,7 @@
 .card .card-header{
   background-color:var(--secondary);
 }
-@media(max-width: 768px){
+@media(max-width: 1280px){
   #services-container{
     background-size: 100%;
     background-position: 70% 25%;
@@ -89,8 +93,19 @@
   height:20vh;
 }
 
-@media(max-width: 768px){
+@media(max-width: 1280px){
   .animal-image{
     height: 30vh;
   }
+}
+
+
+.carousel-item.active{
+  z-index: 0;
+  overflow-y: hidden;
+}
+
+.table{
+  --bs-table-color: var(--white);
+  --bs-table-striped-color: var(--primary);
 }

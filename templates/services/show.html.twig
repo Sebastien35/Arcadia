@@ -4,20 +4,26 @@
 
 {% block body %}
 <link rel="stylesheet" href="{{asset('css/services.css')}}">
-
-<div class="container service-list">
-    <h1 class=""> Les services proposés au zoo:</h1>
-    <div class="row">
-        <div class="col-md-12 col-sm-4 mb-4 service mx-auto" data-service="{{service.nom}}">
-            <div class="card card-service" style="text-align: center;">
-                <H5 class="card-title">{{service.nom}}</H5>
-                <p class="card-text">{{service.description}}</p>
-                <a href="/services" class="btn btn-primary">Retour</a>
-            </div>
+<div class="page-container">
+    <nav class="navbar-expand-lg navbar-dark bg-dark mt-5">
+        <a href="{{path('app_services_index_')}}" class="px-3">Retour</a>
+    </nav>
+    <div class="show-service-container ">
+        <img src="{{asset('images/service/' ~ service.imageName)}}" alt="{{service.nom}}" class="img-fluid show-service-image">
+        <div class="service-description centered show-service-card card">
+            <h1 class="text-center">{{service.nom}}</h1>
+            <p class="text-center">{{service.description}}</p>
         </div>
     </div>
 
+
+
+
+
+
+
 </div>
+
 
 
 

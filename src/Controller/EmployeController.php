@@ -62,8 +62,19 @@ class EmployeController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         $service = $this->entityManager->getRepository(Service::class)->find($id);
-        $service->setNom($data['nom']);
-        $service->setDescription($data['description']);
+        if (!$service) {
+            throw $this->createNotFoundException('Service with id ' . $id . ' does not exist!');
+        }
+        if (empty($data['nom']) || empty($data['description'])) {
+            $service->setnom($service->getNom());
+        }else{
+            $service->setNom($data['nom']);
+        }
+        if (empty($data['description'])) {
+            $service->setDescription($service->getDescription());
+        }else{
+            $service->setDescription($data['description']);
+        }
         $this->entityManager->persist($service);
         $this->entityManager->flush();
         return new JsonResponse(['status' => 'Service updated!'], Response::HTTP_OK);
@@ -126,6 +137,60 @@ public function newRepas(Request $request, SerializerInterface $serializer):Resp
 
     return new RedirectResponse($this->generateUrl('app_employe_index'));
     }
+    #[Route('/demande/delete/{id}', name: 'delete_demande', methods:['DELETE'])]
+    public function deleteDemande(Request $request): Response
+    {   
+        try{
+        $demande = $this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
+        if (!$demande) {
+            throw $this->createNotFoundException('Demande with id ' . $request->attributes->get('id') . ' does not exist!');
+        }
+        $this->entityManager->remove($demande);
+        $this->entityManager->flush();
+        return new JsonResponse(['status' => 'Demande deleted!'], Response::HTTP_OK);
+        }catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage());
+        }
+    }
+
+
+
+    #[Route('/avis/valider/{id}',name: 'validerAvis', methods: 'POST')]
+    public function validerAvis(int $id, Request $request): JsonResponse
+    {
+        $avis=$this->entityManager->getRepository(Avis::class)->find($id);
+        if (!$avis){
+            throw $this->createNotFoundException(
+                'No avis found for id '.$id
+            );
+        }else{
+        $avis->setValidation(true);
+        $this->entityManager->flush();
+        return new JsonResponse(null, Response::HTTP_OK);
+
+        }
+        
+
+        
+    }
+        
+
+
+
+    #[Route('/avis/delete/{id}',name: 'delete', methods: 'DELETE')]
+    public function delete(int $id):Response
+    {
+        $avis = $this->entityManager->getRepository(Avis::class)->find($id);
+        if (!$avis){
+            throw $this->createNotFoundException(
+                'No avis found for id '.$id
+            );
+        }
+        $this->entityManager->remove($avis);
+        $this->entityManager->flush();
+        return new JsonResponse(null, Response::HTTP_OK);
+    }
+
 
 
 }

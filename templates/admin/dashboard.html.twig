@@ -3,48 +3,102 @@
 {% block title %}Espace Admin{% endblock %}
 
 {% block body %}
-<link rel="stylesheet" href="{{ asset('css/admin-dashboard.css') }}">
+<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 
 
 <div class="container-fluid page-container">
-    <div class="row flex-nowrap">
-        <div class="col-lg-3 col-xl-2 px-sm-2 px-0 bg-dark">
+    <div class="row flex-nowrap" id="agencement">
+        
+        
+        <div class="collapse d-lg-none  px-sm-2 px-0 bg-dark" id="sidebarCollapse" aria-hidden="true">
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 <ul class="mt-5">
-                    <li class="mt-2 mb-3">
-                        <H5 class="nav-item"><i class="fa-solid fa-user-tie"></i>Espace administrateur</H5>
+                    <li class="mt-2 mb-3" >
+                        <H5 class="nav-item" role="button" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse"><i class="fa-solid fa-user-tie"></i>Espace administrateur</H5>
                     </li>
-                    <li class="mt-5 mb-3">
-                        <p class="nav-item" id="userBtn" role="button"><i class="fa-regular fa-user"></i> Utilisateurs</p>
-                    </li>
-                    <li class="mt-2 mb-3">
-                        <p class="nav-item" id="habitatBtn" role="button"><i class="fa-solid fa-igloo"></i></i> Habitats</p>
+                    <li class="mt-3 mb-3">
+                        <p class="nav-item userBtn" id="userBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-user"></i> Utilisateurs</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item" id="animalBtn" role="button"><i class="fa-solid fa-dog"></i> Animaux</p>
+                        <p class="nav-item habitatBtn" id="habitatBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-igloo"></i></i> Habitats</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item" id="infoAnimalBtn" role="button"><i class="fa-regular fa-clipboard"></i> Comptes-rendus vétérinaires</p>
+                        <p class="nav-item animalBtn" id="animalBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-dog"></i> Animaux</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item" id="servicesBtn" role="button"><i class="fa-solid fa-shop"></i> Services</p>
+                        <p class="nav-item infoAnimalBtn" id="infoAnimalBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-clipboard"></i> Comptes-rendus vétérinaires</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item" id="horairesBtn" role="button"><i class="fa-regular fa-clock"></i> Horaires</p>
+                        <p class="nav-item servicesBtn" id="servicesBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ><i class="fa-solid fa-shop"></i> Services</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item horairesBtn" id="horairesBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ><i class="fa-regular fa-clock"></i> Horaires</p>
                     </li>
                     <li class="my-2">
-                        <p role="button" id="contactBtn" class="sidebar-item"><i class="fa-solid fa-envelope"></i> Contact</p>
+                        <p class="nav-item contactBtn" id="contactBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-envelope"></i> Contact</p>
                     </li>
                     <li class="my-2">
-                        <p role="button" id="consultationContainerBtn" class="sidebar-item"><i class="fa-solid fa-chart-simple"></i> Consultations</p>
+                        <p class="nav-item consultationContainerBtn" role="button" id="consultationContainerBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-chart-simple"></i> Consultations</p>
+                    </li> 
+                    <li class="my-2">
+                        <p class="nav-item avisBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-comment"></i>Avis clients</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</a>
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ></i>Se déconnecter</a>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="col py-3" >
+        
+        <!-- Sidebar Toggle Button (visible on small screens) -->
+        <div class="d-lg-none  px-sm-2 px-0 mt-5">
+            <button class="btn btn-primary w-100 toggle-btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse">
+                Menu
+            </button>
+        </div>
+
+        <!-- Sidebar Column (visible on large screens) -->
+        <div class="d-none d-lg-block col-lg-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <!-- Sidebar Content -->
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="mt-5">
+                    <li class="mt-2 mb-3" >
+                        <H5 class="nav-item" role="button" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse"><i class="fa-solid fa-user-tie"></i>Espace administrateur</H5>
+                    </li>
+                    <li class="mt-5 mb-3">
+                        <p class="nav-item userBtn" id="userBtn" role="button"><i class="fa-regular fa-user"></i> Utilisateurs</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item habitatBtn" id="habitatBtn" role="button"><i class="fa-solid fa-igloo"></i></i> Habitats</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item animalBtn" id="animalBtn" role="button"><i class="fa-solid fa-dog"></i> Animaux</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item infoAnimalBtn" id="infoAnimalBtn" role="button"><i class="fa-regular fa-clipboard"></i> Comptes-rendus vétérinaires</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item servicesBtn" id="servicesBtn" role="button"><i class="fa-solid fa-shop"></i> Services</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item horairesBtn" id="horairesBtn" role="button"><i class="fa-regular fa-clock"></i> Horaires</p>
+                    </li>
+                    <li class="my-2">
+                        <p class="nav-item contactBtn" id="contactBtn" role="button"><i class="fa-solid fa-envelope"></i> Contact</p>
+                    </li>
+                    <li class="my-2">
+                        <p class="nav-item consultationContainerBtn" role="button" id="consultationContainerBtn"><i class="fa-solid fa-chart-simple"></i> Consultations</p>
+                    </li> 
+                    <li class="my-2">
+                        <p class="nav-item avisBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-comment"></i>Avis clients</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col py-3" id="content" >
             {# Error and success messages #}
             <div>
                 {% for flashMessage in app.flashes('error') %}
@@ -61,7 +115,7 @@
                 {% endfor %}
             </div>
             {# User Container #}
-            <div class="custom-container mt-5 d-none" id="user-container" style="height:90vh">
+            <div class="custom-container mt-5 d-none" id="user-container">
                 <div class="container-header d-flex">
                     <div class="container-header-title">
                         <p> Comptes utilisateurs</p>
@@ -71,33 +125,35 @@
                     </div>
                 </div>
                 <div class="container-body">
-                    <table class="table table-striped" aria-label="user accounts table">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Mail</th>
-                                <th scope="col">Role</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for user in users %}
-                                {% if user.roles[0] != "ROLE_ADMIN" %}
-                                    <tr>
-                                        <td>{{ user.id }}</td>
-                                        <td>{{ user.email }}</td>
-                                        <td>{{ user.roles[0] }}</td>
-                                        <td>
-                                            <button class="btn btn-danger" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="{{ user.id }}"><i class="fa-solid fa-user-xmark"></i></i></button>
-                                            <button class="btn btn-primary" id="edit-user" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="{{ user.id }}"><i class="fa-solid fa-user-edit"></i></i></button>
-                                        </td>
-                                    
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>                 
+                    <div class="table-responsive">
+                        <table class="table table-striped" aria-label="user accounts table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Mail</th>
+                                    <th scope="col">Role</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                    {% if user.roles[0] != "ROLE_ADMIN" %}
+                                        <tr>
+                                            <td>{{ user.id }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td>{{ user.roles[0] }}</td>
+                                            <td>
+                                                <button class="btn btn-danger" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="{{ user.id }}"><i class="fa-solid fa-user-xmark"></i></button>
+                                                <button class="btn btn-primary" id="edit-user" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="{{ user.id }}"><i class="fa-solid fa-user-edit"></i></button>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+                
             
                 
                 {# Modal for creating user #}
@@ -118,7 +174,6 @@
                                             <option value="ROLE_EMPLOYE">Employé</option>
                                             <option value="ROLE_VET">Vétérinaire</option>
                                         </select></br></br>
-
                                     <label for="plainPassword">Mot de passe:</label></br>
                                     <input type="password" Placeholder="Password" name="plainPassword" id="password" required></br>
                                     <label for="plainPassword">Confirmation mot de passe:</label></br>
@@ -186,7 +241,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             
             {# Habitat Container #}
@@ -202,7 +256,7 @@
                 <div class="container-body mt-2 scrollable-container">
                     <div class="row">
                         {% for singlehabitat in habitats %}
-                        <div class="col col-lg-3 col-sm-12">
+                        <div class="col-lg-3 col-sm-12">
                             <div class="card mb-2 habitatCard">
                                 <div class="card-header d-flex justify-content-between">
                                     <div class="card-header-title">
@@ -301,18 +355,8 @@
                     </div>
                 </div>    
                 <div class="container-body mt-2 scrollable-container">
-                    <table class="table table-striped" aria-labelledby="Animaux">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Nom</th>
-                                <th scope="col">Race</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="animalTableBody">
-                        </tbody>
-                    </table>
+                    <div class="row" id="animalsList">      
+                    </div>
                 </div>
                 {# Modal for creating animal #}
                 <div class="modal modal-fade" id="add-animal-modal" tabindex="-1" aria-labelledby="add-animal-modal-label" aria-hidden="true">
@@ -396,7 +440,8 @@
                     </div>              
                 </div>
                 <div class="container-body mt-2 scrollable-container">
-                    <table class="table table-striped" aria-labelledby="Comptes-rendus">
+                    <div class="table-responsive">
+                    <table class="table table-striped " aria-labelledby="Comptes-rendus">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
@@ -407,22 +452,11 @@
                                 
                             </tr>
                         </thead>
-                        <tbody>
-                            {% for infoAnimal in infoAnimals %}
-                            <tr class="infoAnimalRow" data-animal-id="{{infoAnimal.getAnimal.id}}" data-infoAnimal-date="{{infoAnimal.createdAt|date('Y-m-d')}}"> 
-                                <td>{{ infoAnimal.id }}</td>
-                                <td>{{ infoAnimal.createdAt|date('Y-m-d') }}</td>
-                                <td>{{ infoAnimal.getAnimal.prenom }}</td>
-                                <td>{{ infoAnimal.getAuteur.email }}</td>
-                                <td>
-                                    <a type="button" class="btn btn-info" href="/admin/infoAnimal/show/{{infoAnimal.id}}"><i class="fa-regular fa-eye"></i></button>
-                                    <a type="button" class="btn btn-danger" id="delete-infoAnimal" data-bs-toggle="modal" data-bs-target="#deleteInfoAnimalModal" data-infoAnimal-id="{{ infoAnimal.id }}"><i class="fa-solid fa-trash"></i></a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-
+                        <tbody id="infoAnimalTableBody">
+                            
                         </tbody>
                     </table>
+                    </div>
                 </div>
                 {# Modal for deleting infoAnimal #}
                 <div class="modal modal-fade" tabindex="-1" id="deleteInfoAnimalModal" aria-labelledby="deleteInfoAnimalModalLabel" aria-hidden="true">
@@ -455,6 +489,7 @@
                     </div>
                 </div>
                 <div class="container-body mt-2 scrollable-container">
+                    <div class="table-responsive">
                     <table class="table table-striped" aria-labelledby="services">
                         <thead>
                             <tr>
@@ -463,21 +498,11 @@
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {% for service in services %}
-                            <tr>
-                                <td>{{ service.id }}</td>
-                                <td>{{ service.nom }}</td>
-                                <td>{{service.description}}</td>
-                                <td>
-                                    <button class="btn btn-danger" id="delete-service" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" data-service-id="{{ service.id }}"><i class="fa-solid fa-trash"></i></button>
-                                    <a class="btn btn-primary" href="/admin/services/edit/{{service.id}}"><i class="fa-solid fa-pencil"></i></a>
-                                    <a class="btn btn-info" href="/services/show/{{service.id}}"><i class="fa-regular fa-eye"></i></a>
-                                </td>
-                            </tr>
-                            {% endfor %}
+                        <tbody id="servicesList">
+                            
                         </tbody>
                     </table>
+                    </div>
                 </div>
 
                 {# Modal for deleting service #}
@@ -541,32 +566,34 @@
                     </div>
                 </div>
                 <div class="container-body">
-                    <table class="table table-striped"aria-labelledby="horaires">
-                        <thead>
-                            <tr>
-                                <th scope="col">Jour</th>
-                                <th scope="col">Ouverture</th>
-                                <th scope="col">Fermeture</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for horaire in horaires %}
-                            <tr>
-                                <td>{{ horaire.jour }}</td>
-                                {% if horaire.isOuvert %}
-                                <td>{{ horaire.HOuverture|date ('H:i')  }}</td>
-                                <td>{{ horaire.HFermeture|date ('H:i') }}</td>
-                                {% else %}
-                                <td>Fermé</td>
-                                <td>Fermé</td>
-                                {% endif %}
-                                <td>
-                                    <button class="btn btn-primary" id="edit-horaire" data-bs-toggle="modal" data-bs-target="#editHoraireModal" data-horaire-id="{{ horaire.id }}"><i class="fa-solid fa-pencil"></i></button>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-striped"aria-labelledby="horaires">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Jour</th>
+                                    <th scope="col">Ouverture</th>
+                                    <th scope="col">Fermeture</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for horaire in horaires %}
+                                <tr>
+                                    <td>{{ horaire.jour }}</td>
+                                    {% if horaire.isOuvert %}
+                                    <td>{{ horaire.HOuverture|date ('H:i')  }}</td>
+                                    <td>{{ horaire.HFermeture|date ('H:i') }}</td>
+                                    {% else %}
+                                    <td>Fermé</td>
+                                    <td>Fermé</td>
+                                    {% endif %}
+                                    <td>
+                                        <button class="btn btn-primary" id="edit-horaire" data-bs-toggle="modal" data-bs-target="#editHoraireModal" data-horaire-id="{{ horaire.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 {# Modal for editing horaire #}
@@ -603,11 +630,10 @@
                 </div>
             </div>
             {# Contact container #}
-            <div class="mt-5 d-none" id="contactContainer">
-                <div class="custom-container">
+                <div class="custom-container mt-5 d-none" id="contactContainer">
                     <div class="container-header">
                         <div class="container-title">
-                            <H5>Demandes de contact</H5>
+                            <p> Demandes de contact </p>
                         </div>
                     </div>
                     <div class="toolbar d-flex justify-content-around">
@@ -625,56 +651,10 @@
                         </div>              
                     </div>
                     <div class="container-body mt-3 scrollable-container">
-                        <div class="row">
-                            {% if demandes|length == 0 %}
-                                <p>Aucune demande de contact actuellement</p>
-                            {% else %}
-                                {% for demande in demandes %}
-                                    <div class="col-12 px-2">
-                                        <div class="card demande-card mb-5 " data-demande-status="{{ demande.answered }}" data-demande-date="{{ demande.createdAt|date('Y-m-d') }}">
-                                            <div class="card-header d-flex justify-content-between">
-                                                <h5 class="card-title">{{ demande.getTitre }}</h5>
-                                                <p class="text-muted">{{ demande.createdAt|date('d/m/Y') }}</p>
-                                            </div>
-                                            <div class="card-body">  
-                                                <p class="text-muted">{{ demande.mail }}</p>                             
-                                                <p class="card-text">{{ demande.getMessage }}</p>
-                                                {% if demande.answered == false %}
-                                                    <p class="text-muted">Non traitée</p>
-                                                {% else %}
-                                                    <p class="text-muted">Traitée le {{ demande.getAnsweredAt|date('Y-m-d') }}</p>
-                                                {% endif %}
-                                            </div>
-                                            <div class="card-footer mb-5">
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#repondreModal" data-demande-id="{{ demande.id }}">Répondre</button>
-                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="{{demande.id}}">Supprimer</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {# Modal for deleting demande #}
-                                    <div class="modal modal-fade" tabindex="-1" id="deleteDemandeModal" aria-labelledby="deleteDemandeModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="deleteDemandeModalLabel">Supprimer une demande</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body  d-flex justify-content-center">
-                                                    <h1>Êtes-vous sûr de vouloir supprimer cette demande?</h1>
-                                                    <input type="hidden" id="demande-id" value="">
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" id="confirm-delete-demande-btn" onclick="deleteDemande( {{demande.id}} )">Supprimer</button>
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-                        </div>   
+                        <div class="row" id="demandesList">
+                        </div>
                     </div>
-                </div>
+                
                 {# modal repondre #}
                 <div class="modal fade" tabindex="-1" id="repondreModal">
                     <div class="modal-dialog">
@@ -698,24 +678,66 @@
                         </div>
                     </div>
                 </div>
+                {# modal supprimer #}
+                <div class="modal fade" tabindex="-1" id="deleteDemandeModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Supprimer</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Êtes-vous sûr de vouloir supprimer cette demande?</h1>
+                                <input type="hidden" id="demandeId" name="demandeId">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnConfirmDeleteDemande">Supprimer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 
             </div>
             
             {# Consultations Container #}
             <div class="mt-5 d-none custom-container" id="consultationContainer">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <td scope="col">Animal</td>
-                            <td scope="col">Clics</td>
-                        </tr>
-                    </thead>
-                    <tbody id="visitTable">
-                    </tbody>
-                </table>   
+                <div class="container-header">
+                    <div class="container-title">
+                        <p> Popularité des animaux </p>
+                    </div>
+                </div>
+                <div class="toolbar px-1 mt-1">
+                    <input type="text" id="searchAnimal" class="form-control" placeholder="Rechercher un animal">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <td scope="col">Animal</td>
+                                <td scope="col">Clics</td>
+                            </tr>
+                        </thead>
+                        <tbody id="visitTable">
+                        </tbody>
+                    </table>  
+                </div> 
             </div>
             
+            {# Avis Container #}
+            <div class="mt-5 d-none custom-container" id="avisContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <p> Avis </p>
+                    </div>
+                </div>
+                <div class="row" id="avisList">
+                    
+                </div>
+            </div>
+
     </div>
 </div>
 

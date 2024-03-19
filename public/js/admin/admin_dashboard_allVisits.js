@@ -1,6 +1,6 @@
-const visitContainerbtn = document.getElementById('consultationContainerBtn')
+const visitContainerBtns = document.querySelectorAll('.consultationContainerBtn')
 
-visitContainerbtn.addEventListener('click', getConsultations);
+visitContainerBtns.forEach(button=>button.addEventListener('click', getConsultations));
 async function getConsultations(){
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
@@ -15,13 +15,11 @@ async function getConsultations(){
             throw new Error('Network response was not ok');
         }
         let result = await response.json();
-        console.log(result);
         let visits = result; // Assuming result directly contains the visits array
-        console.log(visits);
         let visitTableBody = document.getElementById('visitTable');
-        // Clear existing table rows
+        // Mettre le tableau à 0
         visitTableBody.innerHTML = '';
-        // Iterate over visits and create table rows
+        // Pour chaque visite, créer une ligne dans le tableau
         visits.forEach(visit => {
             let row = document.createElement('tr');
             row.innerHTML = `
@@ -34,3 +32,20 @@ async function getConsultations(){
         console.log('Error: ', error);
     }
 }
+
+
+/* Rechercher un animal */
+const searchInput = document.getElementById('searchAnimal');
+searchInput.addEventListener('input', function(){
+    let searchValue = searchInput.value.toLowerCase();
+    let rows = document.querySelectorAll('tbody tr');
+
+    rows.forEach(row => {
+        let animalName = row.querySelector('td').textContent.toLowerCase();
+        if (animalName.includes(searchValue)){
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});

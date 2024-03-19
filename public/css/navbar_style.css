@@ -59,6 +59,9 @@
     
 }
 
-.footer{
-    z-index: 100000;
+footer{
+    position: absolute;
+    z-index: 1000;
+    min-width: 100vh;
+    --bs-gutter-x: 0 !important;
 }

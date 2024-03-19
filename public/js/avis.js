@@ -92,3 +92,46 @@ function createAvis(){
         console.error('Error:',error);
     });
 }
+
+
+/* Afficher la liste des avis 13/03/2024 */
+const avisListContainer = document.getElementById('avis-list-container');
+const seeAvisBtn=document.querySelector('.see-avis-btn');
+seeAvisBtn.addEventListener('click', function(){
+    flushFeatures();
+    flushActive();
+    avisListContainer.classList.remove('d-none');
+    seeAvisBtn.classList.add('active');
+});
+
+
+/* Afficher le formulaire d'ajout d'avis 13/03/2024 */
+const createAvisContainer = document.getElementById('create-avis-container');
+const createAvisBtn=document.querySelector('.create-avis-btn');
+createAvisBtn.addEventListener('click', function(){
+    flushFeatures();
+    flushActive();
+    createAvisContainer.classList.remove('d-none');
+    createAvisBtn.classList.add('active');
+});
+
+
+/* Flush Features 13/03/2024 */
+function flushFeatures(){
+    createAvisContainer.classList.add('d-none');
+    avisListContainer.classList.add('d-none');
+}
+flushFeatures();
+
+/* Flush Active 13/03/2024 */
+function flushActive(){
+    createAvisBtn.classList.remove('active');
+    seeAvisBtn.classList.remove('active');
+}
+flushActive();
+
+function defaultBehaviour(){
+    seeAvisBtn.classList.add('active');
+    avisListContainer.classList.remove('d-none');
+}
+defaultBehaviour();

@@ -33,6 +33,7 @@ class Animal
 
     
     #[ORM\ManyToOne(inversedBy: 'animals')]
+    #[Groups("animal:read")]
     private ?Habitat $Habitat = null;
 
     #[ORM\Column]
@@ -42,9 +43,11 @@ class Animal
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[Vich\UploadableField(mapping: "animal", fileNameProperty: "imageName")]
+    
     private $imageFile;
 
     #[ORM\Column(type: "string",length:255, nullable: true)]
+    #[Groups("animal:read")]
     private ?string $imageName = null;
 
     

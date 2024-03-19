@@ -7,10 +7,10 @@
 <link rel="stylesheet" href="{{ asset('css/repas.css') }}">
 
 <div class="nav navbar bg-dark mt-5 animal-navbar">
-        <a class="navbar-brand ml-5 mx-5" href="{{ path('app_admin_index') }}">Retour</a>
+        <a class="navbar-brand" href="{{ path('app_veterinaire_index') }}">Tous les animaux</a>
 </div>
 <div class="row">
-    <div class="col">
+    <div class="col-lg-6 col-sm-12 col-md-12">
         <div class="mt-1 mb-2">
             <div class="card">
                 <div class="card-header">
@@ -36,13 +36,21 @@
             </div>
         </div>
     </div>
-    <div class="col">
-        <div class=" mt-1 card mb-2">
+    <div class="col col-lg-6 col-sm-12 col-md-12">
+        <div class="mt-1 card mb-2">
             <div class="card-header">
                 <h2>Notes vétérinaires:</h2>
             </div>
-            <div class="card-body" style="overflow-y: scroll; height: 30vh">
+            <div class="card-body" style="overflow-y: scroll; height: 30vh">                  
                 <table class="table table-striped">
+                    <label for="date">Trier par date</label>
+                    <select id="infoAnimalDateInput" class="form-select">
+                        <option value="" disabled selected>Choisir une option</option>"
+                        <option value="0">Tous</option>
+                        <option value="1">Aujourd'hui</option>
+                        <option value="2">Cette semaine</option>
+                        <option value="3">Ce mois</option>
+                    </select>
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -53,15 +61,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for infoAnimal in infoAnimals %}
+                        {% if infoAnimals == null %}
                         <tr>
-                            <td>{{ infoAnimal.createdAt | date('d-m-Y') }}</td>
+                            <td colspan="5">Pas de notes enregistrées</td>
+                        </tr>
+                        {% else %}
+                        {% for infoAnimal in infoAnimals %}
+                        <tr class="infoAnimal">
+                            <td class="infoAnimalDate">{{ infoAnimal.createdAt | date('Y-m-d') }}</td>
                             <td>{{ infoAnimal.etat }}</td>
                             <td class="d-none d-lg-table-cell">{{ infoAnimal.details }}</td>
                             <td class="d-none d-lg-table-cell">{{ infoAnimal.nourriture.nom }}</td>
                             <td class="d-none d-lg-table-cell">{{ infoAnimal.grammage }}g</td>
                         </tr>
                         {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
@@ -72,51 +86,48 @@
 </div>
 
     
-            <div class="card" id="animalMealCard">
-                <div class="card-header">
-                    <h2>Repas</h2>
-                </div>
-                <div class="card-body">
-                <table class="table table-striped" aria-labelledby="Repas de l'animal">
-                <label for="date">Trier par date</label>
-                <select id="dateInput" class="form-select">
-                    <option value="" disabled selected>Choisir une option</option>"
-                    <option value="0">Tous les repas</option>
-                    <option value="1">Aujourd'hui</option>
-                    <option value="2">Cette semaine</option>
-                    <option value="3">Ce mois</option>
-                </select>
-                    <thead>
-                        <tr>
-                            <th role="button" id="dateBtn"></i> Date</th>
-                            <th>Quantité</th>
-                            <th>Aliment</th>
-                        </tr>
-                    </thead>
-                    <div class="scrollable mb-1">
-                        <tbody class="mb-5">
-                            {% if repas == null %}
-                            <tr>
-                                <td colspan="3">Pas de repas enregistré</td>
+<div class="card mb-5" id="animalMealCard">
+    <div class="card-header">
+        <h2>Repas</h2>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped" aria-labelledby="Repas de l'animal">
+            <label for="date">Trier par date</label>
+            <select id="dateInput" class="form-select">
+                <option value="" disabled selected>Choisir une option</option>"
+                <option value="0">Tous les repas</option>
+                <option value="1">Aujourd'hui</option>
+                <option value="2">Cette semaine</option>
+                <option value="3">Ce mois</option>
+            </select>
+            <thead>
+                <tr>
+                    <th role="button" id="dateBtn"></i> Date</th>
+                    <th>Quantité</th>
+                    <th>Aliment</th>
+                </tr>
+            </thead>
+            <div class="scrollable mb-1">
+                <tbody class="mb-5">
+                    {% if repas == null %}
+                    <tr>
+                        <td colspan="3">Pas de repas enregistré</td>
+                    </tr>
+                    {% else %}
+                        {% for repas in repas %}                    
+                            <tr class="d-none repas">
+                                <td class="repasdate">{{ repas.Datetime | date('Y-m-d') }}</td>
+                                <td>{{ repas.quantite }}g</td>
+                                <td>{{ repas.nourriture.nom }}</td>
                             </tr>
-                            {% else %}
-                                {% for repas in repas %}                    
-                                    <tr class="d-none repas">
-                                        <td class="repasdate">{{ repas.Datetime | date('d/m') }}</td>
-                                        <td>{{ repas.quantite }}g</td>
-                                        <td>{{ repas.nourriture.nom }}</td>
-                                    </tr>
-                                {% endfor %}
-                            {% endif %}
-                        </tbody>
-                    </div>
-                </table>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
             </div>
-            
-        </div>
+        </table>
     </div>
 </div>
 
-<script src="{{ asset('js/filterRepas.js') }}"></script>
+<script src="{{ asset('js/showAnimal.js') }}"></script>
 
 {% endblock %}

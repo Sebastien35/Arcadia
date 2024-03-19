@@ -3,75 +3,50 @@
 {% block title %}{{animal.prenom}}{% endblock %}
 
 {% block body %}
+<link rel="stylesheet" href="{{ asset('css/showAnimal.css') }}">
 <style>
-    .animal-navbar{
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-
     body{
-        background-attachment: fixed;
-        background-size: cover;
         background-image: url( {{asset('images/parc/jungle_bg_.jpg')}} );
     }
 </style>
-<div class="nav navbar mt-5 animal-navbar">
-        <a class="navbar-brand mx-3" href="{{ path('app_habitat_index') }}">Voir les Habitats</a>  
-</div>
-
-<div class="container mt-5 mb-5">
-    <div class="card mt-5">
-        <div class="card-header">
-            <h1>{{animal.prenom}}</h1>
-            <input type="hidden" id="animalId" value="{{animal.id}}">
-        </div>
-        <div class="row">
-            <div class="col-4"> 
-                {% if animal.imageName == null %}
-                <img src="{{ asset('images/parc/default.jpg') }}" alt="image_{{ animal.prenom }}" style="max-height:20vh" >
-                {% else %}
-                <img src="{{ asset('images/animal/' ~ animal.imageName) }}" alt="image_{{ animal.prenom }}" style="max-height:20vh" >
-                {% endif %}
-            </div>
-            <div class="col-8">
-                <div class="card-body">
-                    <p class="card-text">Habitat: {{animal.habitat.nom}} </p>
-                    <p class="card-text">Race: {{animal.race}}</p>
-                    <p class="card-text">Date d'arrivée: {{animal.createdAt | date('d-m-Y')}}</p> 
-                    <p class="card-text">Habitat: {{animal.habitat.nom}} </p>        
-                </div>
-            </div>
-        </div>  
+<div class="page-container">
+    <div class="nav navbar mt-5 animal-navbar">
+            <a class="navbar-brand mx-3" href="{{ path('app_habitat_index') }}">Voir les Habitats</a>  
     </div>
-    <div class="row">
-        <div class="col">
-            
-            <div class="card">
-                <div class="card-header">
-                    <h2>Note du vétérinaire : </h2>
+    <div class="animal-presentation container">
+        <div class="row">            
+            <div class="col-lg-6 col-md-12 col-sm-12 d-flex justify-content-center">
+                <img src="{{asset('images/animal/'~ animal.imageName)}}" alt="animal" class="animal-image">
+            </div>
+            <div class="col-lg-6 col-md-12 col-sm-12 card card-animal mb-5">
+                <div class="card-header text-center">
+                    <h1 class="card-title">{{animal.prenom}}</h1>
                 </div>
                 <div class="card-body">
+                <input type="hidden" id="animalId" value="{{animal.id}}">
+                <p>Race : {{animal.race}}</p>
+                <p>Date d'arrivée : {{animal.createdAt | date('d/m/Y')}}</p>
+                <p>Habitat: {{animal.habitat.nom}}</p>
+                </div>
+                <div class="card-footer text-center">
+                    <h2>Notes vétérinaires:</h2>
                     {% if infoAnimal == null %}
-                    <p class="card-text">Pas de note pour le moment</p>
+                    <p>Pas de note pour le moment</p>
                     {% else %}
                         {% for infoAnimal in infoAnimal %}
-                        <div class="card">
-                            <div class="card-header">
                                 <h3>{{ infoAnimal.createdAt | date('d-m-Y') }}</h3>
-                            </div>
-                            <div class="card-body">
                                 <p class="card-text">Etat de l'animal: {{ infoAnimal.etat }}</p>
-                                <p class="card-text">Details: {{ infoAnimal.details }}</p>
+                                {% if infoAnimal.details != null %}
+                                    <p class="card-text">Détails: {{ infoAnimal.details }}</p>
+                                {% endif %}
                                 <p class="card-text">Nourriture: {{ infoAnimal.nourriture.nom }}</p>
                                 <p class="card-text">Quantité recommandé: {{ infoAnimal.grammage }}g</p>
-                            </div>
-                        </div>
+                            
                         {% endfor %}
                     {% endif %}
-                </div>
+                </div>         
             </div>
-            
         </div>
-        
     </div>
 </div>
 

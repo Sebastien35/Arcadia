@@ -1,13 +1,6 @@
 /*-----------Validation / Suppression avis 05/02/2024 ------------------ */
 const avisContainer = document.getElementById('avisContainer');
-const BtnValider = avisContainer.querySelectorAll('.BtnValider');
 const BtnSupprimer = avisContainer.querySelectorAll('.BtnSupprimer');
-
-if(BtnValider.length > 0){
-    BtnValider.forEach(button=>{
-        button.addEventListener('click', validateAvis);
-    });
-};
 
 if(BtnSupprimer.length > 0){
     BtnSupprimer.forEach(button=>{
@@ -15,67 +8,52 @@ if(BtnSupprimer.length > 0){
     });
 };
 
-function validateAvis(){
-    let dataForm = new FormData(validateAvisForm);
-    let myHeaders = new Headers();
-    let avisId = dataForm.get('id');
-    
-    myHeaders.append('Content-Type', 'application/json');
-
-    let raw= JSON.stringify({
-        "validation": "true"
-    });
-    let requestOptions = {
-        method:'POST',
-        headers:myHeaders,
-        body:"raw",
-        redirect:'follow'
-    };
-    fetch('/avis/valider/' + avisId, requestOptions)
-    .then(response=>{
-        if(response.status === 200){
+async function validerAvis($id) {
+    try {
+        let myHeaders = new Headers(); 
+        myHeaders.append('Content-Type', 'application/json');
+        let requestOptions = {
+            method:'POST',
+            headers:myHeaders,
+            redirect:'follow'
+        };
+        const response = await fetch('/employe/avis/valider/' + $id, requestOptions);
+        if (response.status === 200) {
             console.log('Avis validé');
             window.location.reload();
-        }else{
+        } else {
             console.log('Avis non validé');
         }
-    })
-    .then(result=>{
-        console.log('result', result)
-        
-    })
-    .catch(error=>{
-        console.log('error', error)
-    });
-    
+        const result = await response.json();
+        console.log('result', result);
+    } catch(error) {
+        console.log('error', error);
+    }
 }
 
-function deleteAvis(){
-    let dataForm = new FormData(DelAvisForm);
-    let avisId = dataForm.get('id');
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    let requestOptions = {
-        method:'DELETE',
-        headers:myHeaders,
-        redirect:'follow'
-    };
-    fetch('/avis/delete/' + avisId, requestOptions)
-    .then(response=>{
-        console.log('avisId', avisId, 'response', response)
-        if(response.status === 200){
+async function supprimerAvis($id) {
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        let requestOptions = {
+            method: 'DELETE',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+        const response = await fetch('/employe/avis/delete/' + $id, requestOptions);
+        if (response.status === 200) {
             console.log('Avis supprimé');
             window.location.reload();
-            
-        }else{
+        } else {
             console.log('Avis non supprimé');
         }
-    })
-    .then(result=>{
-        console.log('result', result)
-        
-    })
+        const result = await response.json();
+        console.log('result', result);
+    } catch(error) {
+        console.log('error', error);
+    }
 }
+
 document.addEventListener('DOMContentLoaded', function(){
 const avisList  = document.getElementById('avisList');
 if(avisList.children.length === 0){
@@ -83,6 +61,34 @@ if(avisList.children.length === 0){
 };
 });
 
+
+
+
+/*-----------Affichage avis 14/02/2024 ------------------ */
+
+const avisBtns = document.querySelectorAll('.avisBtn');
+
+avisBtns.forEach(button=>{button.addEventListener('click', function(){
+    flushFeatures();
+    FlushActive();
+    button.classList.add('active');
+    avisContainer.classList.remove('d-none');
+    });
+});
+
+
+/*-----------Affichage services 14/02/2024 ------------------ */
+const servicesContainer = document.getElementById('servicesContainer');
+const servicesBtns = document.querySelectorAll('.servicesBtn');
+
+servicesBtns.forEach(button=>{
+    button.addEventListener('click', function(){
+        flushFeatures();
+        FlushActive();
+        button.classList.add('active');
+        servicesContainer.classList.remove('d-none');
+    }); 
+});
 
 /*---------------- Mise à jour service ------------------ */
 
@@ -131,72 +137,107 @@ function updateService(){
     });
 }
 
+// Afficher le service depuis dropdown
 
-
-/*-----------Affichage avis 14/02/2024 ------------------ */
-
-const avisBtn = document.getElementById('avisBtn');
-
-avisBtn.addEventListener('click', showAvis);
-
-function showAvis(){
-    flushFeatures();
-    FlushActive();
-    avisBtn.classList.add('active')
-    avisContainer.classList.remove('d-none');
-    
+function showService($id){
+    window.location.href = '/services/show/' + $id;
 }
 
-/*-----------Affichage services 14/02/2024 ------------------ */
-const servicesContainer = document.getElementById('servicesContainer');
-const servicesBtn = document.getElementById('servicesBtn');
 
-servicesBtn.addEventListener('click', showServices);
 
-function showServices(){
-    flushFeatures();
-    FlushActive();
-    servicesBtn.classList.add('active')
-    servicesContainer.classList.remove('d-none');
-}
 
 /*-----------Affichage nourriture 15/02/2024 ------------------ */
 
 const nourritureContainer = document.getElementById('foodContainer');
-const nourritureBtn = document.getElementById('foodBtn');
+const nourritureBtns = document.querySelectorAll('.foodBtn');
 
-nourritureBtn.addEventListener('click', showNourriture);
-
-function showNourriture(){
-    flushFeatures();
-    FlushActive();
-    nourritureBtn.classList.add('active');
-    nourritureContainer.classList.remove('d-none');
-}
-
-
+nourritureBtns.forEach(button=>{
+    button.addEventListener('click', function(){
+        flushFeatures();
+        FlushActive();
+        button.classList.add('active');
+        nourritureContainer.classList.remove('d-none');
+    });
+});
 
 /*-----------demandes de contact 05/03/2024 ------------------ */
 const contactContainer = document.getElementById('contactContainer');
-const contactBtn = document.getElementById('contactBtn');
+const contactBtns = document.querySelectorAll('.contactBtn');
 
-contactBtn.addEventListener('click', showContact);
-function showContact(){
+contactBtns.forEach(button => button.addEventListener('click', function(){
     flushFeatures();
     FlushActive();
-    contactBtn.classList.add('active');
+    getAllDemandes();
     contactContainer.classList.remove('d-none');
+    button.classList.add('active');
+}));
+
+
+async function getAllDemandes(){
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    await fetch('/contact/all')
+    .then(response => {
+        if(response.ok){
+            return response.json();
+        } else {
+            throw new Error('Erreur');
+        }
+    })
+    .then(result => {
+        let demandesList = document.getElementById('demandesList');
+        demandesList.innerHTML = '';
+        let demandes = result;
+        if(demandes.length === 0){
+            demandesList.innerHTML = '<p class="text-center mt-5">Aucune demande à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
+        }
+        let row = document.createElement('div');
+        row.classList.add('row');
+        demandes.forEach(demande=>{
+            let card = document.createElement('div');
+            card.classList.add('col-12');
+            card.classList.add('card');
+            card.classList.add('demande-card');
+            card.classList.add('mb-5')
+            card.setAttribute('data-demande-status', demande.reponse);
+            card.setAttribute('data-demande-date', demande.createdAt);
+            card.setAttribute('data-demande-id', demande.id);
+            card.innerHTML = `
+                <div class="card-header d-flex justify-content-between">
+                <h5 class="card-title">${demande.titre}</h5>
+                <p class="text-muted">${formatDate(demande.createdAt)}</p>
+            </div>
+            <div class="card-body">  
+                <p class="text-muted">${demande.mail}</p>                             
+                <p class="card-text">${demande.message}</p>
+
+            </div>
+            <div class="card-footer mb-5">
+                <button type="button" class="btn btn-primary actionBtn" data-bs-toggle="modal" data-bs-target="#repondreModal" data-demande-id="${demande.id}">Répondre</button>
+                <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
+            </div>
+            `;
+            demandesList.appendChild(card);
+            let actionBtns = card.querySelectorAll('.actionBtn');
+            actionBtns.forEach(button => button.addEventListener('click', function(){
+                const demandeId = button.getAttribute('data-demande-id');
+                const demandeIdContainer = document.getElementById('demandeId');
+                demandeIdContainer.value = demandeId;
+            }));           
+        });
+    });
 }
 
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString().slice(-2);
+    return `${day}-${month}-${year}`;
+}
+
+
 // Répondre à une demande de contact
-const contactResponseBtns = document.querySelectorAll('[data-demande-id]');
-contactResponseBtns.forEach(button => {
-    button.addEventListener('click', function() {
-        const demandeId = button.getAttribute('data-demande-id');
-        const demandeIdContainer = document.getElementById('demandeId');
-        demandeIdContainer.value = demandeId; // Utilize .value for form elements
-    });
-});
 
 const sendResponseBtn = document.getElementById('btnConfirmRepondre');
 sendResponseBtn.addEventListener('click', sendResponse);
@@ -224,11 +265,37 @@ async function sendResponse() {
         }
         // Handle success
         console.log('Response sent successfully');
+        window.location.reload();
     } catch (error) {
         // Handle error
         console.error('Error:', error);
     }
 }
+
+const deleteDemandeBtn = document.getElementById('btnConfirmDeleteDemande');
+deleteDemandeBtn.addEventListener('click', deleteDemande);
+// Supprimer une demande de contact
+async function deleteDemande() {
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        let targetId = document.getElementById('demandeId').value;
+        console.log('targetId', targetId);
+        const response = await fetch(`/employe/demande/delete/${targetId}`, {
+            method: 'DELETE',
+            headers: myHeaders,
+        });
+        if (response.ok) {
+            window.location.reload();
+            return await response.json();
+        } else {
+            throw new Error('Erreur');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 
 /* Affichage des fonctionnalités de l'employé 14/02/2024 ------------------ */
@@ -242,10 +309,19 @@ function flushFeatures(){
 flushFeatures();
 
 function FlushActive(){
-    avisBtn.classList.remove('active');
-    servicesBtn.classList.remove('active');
-    nourritureBtn.classList.remove('active');
-    contactBtn.classList.remove('active');
+    avisBtns.forEach(button=>{
+        button.classList.remove('active');
+    });
+    servicesBtns.forEach(button=>{
+        button.classList.remove('active');
+    });
+    nourritureBtns.forEach(button=>{
+        button.classList.remove('active');
+    });
+    contactBtns.forEach(button=>{
+        button.classList.remove('active');
+    });
+    
 }
 FlushActive();
 

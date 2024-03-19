@@ -156,6 +156,28 @@
     </button>
   </div>
 </div>
+<div class="white d-flex justify-content-center">
+  <H5 class="text-dark">Horaires</H5>
+</div>
+<div class="darker d-flex justify-content-center">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      {% for horaire in horaires %}
+      <tr>
+        <td>{{ horaire.jour }}</td>
+        {% if horaire.isOuvert %}
+        <td>{{ horaire.HOuverture|date ('H:i')  }}</td>
+        <td>{{ horaire.HFermeture|date ('H:i') }}</td>
+        {% else %}
+        <td>Fermé</td>
+        <td>Fermé</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+      <td>
+    </table>
+  </div>
+</div>
 
 
 

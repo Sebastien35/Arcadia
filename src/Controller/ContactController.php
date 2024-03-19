@@ -11,6 +11,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use DateTimeImmutable;
 use App\Service\Sanitizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 #[Route('/contact', name: 'app_contact_')]
@@ -19,11 +21,13 @@ class ContactController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private sanitizer $sanitizer
+        private sanitizer $sanitizer,
+        private SerializerInterface $serializer
         )
     {
         $this->entityManager=$entityManager;
         $this->sanitizer=$sanitizer;
+        $this->serializer = $serializer;
     }
 
     
@@ -66,9 +70,21 @@ public function index(Request $request): Response
         'form' => $form->createView(),
     ]);
 
-
-    
-
-
 }
+
+    #[Route('/all',name: 'getAllContacts', methods: 'GET')]
+    public function getAllContacts():Response
+    {
+        if($this->getUser() == null){
+            throw $this->createAccessDeniedException('You are not allowed to access this page');
+        }
+        try{
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $contacts = $this->entityManager->getRepository(DemandeContact::class)->findAll();
+        return JsonResponse::fromJsonString($this->serializer->serialize($contacts, 'json'), Response::HTTP_OK);
+    }   catch(\Exception $e){
+        throw new \Exception($e->getMessage());
+    }
+    }
+
 }

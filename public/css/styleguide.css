@@ -5,6 +5,7 @@
     --darker: #131D00;
     --bg-dark:rgba(19,29,0,1);
     --white:rgba(255,255,255,1);
+    --active:#ffcb00;
     
 }
 .bg-dark{
@@ -64,4 +65,9 @@
     color:var(--secondary);
     outline:var(--secondary);
     
+}
+
+
+H1, H2, H3, H4, H5, H6{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
