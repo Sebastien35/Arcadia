@@ -162,6 +162,9 @@
 <div class="darker d-flex justify-content-center">
   <div class="table-responsive">
     <table class="table table-striped">
+      {% if horaires is empty %}
+      <p>Les horaires ne sont pas encore disponibles</p>
+      {% else %}
       {% for horaire in horaires %}
       <tr>
         <td>{{ horaire.jour }}</td>
@@ -174,6 +177,7 @@
         {% endif %}
       </tr>
       {% endfor %}
+      {% endif %}
       <td>
     </table>
   </div>
