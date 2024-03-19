@@ -41,8 +41,16 @@
             <div class="card-header">
                 <h2>Notes vétérinaires:</h2>
             </div>
-            <div class="card-body" style="overflow-y: scroll; height: 30vh">
+            <div class="card-body" style="overflow-y: scroll; height: 30vh">                  
                 <table class="table table-striped">
+                    <label for="date">Trier par date</label>
+                    <select id="infoAnimalDateInput" class="form-select">
+                        <option value="" disabled selected>Choisir une option</option>"
+                        <option value="0">Tous</option>
+                        <option value="1">Aujourd'hui</option>
+                        <option value="2">Cette semaine</option>
+                        <option value="3">Ce mois</option>
+                    </select>
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -53,15 +61,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for infoAnimal in infoAnimals %}
+                        {% if infoAnimals == null %}
                         <tr>
-                            <td>{{ infoAnimal.createdAt | date('d-m-Y') }}</td>
+                            <td colspan="5">Pas de notes enregistrées</td>
+                        </tr>
+                        {% else %}
+                        {% for infoAnimal in infoAnimals %}
+                        <tr class="infoAnimal">
+                            <td class="infoAnimalDate">{{ infoAnimal.createdAt | date('Y-m-d') }}</td>
                             <td>{{ infoAnimal.etat }}</td>
                             <td class="d-none d-lg-table-cell">{{ infoAnimal.details }}</td>
                             <td class="d-none d-lg-table-cell">{{ infoAnimal.nourriture.nom }}</td>
                             <td class="d-none d-lg-table-cell">{{ infoAnimal.grammage }}g</td>
                         </tr>
                         {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
@@ -102,7 +116,7 @@
                     {% else %}
                         {% for repas in repas %}                    
                             <tr class="d-none repas">
-                                <td class="repasdate">{{ repas.Datetime | date('d/m') }}</td>
+                                <td class="repasdate">{{ repas.Datetime | date('Y-m-d') }}</td>
                                 <td>{{ repas.quantite }}g</td>
                                 <td>{{ repas.nourriture.nom }}</td>
                             </tr>
@@ -114,6 +128,6 @@
     </div>
 </div>
 
-<script src="{{ asset('js/filterRepas.js') }}"></script>
+<script src="{{ asset('js/showAnimal.js') }}"></script>
 
 {% endblock %}
