@@ -3,15 +3,57 @@
 /*---------------- Display User Container ------------------*/
 const userContainer = document.getElementById('user-container');
 const userBtns = document.querySelectorAll('.userBtn');
-
 userBtns.forEach(button => button.addEventListener('click', function() {
     FlushFeatures();
     FlushActive();
-    
+    getNonAdminUsers() 
     userContainer.classList.remove('d-none');
     button.classList.add('active'); // Use 'button' instead of 'userBtn' because 'button' is the current button being clicked
 }));
-
+//get all users
+async function getNonAdminUsers(){
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    await fetch('/admin/user/nonAdmins')
+    .then(response => {
+        if(response.ok){
+            return response.json();
+        } else {
+            throw new Error('Erreur');
+        }   
+    })
+    .then(result => {
+        let userTableBody = document.getElementById('userTableBody');
+        userTableBody.innerHTML = '';
+        let users = result;
+        if(users.length === 0){
+            userTableBody.innerHTML = '<p class="text-center">Aucun utilisateur à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
+        }
+        let row = document.createElement('tr');
+        row.classList.add('userRow');
+        users.forEach(user=>{
+            row.setAttribute('data-user-id', user.id);
+            row.innerHTML = `
+            <td>${user.id}</td>
+            <td>${user.email}</td>
+            <td>${user.roles}</td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
+                        <li class="btn btn-danger mb-1" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="${user.id}"><i class="fa-solid fa-trash"></i></li>
+                        <li class="btn btn-primary  mb-1" onClick="goEditUser(${user.id})"><i class="fa-solid fa-pencil"></i></li>
+                    </div> 
+                </div>
+            </td>
+            `;
+            userTableBody.appendChild(row);
+            row = document.createElement('tr');
+            row.classList.add('userRow');
+        });
+});
+}
 // Delete User:
 document.addEventListener('DOMContentLoaded', function(){
     const deleteUserBtns = document.querySelectorAll('[data-user-id]');
@@ -23,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     });
 });
+
 
 const confirmDeleteUserBtn = document.getElementById('confirm-delete-user-btn');
 confirmDeleteUserBtn.addEventListener('click', deleteUser);
@@ -394,9 +437,9 @@ async function getAllServices(){
         if(services.length === 0){
             servicesList.innerHTML = '<p class="text-center">Aucun service à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
         }
-        services.forEach(service=>{
-            let serviceTableBody = document.getElementById('servicesList');
+        let serviceTableBody = document.getElementById('servicesList');
             serviceTableBody.innerHTML = '';
+        services.forEach(service=>{
             let row = document.createElement('tr');
             row.innerHTML = `
             <td>${service.id}</td>
@@ -560,7 +603,7 @@ async function getAllDemandes(){
             card.classList.add('card');
             card.classList.add('demande-card');
             card.classList.add('mb-5')
-            card.setAttribute('data-demande-status', demande.reponse);
+            card.setAttribute('data-demande-status', demande.answered);
             card.setAttribute('data-demande-date', demande.createdAt);
             card.setAttribute('data-demande-id', demande.id);
             card.innerHTML = `
@@ -571,13 +614,18 @@ async function getAllDemandes(){
             <div class="card-body">  
                 <p class="text-muted">${demande.mail}</p>                             
                 <p class="card-text">${demande.message}</p>
-
             </div>
             <div class="card-footer mb-5">
                 <button type="button" class="btn btn-primary actionBtn" data-bs-toggle="modal" data-bs-target="#repondreModal" data-demande-id="${demande.id}">Répondre</button>
                 <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
             </div>
             `;
+            if (demande.answered) {
+                card.querySelector('.card-footer').innerHTML = `
+                <p class="text-muted">Répondu le ${formatDate(demande.answeredAt)}</p>
+                <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
+                `;               
+            }
             demandesList.appendChild(card);
             let actionBtns = card.querySelectorAll('.actionBtn');
             actionBtns.forEach(button => button.addEventListener('click', function(){
@@ -595,6 +643,15 @@ function formatDate(dateString) {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear().toString().slice(-2);
     return `${day}-${month}-${year}`;
+}
+
+function toYMD(dateISO){
+    let date = new Date(dateISO);
+    let year = date.getFullYear();
+    let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed, so add 1
+    let day = date.getDate().toString().padStart(2, '0');
+    let formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
 }
 
 
@@ -626,7 +683,7 @@ async function sendResponse() {
         }
         // Handle success
         console.log('Response sent successfully');
-        window.location.reload();
+        getAllDemandes();
     } catch (error) {
         // Handle error
         console.error('Error:', error);
@@ -647,7 +704,7 @@ async function deleteDemande() {
             headers: myHeaders,
         });
         if (response.ok) {
-            window.location.reload();
+            getAllDemandes();
             return await response.json();
         } else {
             throw new Error('Erreur');
@@ -661,34 +718,34 @@ async function deleteDemande() {
 
 
 
-// Filtrer les demandes de contact
-function applyDemandeContactFilter(){
-    const targetedStatus = document.getElementById('demandeStatusSelect').value;
-    const targetedDate = document.getElementById('demande-date-select').value;
-    const demandeEntry = document.querySelectorAll('.demande-card');    
-    demandeEntry.forEach(item => {
-        const status = item.getAttribute('data-demande-status') === 'true' || item.getAttribute('data-demande-status') === ''; // Modifier cette ligne
-        let statusMatch;
-        if (targetedStatus === '*') {
-            statusMatch = true; // Si '*' est sélectionné, toutes les demandes sont considérées comme correspondantes
-        } else {
-            statusMatch = (targetedStatus === '1' && status) || (targetedStatus === '0' && !status); // Inverser la comparaison
-        }
-        const dateMatch = (targetedDate === '') || (item.getAttribute('data-demande-date') === targetedDate);
-        if (statusMatch && dateMatch) {
-            item.classList.remove('d-none');
-        } else {
-            item.classList.add('d-none');
-        }
-    });
-}
-const demandeStatusSelect = document.getElementById('demandeStatusSelect');
-demandeStatusSelect.addEventListener('change', applyDemandeContactFilter);
+// // Filtrer les demandes de contact
+// function applyDemandeContactFilter(){
+//     const targetedStatus = document.getElementById('demandeStatusSelect').value;
+//     const targetedDate = document.getElementById('demande-date-select').value;
+//     const demandeEntry = document.querySelectorAll('.demande-card');    
+//     demandeEntry.forEach(item => {
+//         const status = item.getAttribute('data-demande-status') === 'true' || item.getAttribute('data-demande-status') === ''; // Modifier cette ligne
+//         let statusMatch;
+//         if (targetedStatus === '*') {
+//             statusMatch = true; // Si '*' est sélectionné, toutes les demandes sont considérées comme correspondantes
+//         } else {
+//             statusMatch = (targetedStatus === '1' && status) || (targetedStatus === '0' && !status); // Inverser la comparaison
+//         }
+//         const dateMatch = (targetedDate === '') || (item.getAttribute('data-demande-date') === targetedDate);
+//         if (statusMatch && dateMatch) {
+//             item.classList.remove('d-none');
+//         } else {
+//             item.classList.add('d-none');
+//         }
+//     });
+// }
+// const demandeStatusSelect = document.getElementById('demandeStatusSelect');
+// demandeStatusSelect.addEventListener('change', applyDemandeContactFilter);
 
-const demandeDateSelect = document.getElementById('demande-date-select');
-demandeDateSelect.addEventListener('change', applyDemandeContactFilter);
+// const demandeDateSelect = document.getElementById('demande-date-select');
+// demandeDateSelect.addEventListener('change', applyDemandeContactFilter);
 
-applyDemandeContactFilter();
+// applyDemandeContactFilter();
 
 /*----------------- Consultations des animaux -----------------*/
 
@@ -740,7 +797,7 @@ async function getNonValidatedReviews(){
             }
             avis.forEach(avis=>{
                 let card = document.createElement('div');
-                card.classList.add('col-10');
+                card.classList.add('col-12');
                 card.classList.add('card');
                 card.innerHTML = `
                 <div class="card-header">
@@ -749,7 +806,7 @@ async function getNonValidatedReviews(){
                 <div class="card-body">
                     <p class="card-text">${avis.note}</p>
                     <p class="card-text">${avis.avisContent}</p>
-                    <p class="card-text text-muted">${avis.createdAt}</p>
+                    <p class="card-text text-muted">${formatDate(avis.createdAt)}</p>
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-success" onclick="validerAvis(${avis.id})">Valider</button>
@@ -777,7 +834,7 @@ async function validerAvis($id) {
         const response = await fetch('/admin/avis/valider/' + $id, requestOptions);
         if (response.status === 200) {
             console.log('Avis validé');
-            window.location.reload();
+            getNonValidatedReviews();
         } else {
             console.log('Avis non validé');
         }
@@ -799,13 +856,11 @@ async function supprimerAvis($id) {
         };
         const response = await fetch('/admin/avis/delete/' + $id, requestOptions);
         if (response.status === 200) {
-            console.log('Avis supprimé');
-            window.location.reload();
+            getNonValidatedReviews();
         } else {
             console.log('Avis non supprimé');
         }
         const result = await response.json();
-        console.log('result', result);
     } catch(error) {
         console.log('error', error);
     }

@@ -43,7 +43,7 @@ use App\Service\MailerService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Document\AnimalVisit;
 use App\Entity\Avis;
-
+use PHPUnit\TextUI\XmlConfiguration\Groups;
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
@@ -260,6 +260,25 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         $this->entityManager->flush();
         return new JsonResponse(['message' => 'User updated successfully'], Response::HTTP_OK);
     }
+
+    #[Route('/user/nonAdmins', name: 'getNonAdmins', methods: ['GET'])]
+    public function getNonAdmins(): JsonResponse
+    {
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+        $context = ['groups' => 'user_info'];
+        $nonAdmins = [];
+        foreach ($users as $user) {
+            if (!in_array('ROLE_ADMIN', $user->getRoles())) {
+                $nonAdmins[] = $user;
+            }
+        }
+        return JsonResponse::fromJsonString($this->serializer->serialize(
+            $nonAdmins, 'json', $context),
+            Response::HTTP_OK);
+            }
+    
+
+        
 
     /* ------------------------Horaires------------------------ */
 
@@ -609,6 +628,18 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
     }catch(\Exception $e){
         return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+    }
+
+    #[Route('/avis/delete/{id}', name: 'deleteAvis', methods: ['DELETE'])]
+    public function deleteAvis(int $id): JsonResponse
+    {
+        $avis = $this->entityManager->getRepository(Avis::class)->find($id);
+        if (!$avis) {
+            return new JsonResponse(['error' => 'Avis not found'], Response::HTTP_NOT_FOUND);
+        }
+        $this->entityManager->remove($avis);
+        $this->entityManager->flush();
+        return new JsonResponse(['message' => 'Avis deleted successfully'], Response::HTTP_OK);
     }
 
 
