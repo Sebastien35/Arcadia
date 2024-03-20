@@ -8,8 +8,6 @@ Ces instructions vous permettront d'obtenir une copie du projet en cours d'exéc
 
 ### Prérequis
 
-
-```
 PHP 8.2 or above
 Symfony 5.7 or above
 mySQL
@@ -17,7 +15,7 @@ noSQL
  MongoDB:          7.0.6
 VSCODE 
 GIT
-```
+
 
 ### Installation
 Un guide pas à pas pour créer un environnement de développement fonctionnel.
