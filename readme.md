@@ -39,14 +39,19 @@ et effectuer la commande:
 composer install
 ```
 L'installation des dépendances peut prendre plusieurs minutes.
-
+### Créer et remplir la base de données:
+Pendant les trois prochaines étapes, nous allons: </br>
+- Créer la base données </br>
+- Insérer des comptes utilisateurs dans la base de données </br>
+- Insérer d'autres données dans la base.  </br>
+Il est important de respecter l'ordre des consignes.
 #### Créer la base de donneés
 -Un fichier sql permettant de créer la base de données et les tables est disponible dans le dossier 'SQL' </br>
 -S'y positionner depuis le dossier Arcadia:
 ```
 cd SQL
 ``` 
-#### Créer la base de données en se servant du fichier sql:
+Créer la base de données en se servant du fichier sql:
 - se connecter à mysql
 ```
 mysql -u \votreUsername\ -p\votrePassword\
@@ -54,13 +59,6 @@ mysql -u \votreUsername\ -p\votrePassword\
 - utiliser le fichier
 ```
 source creation_db.sql
-```
-#### Ajouter des données: </br>
--Pour pouvoir tester le site, des données sont nécéssaires.
--Toujours dans le dossier SQL, un fichier 'inser_data.sql' permettant d'ajouter des données à notre nouvelle base données et disponible.
-- utiliser le fichier:
-```
-source insert_data.sql
 ```
 #### Créer les comptes utilisateurs: </br>
 Toujours dans l'optique de pouvoir tester le site, il nous faut créer les différents comptes pour accéder au site.
@@ -70,6 +68,14 @@ La création des comptes se fera à l'aide de fixtures doctrine.
 ```
 symfony console doctrine:fixtures:load --append
 ```
+#### Ajouter des données: </br>
+-Pour pouvoir tester le site, des données sont nécéssaires.
+-Toujours dans le dossier SQL, un fichier 'inser_data.sql' permettant d'ajouter des données à notre nouvelle base données et disponible.
+- utiliser le fichier:
+```
+source insert_data.sql
+```
+
 
 Nous avons désormais une base de données avec différentes tables, sur laquelle nous avons envoyé des données. </br>
 Nous avons également inséré en base de données les comptes utilisateurs qui nous servirons à nous connecter au site web avec différents roles.</br>
