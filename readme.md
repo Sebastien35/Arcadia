@@ -63,6 +63,19 @@ Ajouter des données: </br>
 ```
 source insert_data.sql
 ```
+Créer les comptes utilisateurs: </br>
+Toujours dans l'optique de pouvoir tester le site, il nous faut créer les différents comptes pour accéder au site.
+La création des comptes se fera à l'aide de fixtures doctrine.
+- Charger les fixtures:
+  Se positionner dans le dossier Arcadia, et effectuer la commande suivante, **sans oublier le --apend**:
+```
+symfony console doctrine:fixtures:load --append
+```
+
+Nous avons désormais une base de données avec différentes tables, sur laquelle nous avons envoyé des données. </br>
+Nous avons également inséré en base de données les comptes utilisateurs qui nous servirons à nous connecter au site web avec différents roles.
+
+
 
 End with an example of getting some data out of the system or using it for a little demo
 
