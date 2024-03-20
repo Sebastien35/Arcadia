@@ -13,10 +13,10 @@ Ces instructions vous permettront d'obtenir une copie du projet en cours d'exéc
 PHP 8.2 or above
 Symfony 5.7 or above
 mySQL
-Ver 15.1 Distrib
-10.4.32-MariaDB
 noSQL
-  MongoDB:          7.0.6
+ MongoDB:          7.0.6
+VSCODE 
+GIT
 ```
 
 ### Installation
@@ -26,15 +26,20 @@ Un guide pas à pas pour créer un environnement de développement fonctionnel.
 #### Cloner le repo </br>
 -Créer un nouveau dossier, se positionner à l'aide d'un terminal  dans ce dossier et effectuer la commande:
 ```
+mkdir ECF_SB
+cd ECF_SB
 git clone https://github.com/Sebastien35/Arcadia.git
 ```
-
 #### Installer les dépendances avec composer
 - A l'aide d'un terminal, se positionner dans le dossier ' Arcadia'
 ```
 cd Arcadia
 ```
 et effectuer la commande:
+```
+symfony check:requirements
+```
+Installer les dépendances
 ```
 composer install
 ```
