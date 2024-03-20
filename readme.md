@@ -24,13 +24,13 @@ noSQL
 
 Un guide pas à pas pour créer un environnement de développement fonctionnel.
 
-Cloner le repo </br>
+#### Cloner le repo </br>
 -Créer un nouveau dossier, se positionner à l'aide d'un terminal  dans ce dossier et effectuer la commande:
 ```
 git clone https://github.com/Sebastien35/Arcadia.git
 ```
 
-Installer les dépendances avec composer
+#### Installer les dépendances avec composer
 - A l'aide d'un terminal, se positionner dans le dossier ' Arcadia'
 ```
 cd Arcadia
@@ -41,13 +41,13 @@ composer install
 ```
 L'installation des dépendances peut prendre plusieurs minutes.
 
-Créer la base de donneés
+#### Créer la base de donneés
 -Un fichier sql permettant de créer la base de données et les tables est disponible dans le dossier 'SQL'
 -S'y positionner depuis le dossier Arcadia:
 ```
 cd SQL
-```
-Créer la base de données en se servant du fichier sql:
+``` 
+#### Créer la base de données en se servant du fichier sql:
 - se connecter à mysql
 ```
 mysql -u \votreUsername\ -p\votrePassword\
@@ -56,14 +56,14 @@ mysql -u \votreUsername\ -p\votrePassword\
 ```
 source creation_db.sql
 ```
-Ajouter des données: </br>
+#### Ajouter des données: </br>
 -Pour pouvoir tester le site, des données sont nécéssaires.
 -Toujours dans le dossier SQL, un fichier 'inser_data.sql' permettant d'ajouter des données à notre nouvelle base données et disponible.
 - utiliser le fichier:
 ```
 source insert_data.sql
 ```
-Créer les comptes utilisateurs: </br>
+#### Créer les comptes utilisateurs: </br>
 Toujours dans l'optique de pouvoir tester le site, il nous faut créer les différents comptes pour accéder au site.
 La création des comptes se fera à l'aide de fixtures doctrine.
 - Charger les fixtures:
@@ -86,8 +86,10 @@ Employe: </br>
 Email: employe.ecfarcadia@gmail.com </br>
 Password: Studi123ECF </br>
 </br>
-Un autre compte existe, mais représentant une personne extérieure au zoo, il n'a pas été inséré un base de données.
+Un autre compte existe, mais représentant une personne extérieure au zoo, il n'a pas été inséré en base de données.
 Il servira à tester la fonctionnalité de mailing plus tard.
+
+####
 
 
 
