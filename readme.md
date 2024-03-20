@@ -32,6 +32,33 @@ mkdir ECF_SB
 cd ECF_SB
 git clone https://github.com/Sebastien35/Arcadia.git
 ```
+
+#### Configurer les variables d'environnement:
+
+Afin de pouvoir tester correctement ce projet il nous faut également configurer les variables d'environnement:
+Se positionner dans le dossier Arcadia, créer un fichier nommé .env.local
+Dans ce fichier, ajouter les lignes suivantes:
+```
+cd Arcadia
+```
+Puis créer le fichier .env.local
+Windows powershell:
+```
+ni .env.local
+```
+Linux: 
+```
+touch .env.local
+```
+Dans ce fichier .env.local , ajouter les variables d'environnement:
+
+```
+DATABASE_URL="mysql://root@127.0.0.1:3306/arcadia_db?serverVersion=10.11.2-MariaDB&charset=utf8mb4" 
+
+MAILER_DSN=mailjet+smtp://104ac58d97c7d19f3df5a298c7359548:998fa0a0d4cdf5f2c4d42d859b8e6fef@in-v3.mailjet.com
+
+MONGODB_URL=mongodb://localhost:27017 
+```
 #### Installer les dépendances avec composer
 - A l'aide d'un terminal, se positionner dans le dossier ' Arcadia'
 ```
@@ -83,19 +110,6 @@ Nous avons également inséré en base de données les comptes utilisateurs qui 
 Un autre compte existe, mais représentant une personne extérieure au zoo, il n'a pas été inséré en base de données.
 Il servira à tester la fonctionnalité de mailing plus tard.
 
-#### Configurer les variables d'environnement:
-
-Afin de pouvoir tester correctement ce projet il nous faut également configurer les variables d'environnement:
-Se positionner dans le dossier Arcadia, créer un fichier nommé .env.local
-Dans ce fichier, ajouter les lignes suivantes:
-```
-DATABASE_URL="mysql://root@127.0.0.1:3306/arcadia_db?serverVersion=10.11.2-MariaDB&charset=utf8mb4" (3306 est le port par défaut mySQL, le remplacer si vous avez une configuration personnalisée.)
-
-MAILER_DSN=mailjet+smtp://104ac58d97c7d19f3df5a298c7359548:998fa0a0d4cdf5f2c4d42d859b8e6fef@in-v3.mailjet.com
-
-MONGODB_URL=mongodb://localhost:27017 (port par défaut mongodb en local, à remplacer dans le cas où vous auriez une configuration personnalisée)
-MONGODB_DB=symfony
-```
 
 
 
