@@ -29,7 +29,11 @@ symfony check:requirements -v
 -Créer un nouveau dossier, se positionner à l'aide d'un terminal  dans ce dossier et effectuer la commande:
 ```
 mkdir ECF_SB
+```
+```
 cd ECF_SB
+```
+```
 git clone https://github.com/Sebastien35/Arcadia.git
 ```
 #### Installer les dépendances avec composer
