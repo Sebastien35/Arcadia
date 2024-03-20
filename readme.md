@@ -42,7 +42,7 @@ composer install
 L'installation des dépendances peut prendre plusieurs minutes.
 
 Créer la base de donneés
-Un fichier sql permettant de créer la base de données et les tables est disponible dans le dossier'SQL'
+Un fichier sql permettant de créer la base de données et les tables est disponible dans le dossier 'SQL'
 S'y positionner depuis le dossier Arcadia:
 ```
 cd SQL
