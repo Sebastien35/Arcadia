@@ -52,9 +52,10 @@ Pendant les trois prochaines étapes, nous allons: </br>
 - Insérer d'autres données dans la base.  </br>
 Il est important de respecter l'ordre des consignes.
 #### Créer la base de donneés
--Un fichier sql permettant de créer la base de données et les tables est disponible dans le dossier 'SQL' </br>
+-Un fichier sql permettant de créer la base de données et les tables est disponible dans le dossier Documentation\SQL </br>
 -S'y positionner depuis le dossier Arcadia:
 ```
+cd Documentation
 cd SQL
 ``` 
 Créer la base de données en se servant du fichier sql:
