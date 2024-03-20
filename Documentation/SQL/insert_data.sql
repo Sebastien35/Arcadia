@@ -42,7 +42,7 @@ INSERT INTO commentaire_habitat (id, commentaire, habitat_id, created_at, update
 (2, "Rien à dire c'est nickel", 1, NOW(), null, 2),
 (3, "Les animaux sont bien traités", 1, NOW(), null, 2),
 (4, "L'enclos est propre, rien de particulier", 1, NOW(), null, 2),
-(5, "Penser à replanter des arbustes au bord du point d'eau numéro 3", 5, NOW(), null, 2)
+(5, "Penser à replanter des arbustes au bord du point d'eau numéro 3", 5, NOW(), null, 2);
 
 
 INSERT INTO service (id, nom, description, created_at, updated_at, zoo_id, image_name) VALUES

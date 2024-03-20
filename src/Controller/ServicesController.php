@@ -43,6 +43,7 @@ class ServicesController extends AbstractController
     #[Route('/show/{id}',name: 'showService', methods: 'GET')]
     public function show(int $id):Response
     {
+        try{
         $service = $this->entityManager->getRepository(Service::class)->find($id);
         if (!$service){
             throw $this->createNotFoundException("No service found for {$id} id");
@@ -51,6 +52,10 @@ class ServicesController extends AbstractController
             'controller_name' => 'ServicesController',
             'service'=>$service // Passer la variable qui contient le service correspondant à l'ID recherché
         ]);
+    }   catch(\Exception $e){
+        throw new \Exception($e->getMessage());
+    }
+    
     }
 
     #[Route('/all',name: 'getAllServices', methods: 'GET')]

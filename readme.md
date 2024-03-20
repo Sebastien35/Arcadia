@@ -1,7 +1,5 @@
 # Projet Arcadia
-
 Le site d'un zoo fictif en bretagne
-
 ## Getting Started
 
 Ces instructions vous permettront d'obtenir une copie du projet en cours d'exécution sur votre machine locale à des fins de développement et de test. Consultez le déploiement pour obtenir des notes sur la manière de déployer le projet sur un système en direct.
@@ -15,7 +13,6 @@ noSQL </br>
 MongoDB: 7.0.6 </br>
 VSCODE </br>
 GIT </br>
-
 
 ### Installation
 Un guide pas à pas pour créer un environnement de développement fonctionnel.
@@ -81,8 +78,6 @@ Se positionner dans le dossier SQL et à l'aide d'un terminal mySQL, effectuer l
 ```
 source insert_data.sql
 ```
-
-
 ** Nous avons désormais une base de données avec différentes tables, sur laquelle nous avons envoyé des données. ** </br>
 Nous avons également inséré en base de données les comptes utilisateurs qui nous servirons à nous connecter au site web avec différents roles.</br>
 Un autre compte existe, mais représentant une personne extérieure au zoo, il n'a pas été inséré en base de données.

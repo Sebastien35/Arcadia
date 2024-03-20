@@ -128,7 +128,6 @@ public function newRepas(Request $request, SerializerInterface $serializer):Resp
         $demande=$this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
         $demande->setAnsweredAt(new \DateTimeImmutable());
         $demande->setAnswered(true);
-        $this->addFlash('success', 'Votre réponse a bien été envoyée.');
         $this->entityManager->persist($demande);
         $this->entityManager->flush();
     } catch (\Exception $e) {
