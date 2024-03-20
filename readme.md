@@ -75,19 +75,19 @@ symfony console doctrine:fixtures:load --append
 Nous avons désormais une base de données avec différentes tables, sur laquelle nous avons envoyé des données. </br>
 Nous avons également inséré en base de données les comptes utilisateurs qui nous servirons à nous connecter au site web avec différents roles.
 Les voici:
-
-Admin:
-Email: jose.ecfarcadia@gmail.com
-Password: Studi123ECF
-
-Vétériaire:
-Email: veterinaire.ecfarcadia@gmail.com
-Password: Studi123ECF
-
-Employe:
-Email: employe.ecfarcadia@gmail.com
-Password: Studi123ECF
-
+</br>
+Admin: </br>
+Email: jose.ecfarcadia@gmail.com </br>
+Password: Studi123ECF </br>
+</br>
+Vétériaire: </br>
+Email: veterinaire.ecfarcadia@gmail.com </br>
+Password: Studi123ECF </br>
+</br>
+Employe: </br>
+Email: employe.ecfarcadia@gmail.com </br>
+Password: Studi123ECF </br>
+</br>
 Un autre compte existe, mais représentant une personne extérieure au zoo, il n'a pas été inséré un base de données.
 Il servira à tester la fonctionnalité de mailing plus tard.
 
