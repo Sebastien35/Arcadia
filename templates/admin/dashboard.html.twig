@@ -135,20 +135,8 @@
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {% for user in users %}
-                                    {% if user.roles[0] != "ROLE_ADMIN" %}
-                                        <tr>
-                                            <td>{{ user.id }}</td>
-                                            <td>{{ user.email }}</td>
-                                            <td>{{ user.roles[0] }}</td>
-                                            <td>
-                                                <button class="btn btn-danger" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="{{ user.id }}"><i class="fa-solid fa-user-xmark"></i></button>
-                                                <button class="btn btn-primary" id="edit-user" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="{{ user.id }}"><i class="fa-solid fa-user-edit"></i></button>
-                                            </td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
+                            <tbody id="userTableBody">
+                                
                             </tbody>
                         </table>
                     </div>
@@ -671,7 +659,7 @@
                                     
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary mt-2 mb-2" id="btnConfirmRepondre">Envoyer</button>
+                                <button type="button" class="btn btn-primary mt-2 mb-2" data-bs-dismiss="modal" id="btnConfirmRepondre">Envoyer</button>
                                 <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
                             </form>
                             </div>
@@ -691,7 +679,7 @@
                                 <input type="hidden" id="demandeId" name="demandeId">
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" id="btnConfirmDeleteDemande">Supprimer</button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="btnConfirmDeleteDemande">Supprimer</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                             </div>
                         </div>
@@ -733,8 +721,10 @@
                         <p> Avis </p>
                     </div>
                 </div>
-                <div class="row" id="avisList">
-                    
+                <div class="container-body mt-3 scrollable-container">
+                    <div class="row" id="avisList">
+                        
+                    </div>
                 </div>
             </div>
 
@@ -743,6 +733,7 @@
 
 <script src="{{ asset('js//admin/admin-dashboard.js') }}"></script>
 <script src="{{ asset('js/admin/admin_dashboard_allVisits.js') }}"></script>
+<script src="{{ asset('js/filtre_DDC.js') }}"></script>
 <script src="{{ asset('js/allAnimals.js') }}"></script>
 <script src="{{ asset('js/sanitizer.js') }}"></script>
 {% endblock %}

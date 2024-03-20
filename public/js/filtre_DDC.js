@@ -9,7 +9,7 @@ function applyDemandeContactFilter(){
         if (targetedStatus === '*') {
             statusMatch = true; // Si '*' est sélectionné, toutes les demandes sont considérées comme correspondantes
         } else {
-            statusMatch = (targetedStatus === '1' && status) || (targetedStatus === '0' && !status); // Inverser la comparaison
+            statusMatch = (targetedStatus === '0' && status) || (targetedStatus === '1' && !status); // Inverser la comparaison
         }
         const dateMatch = (targetedDate === '') || (item.getAttribute('data-demande-date') === targetedDate);
         if (statusMatch && dateMatch) {
