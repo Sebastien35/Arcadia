@@ -31,7 +31,6 @@ class Animal
     #[ORM\Column]
     private ?string $race = null;
 
-    
     #[ORM\ManyToOne(inversedBy: 'animals')]
     #[Groups("animal:read")]
     private ?Habitat $Habitat = null;
