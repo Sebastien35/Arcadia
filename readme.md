@@ -20,8 +20,14 @@ GIT
 ```
 
 ### Installation
-
 Un guide pas à pas pour créer un environnement de développement fonctionnel.
+
+#### Installer Symfony
+https://symfony.com/doc/current/setup.html
+```
+symfony check:requirements
+```
+
 
 #### Cloner le repo </br>
 -Créer un nouveau dossier, se positionner à l'aide d'un terminal  dans ce dossier et effectuer la commande:
