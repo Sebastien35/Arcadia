@@ -8,13 +8,13 @@ Ces instructions vous permettront d'obtenir une copie du projet en cours d'exéc
 
 ### Prérequis
 
-PHP 8.2 or above
-Symfony 5.7 or above
-mySQL
-noSQL
- MongoDB:          7.0.6
-VSCODE 
-GIT
+PHP 8.2 or above </br>
+Symfony 5.7 or above </br>
+mySQL </br>
+noSQL </br>
+MongoDB: 7.0.6 </br>
+VSCODE </br>
+GIT </br>
 
 
 ### Installation
