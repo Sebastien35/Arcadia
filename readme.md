@@ -73,8 +73,7 @@ symfony console doctrine:fixtures:load --append
 ```
 
 Nous avons désormais une base de données avec différentes tables, sur laquelle nous avons envoyé des données. </br>
-Nous avons également inséré en base de données les comptes utilisateurs qui nous servirons à nous connecter au site web avec différents roles.
-</br>
+Nous avons également inséré en base de données les comptes utilisateurs qui nous servirons à nous connecter au site web avec différents roles.</br>
 Admin: </br>
 Email: jose.ecfarcadia@gmail.com </br>
 Password: Studi123ECF </br>
