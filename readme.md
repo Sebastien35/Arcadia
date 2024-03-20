@@ -37,7 +37,7 @@ cd Arcadia
 ```
 et effectuer la commande:
 ```
-symfony check:requirements
+symfony check:requirements -v
 ```
 Installer les dépendances
 ```
