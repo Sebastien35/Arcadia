@@ -75,7 +75,7 @@ source creation_db.sql
 Toujours dans l'optique de pouvoir tester le site, il nous faut créer les différents comptes pour accéder au site.
 La création des comptes se fera à l'aide de fixtures doctrine.
 - Charger les fixtures:
-  Se positionner dans le dossier Arcadia avec un terminal powershell, et effectuer la commande suivante, **sans oublier le --apend**:
+  Se positionner dans le dossier Arcadia avec un terminal, et effectuer la commande suivante, **sans oublier le --apend**:
 ```
 symfony console doctrine:fixtures:load --append
 ```
