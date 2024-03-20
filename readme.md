@@ -69,8 +69,7 @@ La création des comptes se fera à l'aide de fixtures doctrine.
 symfony console doctrine:fixtures:load --append
 ```
 #### Ajouter des données: </br>
--Pour pouvoir tester le site, des données sont nécéssaires.
--Toujours dans le dossier SQL, un fichier 'inser_data.sql' permettant d'ajouter des données à notre nouvelle base données et disponible.
+Dans le dossier SQL, un fichier 'inser_data.sql' permettant d'ajouter des données à notre nouvelle base données et disponible.
 - utiliser le fichier:
 ```
 source insert_data.sql
