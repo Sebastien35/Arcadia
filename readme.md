@@ -24,7 +24,7 @@ noSQL
 
 Un guide pas à pas pour créer un environnement de développement fonctionnel.
 
-Cloner le repo
+Cloner le repo </br>
 -Créer un nouveau dossier, se positionner à l'aide d'un terminal  dans ce dossier et effectuer la commande:
 ```
 git clone https://github.com/Sebastien35/Arcadia.git
@@ -56,7 +56,7 @@ mysql -u \votreUsername\ -p\votrePassword\
 ```
 source creation_db.sql
 ```
-Ajouter des données: 
+Ajouter des données: </br>
 -Pour pouvoir tester le site, des données sont nécéssaires.
 -Toujours dans le dossier SQL, un fichier 'inser_data.sql' permettant d'ajouter des données à notre nouvelle base données et disponible.
 - utiliser le fichier:
