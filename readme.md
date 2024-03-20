@@ -1,7 +1,5 @@
 # Projet Arcadia
-
 Le site d'un zoo fictif en bretagne
-
 ## Getting Started
 
 Ces instructions vous permettront d'obtenir une copie du projet en cours d'exécution sur votre machine locale à des fins de développement et de test. Consultez le déploiement pour obtenir des notes sur la manière de déployer le projet sur un système en direct.
@@ -13,8 +11,7 @@ Ces instructions vous permettront d'obtenir une copie du projet en cours d'exéc
 PHP 8.2 or above
 Symfony 5.7 or above
 mySQL
-noSQL
- MongoDB:          7.0.6
+noSQL MongoDB:          7.0.6
 VSCODE 
 GIT
 ```
