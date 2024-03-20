@@ -23,7 +23,6 @@ GIT
 Un guide pas à pas pour créer un environnement de développement fonctionnel.
 
 #### Installer Symfony CLI
-https://symfony.com/doc/current/setup.html
 ```
 https://symfony.com/download
 ```
