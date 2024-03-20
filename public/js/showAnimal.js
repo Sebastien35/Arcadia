@@ -3,7 +3,6 @@ const repas = document.querySelectorAll('.repas');
 const repasDate = document.querySelectorAll('.repasdate');
 
 dateInput.addEventListener('change', function() {
-    console.log(dateInput.value);
     // Quelle option a été sélectionnée ?
     let selectedOption = parseInt(dateInput.value);
     // Quelle est la date d'aujourd'hui ?
@@ -62,7 +61,6 @@ const infoAnimalDateInput = document.getElementById('infoAnimalDateInput');
     const infoAnimalDate = document.querySelectorAll('.infoAnimalDate');
 
     infoAnimalDateInput.addEventListener('change', function() {
-        console.log(infoAnimalDateInput.value);
         // Quelle option a été sélectionnée ?
         let selectedOption = parseInt(infoAnimalDateInput.value);
         // Quelle est la date d'aujourd'hui ?
