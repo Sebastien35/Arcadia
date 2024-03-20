@@ -25,11 +25,8 @@ https://symfony.com/download
 
 #### Installer Symfony
 ```
-symfony check:requirements
+symfony check:requirements -v
 ```
-
-
-
 
 #### Cloner le repo </br>
 -Créer un nouveau dossier, se positionner à l'aide d'un terminal  dans ce dossier et effectuer la commande:
@@ -42,10 +39,6 @@ git clone https://github.com/Sebastien35/Arcadia.git
 - A l'aide d'un terminal, se positionner dans le dossier ' Arcadia'
 ```
 cd Arcadia
-```
-et effectuer la commande:
-```
-symfony check:requirements -v
 ```
 Installer les dépendances
 ```
