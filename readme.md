@@ -23,7 +23,7 @@ Un guide pas à pas pour créer un environnement de développement fonctionnel.
 #### Installer Symfony CLI
 https://symfony.com/download
 
-#### Installer Symfony
+#### Vérifier l'installation
 ```
 symfony check:requirements -v
 ```
