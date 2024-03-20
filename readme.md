@@ -6,25 +6,24 @@ Ces instructions vous permettront d'obtenir une copie du projet en cours d'exéc
 
 ### Prérequis
 
-
-```
-PHP 8.2 or above
-Symfony 5.7 or above
-mySQL
-noSQL MongoDB:          7.0.6
-VSCODE 
-GIT
-```
+PHP 8.2 or above </br>
+Symfony 5.7 or above </br>
+mySQL </br>
+noSQL </br>
+MongoDB: 7.0.6 </br>
+VSCODE </br>
+GIT </br>
 
 ### Installation
 Un guide pas à pas pour créer un environnement de développement fonctionnel.
 
-#### Installer Symfony
-https://symfony.com/doc/current/setup.html
-```
-symfony check:requirements
-```
+#### Installer Symfony CLI
+https://symfony.com/download
 
+#### Vérifier l'installation
+```
+symfony check:requirements -v
+```
 
 #### Cloner le repo </br>
 -Créer un nouveau dossier, se positionner à l'aide d'un terminal  dans ce dossier et effectuer la commande:
@@ -38,10 +37,6 @@ git clone https://github.com/Sebastien35/Arcadia.git
 ```
 cd Arcadia
 ```
-et effectuer la commande:
-```
-symfony check:requirements -v
-```
 Installer les dépendances
 ```
 composer install
@@ -54,9 +49,10 @@ Pendant les trois prochaines étapes, nous allons: </br>
 - Insérer d'autres données dans la base.  </br>
 Il est important de respecter l'ordre des consignes.
 #### Créer la base de donneés
--Un fichier sql permettant de créer la base de données et les tables est disponible dans le dossier 'SQL' </br>
+-Un fichier sql permettant de créer la base de données et les tables est disponible dans le dossier Documentation\SQL </br>
 -S'y positionner depuis le dossier Arcadia:
 ```
+cd Documentation
 cd SQL
 ``` 
 Créer la base de données en se servant du fichier sql:
@@ -82,8 +78,6 @@ Se positionner dans le dossier SQL et à l'aide d'un terminal mySQL, effectuer l
 ```
 source insert_data.sql
 ```
-
-
 ** Nous avons désormais une base de données avec différentes tables, sur laquelle nous avons envoyé des données. ** </br>
 Nous avons également inséré en base de données les comptes utilisateurs qui nous servirons à nous connecter au site web avec différents roles.</br>
 Un autre compte existe, mais représentant une personne extérieure au zoo, il n'a pas été inséré en base de données.
@@ -105,60 +99,4 @@ MONGODB_DB=symfony
 
 
 
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
 
