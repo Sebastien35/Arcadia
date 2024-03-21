@@ -43,7 +43,7 @@ CREATE TABLE demande_contact (
     mail VARCHAR(255),
     created_at DATETIME,
     answered_at DATETIME NULL,
-    answered TINYINT(1) DEFAULT 0
+    answered TINYINT(1) DEFAULT 0,
     zoo_id INT 
 );
 
@@ -60,7 +60,7 @@ CREATE TABLE Horaire (
     jour VARCHAR(8),
     h_ouverture TIME,
     h_fermeture TIME,
-    ouvert TINYINT(1) DEFAULT 0
+    ouvert TINYINT(1) DEFAULT 0,
     zoo_id INT
 );
 
@@ -116,13 +116,13 @@ ALTER TABLE Animal ADD CONSTRAINT FK_habitat_for_animal FOREIGN KEY (habitat_id)
 ALTER TABLE Avis ADD CONSTRAINT FK_zoo_id_for_avis FOREIGN KEY (zoo_id) REFERENCES Zoo(id);
 
 ALTER TABLE commentaire_habitat ADD CONSTRAINT FK_habitat_id_for_commentaire FOREIGN KEY (habitat_id) REFERENCES Habitat(id);
-ALTER TABLE commentaire_habitat ADD CONSTRAINT FK_auteur_id_for_commentaire FOREIGN KEY (auteur_id) REFERENCES Users(id);
+ALTER TABLE commentaire_habitat ADD CONSTRAINT FK_auteur_id_for_commentaire FOREIGN KEY (auteur_id) REFERENCES Users(id) ON DELETE SET NULL;
 
 ALTER TABLE demande_contact ADD CONSTRAINT FK_zoo_id_for_demande FOREIGN KEY (zoo_id) REFERENCES Zoo(id);
 
 ALTER TABLE info_animal ADD CONSTRAINT FK_animal_for_infoAnimal FOREIGN KEY (animal_id) REFERENCES Animal(id);
 ALTER TABLE info_animal ADD CONSTRAINT FK_nourriture_for_infoAnimal FOREIGN KEY (nourriture_id) REFERENCES Nourriture(id);
-ALTER TABLE info_animal ADD CONSTRAINT FK_auteur_for_infoAnimal FOREIGN KEY (auteur_id) REFERENCES Users(id);
+ALTER TABLE info_animal ADD CONSTRAINT FK_auteur_for_infoAnimal FOREIGN KEY (auteur_id) REFERENCES Users(id) ON DELETE SET NULL;
 
 ALTER TABLE repas ADD CONSTRAINT FK_animal_for_repas FOREIGN KEY (animal_id) REFERENCES Animal(id);
 ALTER TABLE repas ADD CONSTRAINT FK_nourriture_for_repas FOREIGN KEY (nourriture_id) REFERENCES Nourriture(id);
@@ -130,3 +130,7 @@ ALTER TABLE repas ADD CONSTRAINT FK_nourriture_for_repas FOREIGN KEY (nourriture
 ALTER TABLE Service ADD CONSTRAINT FK_zoo_id_for_service FOREIGN KEY (zoo_id) REFERENCES Zoo(id);
 
 ALTER TABLE Users ADD CONSTRAINT FK_zoo_id_for_user FOREIGN KEY (zoo_id) REFERENCES Zoo(id);
+
+
+INSERT INTO zoo VALUES 
+(1, 'Arcadia');

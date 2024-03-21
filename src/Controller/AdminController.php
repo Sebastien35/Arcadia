@@ -44,6 +44,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Document\AnimalVisit;
 use App\Entity\Avis;
 use PHPUnit\TextUI\XmlConfiguration\Groups;
+use PHPUnit\Util\Json;
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
@@ -114,6 +115,7 @@ public function dashboard(Request $request): Response
                 $service->setDescription($form->get('description')->getData());
                 $service->setCreatedAt(new \DateTimeImmutable());
                 $service->setImageFile($form->get('imageFile')->getData());
+                $service->setZoo($this->entityManager->getRepository(Zoo::class)->find(1));
                 $this->entityManager->persist($service);
                 $this->entityManager->flush();
                 $this->addFlash('success', 'Service created successfully');
@@ -174,7 +176,7 @@ public function dashboard(Request $request): Response
     }
 
     #[Route('/services/delete/{id}',name: 'deleteService', methods: 'DELETE')]
-    public function delete(int $id):Response
+    public function delete(int $id):JsonResponse
     {
         try{
         $service=$this->entityManager->getRepository(Service::class)->find($id);
@@ -186,12 +188,10 @@ public function dashboard(Request $request): Response
         
         $this->entityManager->remove($service);
         $this->entityManager->flush();
-        $this->addFlash('success', 'Service deleted successfully');
-        $this->addFlash('Success', 'Le service a été supprimé avec succès!');
-        return new Response('Service deleted successfully', 200);
+        return new JsonResponse(Response::HTTP_OK); 
         }catch (\Exception $e) {
             $this->addFlash('error', 'An error occured');
-            return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
+            return new JsonResponse(Response::HTTP_INTERNAL_SERVER_ERROR);    
         }
     }
 
@@ -638,7 +638,22 @@ public function dashboard(Request $request): Response
         return new JsonResponse(['message' => 'Avis deleted successfully'], Response::HTTP_OK);
     }
 
-
-
+    #[Route('/commentaires/delete/{id}', name: 'deleteCommentaire', methods: ['DELETE'])] 
+    public function deleteCommentaireHabitat(int $id): JsonResponse
+    {   try{
+        if (!$this->isGranted('ROLE_AUTHENTICATED_FULLY')) {
+            return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }   
+        $commentaire = $this->entityManager->getRepository(CommentaireHabitat::class)->find($id);
+        if (!$commentaire) {
+            return new JsonResponse(['error' => 'Commentaire not found'], Response::HTTP_NOT_FOUND);
+        }
+        $this->entityManager->remove($commentaire);
+        $this->entityManager->flush();
+        return new JsonResponse(['message' => 'Commentaire deleted successfully'], Response::HTTP_OK);
+    }catch(\Exception $e){
+        return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
+    } 
+}
     
 }

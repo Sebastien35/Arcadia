@@ -1,13 +1,18 @@
 USE arcadia_db;
 SET NAMES 'utf8mb4';
-INSERT INTO Horaire(jour, h_ouverture, h_fermeture, ouvert) VALUES
-('Lundi', '08:00:00', '18:00:00', 1),
-('Mardi', '08:00:00', '18:00:00', 1),
-('Mercredi', '08:00:00', '18:00:00', 1),
-('Jeudi', '08:00:00', '18:00:00', 1),
-('Vendredi', '08:00:00', '18:00:00', 1),
-('Samedi', '08:00:00', '18:00:00', 1),
-('Dimanche', '08:00:00', '18:00:00', 1);
+
+INSERT INTO zoo(id, nom) VALUES 
+(1, 'Arcadia Zoo');
+
+
+INSERT INTO Horaire(jour, h_ouverture, h_fermeture, ouvert, zoo_id) VALUES
+('Lundi', '08:00:00', '18:00:00', 1, 1),
+('Mardi', '08:00:00', '18:00:00', 1, 1),
+('Mercredi', '08:00:00', '18:00:00', 1, 1),
+('Jeudi', '08:00:00', '18:00:00', 1, 1),
+('Vendredi', '08:00:00', '18:00:00', 1, 1),
+('Samedi', '08:00:00', '18:00:00', 1, 1),
+('Dimanche', '08:00:00', '18:00:00', 1, 1);
 
 INSERT INTO Habitat (id, nom, image_name, description, updated_at) VALUES
 (1,'Savane','65c4f28208809965150037.jpeg', 'Des plaines arides, où vivent des animaux légendaires.', null),
@@ -28,34 +33,35 @@ INSERT INTO Animal (id, habitat_id, prenom, race, created_at, updated_at, image_
 (9, 3, 'Lucie', 'Marmotte', NOW(), null, '65f82f10ca9d3556392311.jpeg'),
 (10, 2, 'Gia', 'Jaguar', NOW(), null, '65f8bb93ec422977272701.jpg');
 
-INSERT INTO Avis (id, pseudo, avis_content, note, validation, created_at) VALUES
-(1, 'Alex', 'Superbe parc, j ai adoré !', 5, 1,NOW()),
-(2, 'Marty', 'J ai passé un super moment, je recommande !', 5, 0,NOW()),
-(3, 'Melman', 'J ai adoré, je reviendrai !', 5, 0,NOW()),
-(4, 'Scrat', 'J ai adoré, je reviendrai !', 5, 1,NOW()),
-(5, 'Billy', 'J ai adoré, je reviendrai !', 5, 1,NOW()),
-(6, 'Sirius', 'Le restaurant est vraiment nul !', 1, 1,NOW());
+INSERT INTO Avis (id, pseudo, avis_content, note, validation, created_at, zoo_id) VALUES
+(1, 'Alex', 'Superbe parc, j ai adoré !', 5, 1,NOW(), 1),
+(2, 'Marty', 'J ai passé un super moment, je recommande !', 5, 0,NOW(), 1),
+(3, 'Melman', 'J ai adoré, je reviendrai !', 5, 0,NOW(), 1),
+(4, 'Scrat', 'J ai adoré, je reviendrai !', 5, 1,NOW(), 1),
+(5, 'Billy', 'J ai adoré, je reviendrai !', 5, 1,NOW(), 1),
+(6, 'Sirius', 'Le restaurant est vraiment nul !', 1, 1,NOW(), 1);
+
 
 
 INSERT INTO commentaire_habitat (id, commentaire, habitat_id, created_at, updated_at, auteur_id) VALUES
 (1, "Il faut changer l' eau des animaux plus régulièrement", 1, NOW(), null, 2),
-(2, "Rien à dire c'est nickel", 1, NOW(), null, 2),
-(3, "Les animaux sont bien traités", 1, NOW(), null, 2),
-(4, "L'enclos est propre, rien de particulier", 1, NOW(), null, 2),
+(2, "Rien à dire c'est nickel", 2, NOW(), null, 2),
+(3, "Les animaux sont bien traités", 3, NOW(), null, 2),
+(4, "L'enclos est propre, rien de particulier", 4, NOW(), null, 2),
 (5, "Penser à replanter des arbustes au bord du point d'eau numéro 3", 5, NOW(), null, 2);
 
 
-INSERT INTO service (id, nom, description, created_at, updated_at, zoo_id, image_name) VALUES
-(1, 'Restaurant', "Profitez d'une pause gourmande près des animaux.", NOW(), NULL, NULL, '65f81f89bb38d643616718.webp'),
-(2, 'Balade en petit train', 'Une balade autour du zoo dans un petit train', NOW(), NULL, NULL, '65f82c1d3c3a7400963628.webp'),
-(3, 'Visite guidée des habitats', "Visitez les animaux accompagnés d'un guide vétérinaire.", NOW(), NULL, NULL, '65f82d2f91802833866449.webp');
+INSERT INTO service (id, nom, description, created_at, updated_at, image_name, zoo_id) VALUES
+(1, 'Restaurant', "Profitez d'une pause gourmande près des animaux.", NOW(), NULL,  '65f81f89bb38d643616718.webp', 1),
+(2, 'Balade en petit train', 'Une balade autour du zoo dans un petit train', NOW(), NULL, '65f82c1d3c3a7400963628.webp', 1),
+(3, 'Visite guidée des habitats', "Visitez les animaux accompagnés d'un guide vétérinaire.", NOW(), NULL, '65f82d2f91802833866449.webp', 1);
 
 
-INSERT INTO demande_contact (id, titre, message, mail, created_at, answered_at, answered) VALUES
-(1, 'Demande de renseignements', 'Bonjour, je souhaiterais avoir des informations sur les horaires d ouverture du zoo.', 'jeanquete.ecfarcadia@gmail.com', NOW(), NULL, 0),
-(2, 'Demande de renseignements', 'Bonjour, je souhaiterais avoir des informations sur les tarifs du zoo.', 'jeanquete.ecfarcadia@gmail.com', NOW(), NULL, 0),
-(3, 'Stage de 3eme', 'Bonjour, je cherche un stage pour ma fille.', 'jeanquete.ecfarcadia@gmail.com', NOW(), NULL, 0),
-(4, 'Demande de renseignements', 'Bonjour, je souhaiterais avoir des informations sur les horaires d ouverture du zoo.', 'jeanquete.ecfarcadia@gmail.com', NOW(), NOW(), 1);
+INSERT INTO demande_contact (id, titre, message, mail, created_at, answered_at, answered, zoo_id) VALUES
+(1, 'Demande de renseignements', 'Bonjour, je souhaiterais avoir des informations sur les horaires d ouverture du zoo.', 'jeanquete.ecfarcadia@gmail.com', NOW(), NULL, 0, 1),
+(2, 'Demande de renseignements', 'Bonjour, je souhaiterais avoir des informations sur les tarifs du zoo.', 'jeanquete.ecfarcadia@gmail.com', NOW(), NULL, 0, 1),
+(3, 'Stage de 3eme', 'Bonjour, je cherche un stage pour ma fille.', 'jeanquete.ecfarcadia@gmail.com', NOW(), NULL, 0, 1),
+(4, 'Demande de renseignements', 'Bonjour, je souhaiterais avoir des informations sur les horaires d ouverture du zoo.', 'jeanquete.ecfarcadia@gmail.com', NOW(), NOW(), 1, 1);
 
 
 INSERT INTO nourriture (id, nom, description) VALUES
@@ -110,3 +116,4 @@ INSERT INTO repas (id, nourriture_id, animal_id, datetime, quantite) VALUES
 (28, 2, 8, DATE_SUB(NOW(), INTERVAL 3 DAY), 190),
 (29, 4, 9, DATE_SUB(NOW(), INTERVAL 3 DAY), 200),
 (30, 1, 10, DATE_SUB(NOW(), INTERVAL 3 DAY), 200);
+
