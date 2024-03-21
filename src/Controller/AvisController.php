@@ -51,6 +51,7 @@ class AvisController extends AbstractController
         $avis = $this->serializer->deserialize($request->getContent(), Avis::class, 'json');
         $avis->setCreatedAt(new DateTimeImmutable());
         $avis->setValidation(false);
+        $avis->setZoo($this->entityManager->getRepository(Zoo::class)->find(1));   
 
         $this->entityManager->persist($avis);
         $this->entityManager->flush();

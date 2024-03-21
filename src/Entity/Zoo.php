@@ -22,7 +22,7 @@ class Zoo
     #[ORM\OneToMany(mappedBy: 'Zoo', targetEntity: Service::class)]
     private Collection $services;
 
-    #[ORM\OneToMany(mappedBy: 'worksAt', targetEntity: User::class)]
+    #[ORM\OneToMany(mappedBy: 'zoo_id', targetEntity: User::class)]
     private Collection $users;
 
     #[ORM\OneToMany(mappedBy: 'Zoo', targetEntity: Avis::class)]

@@ -111,7 +111,7 @@ CREATE TABLE Users (
 
 
 
-ALTER TABLE Animal ADD CONSTRAINT FK_habitat_for_animal FOREIGN KEY (habitat_id) REFERENCES Habitat(id);
+ALTER TABLE Animal ADD CONSTRAINT FK_habitat_for_animal FOREIGN KEY (habitat_id) REFERENCES Habitat(id) ON DELETE SET NULL;
 
 ALTER TABLE Avis ADD CONSTRAINT FK_zoo_id_for_avis FOREIGN KEY (zoo_id) REFERENCES Zoo(id);
 

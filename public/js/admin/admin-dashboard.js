@@ -608,18 +608,19 @@ async function getAllDemandes(){
         let row = document.createElement('div');
         row.classList.add('row');
         demandes.forEach(demande=>{
+            console.log(demande);
             let card = document.createElement('div');
             card.classList.add('col-12');
             card.classList.add('card');
             card.classList.add('demande-card');
             card.classList.add('mb-5')
             card.setAttribute('data-demande-status', demande.answered);
-            card.setAttribute('data-demande-date', demande.createdAt);
+            card.setAttribute('data-demande-date', toYMD(demande.created_at));
             card.setAttribute('data-demande-id', demande.id);
             card.innerHTML = `
                 <div class="card-header d-flex justify-content-between">
                 <h5 class="card-title">${demande.titre}</h5>
-                <p class="text-muted">${formatDate(demande.createdAt)}</p>
+                <p class="text-muted">${toYMD(demande.created_at)}</p>
             </div>
             <div class="card-body">  
                 <p class="text-muted">${demande.mail}</p>                             
