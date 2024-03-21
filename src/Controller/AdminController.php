@@ -61,10 +61,9 @@ class AdminController extends AbstractController
     }
 
     #[Route('/', name: 'index', methods: ['GET'])]
-public function dashboard(Request $request, PaginatorInterface $paginator): Response
+public function dashboard(Request $request): Response
 {
     $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
-    $users = $this->entityManager->getRepository(User::class)->findAll();
     $zoos = $this->entityManager->getRepository(Zoo::class)->findAll();
     $horaires = $this->entityManager->getRepository(Horaire::class)->findAll();
     $habitats = $this->entityManager->getRepository(Habitat::class)->findAll();
@@ -76,7 +75,6 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
 
     return $this->render('admin/dashboard.html.twig', [
         'controller_name' => 'AdminController',
-        'users' => $users,
         'zoos' => $zoos,
         'horaires' => $horaires,
         'habitats' => $habitats,
@@ -134,6 +132,7 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
     public function editService(Request $request,int $id): Response
     {
     try {
+        
         $service = $this->entityManager->getRepository(Service::class)->find($id);
         if (!$service) {
             return new JsonResponse(['status' => 'Service not found'], Response::HTTP_NOT_FOUND);
@@ -263,7 +262,7 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
 
     #[Route('/user/nonAdmins', name: 'getNonAdmins', methods: ['GET'])]
     public function getNonAdmins(): JsonResponse
-    {
+    {   
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $context = ['groups' => 'user_info'];
         $nonAdmins = [];
@@ -275,10 +274,8 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         return JsonResponse::fromJsonString($this->serializer->serialize(
             $nonAdmins, 'json', $context),
             Response::HTTP_OK);
-            }
+    }
     
-
-        
 
     /* ------------------------Horaires------------------------ */
 
@@ -581,7 +578,6 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         $demande=$this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
         $demande->setAnsweredAt(new \DateTimeImmutable());
         $demande->setAnswered(true);
-        $this->addFlash('success', 'Votre réponse a bien été envoyée.');
         $this->entityManager->persist($demande);
         $this->entityManager->flush();
     } catch (\Exception $e) {

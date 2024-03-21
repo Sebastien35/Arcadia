@@ -8,6 +8,7 @@ if(BtnSupprimer.length > 0){
     });
 };
 
+
 async function validerAvis($id) {
     try {
         let myHeaders = new Headers(); 
@@ -160,7 +161,7 @@ nourritureBtns.forEach(button=>{
     });
 });
 
-/*-----------demandes de contact 05/03/2024 ------------------ */
+//*-----------demandes de contact 05/03/2024 ------------------ */
 const contactContainer = document.getElementById('contactContainer');
 const contactBtns = document.querySelectorAll('.contactBtn');
 
@@ -199,7 +200,7 @@ async function getAllDemandes(){
             card.classList.add('card');
             card.classList.add('demande-card');
             card.classList.add('mb-5')
-            card.setAttribute('data-demande-status', demande.reponse);
+            card.setAttribute('data-demande-status', demande.answered);
             card.setAttribute('data-demande-date', demande.createdAt);
             card.setAttribute('data-demande-id', demande.id);
             card.innerHTML = `
@@ -210,13 +211,18 @@ async function getAllDemandes(){
             <div class="card-body">  
                 <p class="text-muted">${demande.mail}</p>                             
                 <p class="card-text">${demande.message}</p>
-
             </div>
             <div class="card-footer mb-5">
                 <button type="button" class="btn btn-primary actionBtn" data-bs-toggle="modal" data-bs-target="#repondreModal" data-demande-id="${demande.id}">Répondre</button>
                 <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
             </div>
             `;
+            if (demande.answered) {
+                card.querySelector('.card-footer').innerHTML = `
+                <p class="text-muted">Répondu le ${formatDate(demande.answeredAt)}</p>
+                <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
+                `;               
+            }
             demandesList.appendChild(card);
             let actionBtns = card.querySelectorAll('.actionBtn');
             actionBtns.forEach(button => button.addEventListener('click', function(){
@@ -236,6 +242,15 @@ function formatDate(dateString) {
     return `${day}-${month}-${year}`;
 }
 
+function toYMD(dateISO){
+    let date = new Date(dateISO);
+    let year = date.getFullYear();
+    let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed, so add 1
+    let day = date.getDate().toString().padStart(2, '0');
+    let formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+}
+
 
 // Répondre à une demande de contact
 
@@ -247,11 +262,9 @@ async function sendResponse() {
     myHeaders.append('Content-Type', 'application/json');
     let dataForm = new FormData(repondreForm);
     let targetId = document.getElementById('demandeId').value;
-    console.log('targetId', targetId)
     let raw = JSON.stringify({
         "response": dataForm.get('reponse')
     });
-    console.log('raw', raw);
     let requestOptions = {
         method: 'POST',
         headers: myHeaders,
@@ -259,13 +272,11 @@ async function sendResponse() {
         redirect: 'follow'
     };
     try {
-        let response = await fetch(`/employe/demande/repondre/${targetId}`, requestOptions);
+        let response = await fetch(`/admin/demande/repondre/${targetId}`, requestOptions);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        // Handle success
-        console.log('Response sent successfully');
-        window.location.reload();
+        getAllDemandes();
     } catch (error) {
         // Handle error
         console.error('Error:', error);
@@ -280,13 +291,12 @@ async function deleteDemande() {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         let targetId = document.getElementById('demandeId').value;
-        console.log('targetId', targetId);
-        const response = await fetch(`/employe/demande/delete/${targetId}`, {
+        const response = await fetch(`/admin/demande/delete/${targetId}`, {
             method: 'DELETE',
             headers: myHeaders,
         });
         if (response.ok) {
-            window.location.reload();
+            getAllDemandes();
             return await response.json();
         } else {
             throw new Error('Erreur');
@@ -295,8 +305,6 @@ async function deleteDemande() {
         console.log(error);
     }
 }
-
-
 
 /* Affichage des fonctionnalités de l'employé 14/02/2024 ------------------ */
 
