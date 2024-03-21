@@ -328,6 +328,14 @@ async function getAllInfoAnimals(){
             row = document.createElement('tr');
             row.classList.add('infoAnimalRow');
         });
+        const btndelteinfoAnimals = document.querySelectorAll('[data-infoAnimal-id]');
+        btndelteinfoAnimals.forEach(button=>{
+            button.addEventListener('click', function(){
+            const infoAnimalId = button.getAttribute('data-infoAnimal-id');
+            const infoAnimalIdContainer = document.getElementById('infoAnimal-id');
+            infoAnimalIdContainer.value = infoAnimalId;
+            });
+        });
     });
 }
 function toYMD(dateString) {
@@ -342,14 +350,7 @@ function goSeeInfoAnimal(id){
     window.location.href = '/admin/infoAnimal/show/'+id;
 }
 
-const btndelteinfoAnimals = document.querySelectorAll('[data-infoAnimal-id]');
-btndelteinfoAnimals.forEach(button=>{
-    button.addEventListener('click', function(){
-        const infoAnimalId = button.getAttribute('data-infoAnimal-id');
-        const infoAnimalIdContainer = document.getElementById('infoAnimal-id');
-        infoAnimalIdContainer.value = infoAnimalId;
-    });
-});
+
 
 const confirmDeleteinfoAnimalBtn = document.getElementById('confirm-delete-infoAnimal-btn');
 confirmDeleteinfoAnimalBtn.addEventListener('click', deleteInfoAnimal);
@@ -359,13 +360,13 @@ async function deleteInfoAnimal() {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         let targetId = document.getElementById('infoAnimal-id').value;        
-        const response = await fetch(`/admin/infoAnimals/delete/${targetId}`, {
+        const response = await fetch(`/admin/infoAnimal/delete/${targetId}`, {
             method: 'DELETE',
             headers: myHeaders,
         });
         if (response.ok) {
             const result = await response.json();
-            window.location.reload();
+            getAllInfoAnimals();
             return result;
         } else {
             throw new Error('Erreur');

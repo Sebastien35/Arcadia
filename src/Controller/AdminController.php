@@ -440,6 +440,22 @@ public function dashboard(Request $request): Response
             ]);
         }
     }
+    #[ROute('/infoAnimal/delete/{id}', name: 'deleteInfoAnimal', methods: ['DELETE'])]
+    public function deleteInfoAnimal(int $id): JsonResponse
+    {   
+        try{
+        $infoAnimal = $this->entityManager->getRepository(InfoAnimal::class)->find($id);
+        if (!$infoAnimal) {
+            return new JsonResponse(['error' => 'InfoAnimal not found'], Response::HTTP_NOT_FOUND);
+        }
+        $this->entityManager->remove($infoAnimal);
+        $this->entityManager->flush();
+        return new JsonResponse(Response::HTTP_OK);
+        }catch (\Exception $e) {
+            return new JsonResponse(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     
     /* ------------------------Animal------------------------ */
     
