@@ -86,7 +86,8 @@ CREATE TABLE repas(
     nourriture_id INT,
     animal_id INT,
     datetime DATETIME,
-    quantite INT
+    quantite INT,
+    auteur INT
 );
 
 CREATE TABLE Service (
@@ -126,6 +127,7 @@ ALTER TABLE info_animal ADD CONSTRAINT FK_auteur_for_infoAnimal FOREIGN KEY (aut
 
 ALTER TABLE repas ADD CONSTRAINT FK_animal_for_repas FOREIGN KEY (animal_id) REFERENCES Animal(id);
 ALTER TABLE repas ADD CONSTRAINT FK_nourriture_for_repas FOREIGN KEY (nourriture_id) REFERENCES Nourriture(id);
+ALTER TABLE repas ADD CONSTRAINT FK_auteur_for_repas FOREIGN KEY (auteur) REFERENCES Users(id) ON DELETE SET NULL;
 
 ALTER TABLE Service ADD CONSTRAINT FK_zoo_id_for_service FOREIGN KEY (zoo_id) REFERENCES Zoo(id);
 

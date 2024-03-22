@@ -45,6 +45,7 @@ use App\Document\AnimalVisit;
 use App\Entity\Avis;
 use PHPUnit\TextUI\XmlConfiguration\Groups;
 use PHPUnit\Util\Json;
+use App\Service\Sanitizer;
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
@@ -54,11 +55,14 @@ class AdminController extends AbstractController
         private SerializerInterface $serializer,
         private HoraireRepository  $horaireRepository,
         private DocumentManager $dm,
+        private Sanitizer $sanitizer
 
         )
     {
         $this->entityManager=$entityManager;
         $this->dm = $dm;
+        $this->serializer = $serializer;
+        $this->sanitizer = $sanitizer;
     }
 
     #[Route('/', name: 'index', methods: ['GET'])]
@@ -111,8 +115,10 @@ public function dashboard(Request $request): Response
             $form = $this->createForm(ServiceType::class, $service);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $service->setNom($form->get('nom')->getData());
-                $service->setDescription($form->get('description')->getData());
+                $service->setNom
+                ($this->sanitizer->sanitizeHtml($form->get('nom')->getData()));
+                $service->setDescription
+                ($this->sanitizer->sanitizeHtml($form->get('description')->getData()));
                 $service->setCreatedAt(new \DateTimeImmutable());
                 $service->setImageFile($form->get('imageFile')->getData());
                 $service->setZoo($this->entityManager->getRepository(Zoo::class)->find(1));
@@ -143,12 +149,12 @@ public function dashboard(Request $request): Response
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if(isset($form['nom'])){
-                $service->setNom($form['nom']->getData());
+                $service->setNom($this->sanitizer->sanitizeHtml($form['nom']->getData()));
             }else{
                 $service->setNom($service->getNom());
             }
             if(isset($form['description'])){
-                $service->setDescription($form['description']->getData());
+                $service->setDescription($this->sanitizer->sanitizeHtml($form['description']->getData()));
             }else{
                 $service->setDescription($service->getDescription());
             }
@@ -427,17 +433,26 @@ public function dashboard(Request $request): Response
 
     /* ------------------------infoAnimal------------------------ */
     #[Route('/infoAnimal/show/{id}',name: 'showInfoAnimal', methods: ['GET'])]
-    public function showInfoAnimal(int $id){
+    public function showInfoAnimal(int $id): Response
+    {
+        try{
         $infoAnimal = $this->entityManager->getRepository(InfoAnimal::class)->find($id);
         if (!$infoAnimal){
             throw $this->createNotFoundException(
                 'No infoAnimal found for id '.$id
             );
         }else{
+            if ($infoAnimal->getAuteur() == null){
+                $infoAnimal->setAuteur('Anonyme');
+
+            }
             return $this->render('admin/showInfoAnimal.html.twig', [
                 'controller_name' => 'AdminController',
                 'infoAnimal'=>$infoAnimal
             ]);
+        }
+        }catch (\Exception $e) {
+            throw new \Exception('An error occured: ' . $e->getMessage());
         }
     }
     #[ROute('/infoAnimal/delete/{id}', name: 'deleteInfoAnimal', methods: ['DELETE'])]
@@ -603,8 +618,9 @@ public function dashboard(Request $request): Response
     }
 
     #[Route('/demande/delete/{id}', name: 'delete_demande', methods:['DELETE'])]
-    public function deleteDemande(Request $request): Response
-    {
+    public function deleteDemande(Request $request, int $id): Jsonresponse
+    {   
+        try{
         $demande=$this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
         if (!$demande){
             $this->addFlash('error', 'Demande not found');
@@ -612,8 +628,11 @@ public function dashboard(Request $request): Response
         }
         $this->entityManager->remove($demande);
         $this->entityManager->flush();
-        $this->addFlash('success', 'Demande deleted successfully');
-        return new Response('Demande deleted successfully', 200);
+        return new JsonResponse('Demande deleted successfully', 200);
+    }catch (\Exception $e) {
+        $this->addFlash('error', 'Une erreur est survenue pendant la suppression de la demande de contact. Si le problème perisiste, veuillez contacter l\'administrateur du site.');
+        return new JsonResponse('Une erreur est survenue : ' . $e->getMessage(), 500);
+    }
     }
 
 

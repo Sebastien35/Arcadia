@@ -22,7 +22,7 @@ class Repas
     #[ORM\ManyToOne(targetEntity: Nourriture::class, inversedBy: 'repas')]
     private ?Nourriture $nourriture;
 
-    #[ORM\ManyToOne(inversedBy: 'repas')]
+    #[ORM\ManyToOne(inversedBy: 'repas', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Animal $animal = null;
 

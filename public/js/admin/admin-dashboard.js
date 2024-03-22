@@ -319,7 +319,7 @@ async function getAllInfoAnimals(){
                     </button>
                     <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
                         <li class="btn btn-danger mb-1" id="delete-infoAnimal" data-bs-toggle="modal" data-bs-target="#deleteInfoAnimalModal" data-infoAnimal-id="${infoAnimal.id}"><i class="fa-solid fa-trash"></i></li>
-                        <li class="brn btn-info  mb-1" onClick="goSeeInfoAnimal(${infoAnimal.id})"><i class="fa-regular fa-eye"></i></li>
+                        <li class="btn btn-info  mb-1" onClick="goSeeInfoAnimal(${infoAnimal.id})"><i class="fa-regular fa-eye"></i></li>
                     </div> 
                 </div>
             </td>
@@ -596,6 +596,7 @@ async function getAllDemandes(){
             return response.json();
         } else {
             throw new Error('Erreur');
+            window.location.reload();
         }
     })
     .then(result => {
@@ -608,7 +609,6 @@ async function getAllDemandes(){
         let row = document.createElement('div');
         row.classList.add('row');
         demandes.forEach(demande=>{
-            console.log(demande);
             let card = document.createElement('div');
             card.classList.add('col-12');
             card.classList.add('card');
@@ -633,7 +633,7 @@ async function getAllDemandes(){
             `;
             if (demande.answered) {
                 card.querySelector('.card-footer').innerHTML = `
-                <p class="text-muted">Répondu le ${formatDate(demande.answeredAt)}</p>
+                <p class="text-muted">Répondu le ${formatDate(demande.answered_at)}</p>
                 <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
                 `;               
             }
