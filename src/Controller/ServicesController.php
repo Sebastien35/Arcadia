@@ -67,7 +67,10 @@ class ServicesController extends AbstractController
         try{
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         $services = $this->entityManager->getRepository(Service::class)->findAll();
-        return JsonResponse::fromJsonString($this->serializer->serialize($services, 'json'), Response::HTTP_OK);
+        $context = ['groups' => 'service_info'];    
+        return JsonResponse::fromJsonString($this->serializer->serialize
+        ($services, 'json', $context), 
+        Response::HTTP_OK);
     }   catch(\Exception $e){
         throw new \Exception($e->getMessage());
     }

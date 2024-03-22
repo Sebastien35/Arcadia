@@ -40,7 +40,7 @@ class Habitat
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'habitat', targetEntity: CommentaireHabitat::class)]
+    #[ORM\OneToMany(mappedBy: 'Habitat', targetEntity: CommentaireHabitat::class, cascade: ['remove'])]
     private Collection $commentaireHabitats;
 
     public function __construct()

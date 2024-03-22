@@ -36,6 +36,7 @@ class RegistrationController extends AbstractController
         [$request->request->get('Roles')],
         new \DateTimeImmutable(),
         null,
+        1
     );
     $email = $request->request->get('email');
     $context = ['user'=>$user];

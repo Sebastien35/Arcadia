@@ -51,10 +51,10 @@ class Animal
 
     
 
-    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Repas::class)]
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Repas::class, cascade: ["remove"])]
     private Collection $repas;
 
-    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: InfoAnimal::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: InfoAnimal::class, orphanRemoval: true, cascade: ["remove"])]
     private Collection $infoAnimals;
 
     

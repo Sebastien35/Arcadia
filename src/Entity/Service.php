@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
@@ -15,9 +16,11 @@ class Service
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['service_info'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 128)]
+    #[Groups(['service_info'])]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::TEXT)]

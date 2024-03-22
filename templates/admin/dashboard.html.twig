@@ -265,9 +265,12 @@
                                         {% for commentaire in commentaires %}
                                             {% if commentaire.getHabitat.id == singlehabitat.id %}
                                                 <div class="card">
-                                                    {% if commentaire.auteur.id != 0 %}                    
+                                                    {% if commentaire.auteur is not null %}
                                                         <p class="text-muted">{{ commentaire.getcreatedAt | date ('d m Y') }}, {{ commentaire.auteur.email }}</p>
-                                                        <p class="card-text"">{{commentaire.commentaire }} </p>
+                                                        <p class="card-text">{{ commentaire.commentaire }}</p>
+                                                    {% else %}
+                                                        <p class="text-muted">{{ commentaire.getcreatedAt | date ('d m Y') }}, Compte supprimé</p>
+                                                        <p class="card-text">{{ commentaire.commentaire }}</p>
                                                     {% endif %}
                                                 </div>
                                             {% endif %}
@@ -459,7 +462,7 @@
                                 <input type="hidden" id="infoAnimal-id" value="">
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" id="confirm-delete-infoAnimal-btn">Supprimer</button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"  id="confirm-delete-infoAnimal-btn">Supprimer</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                             </div>
                         </div>
@@ -506,7 +509,7 @@
                                 <input type="hidden" id="service-id" value="">
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" id="confirm-delete-service-btn">Supprimer</button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="confirm-delete-service-btn">Supprimer</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                             </div>
                         </div>
