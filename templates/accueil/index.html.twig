@@ -166,19 +166,18 @@
       <p>Les horaires ne sont pas encore disponibles</p>
       {% else %}
       {% for horaire in horaires %}
-      <tr>
-        <td>{{ horaire.jour }}</td>
-        {% if horaire.isOuvert %}
-        <td>{{ horaire.HOuverture|date ('H:i')  }}</td>
-        <td>{{ horaire.HFermeture|date ('H:i') }}</td>
-        {% else %}
-        <td>Fermé</td>
-        <td>Fermé</td>
-        {% endif %}
-      </tr>
-      {% endfor %}
+        <tr>
+          <td>{{ horaire.jour }}</td>
+          {% if horaire.isOuvert %}
+          <td>{{ horaire.HOuverture|date ('H:i')  }}</td>
+          <td>{{ horaire.HFermeture|date ('H:i') }}</td>
+          {% else %}
+          <td>Fermé</td>
+          <td>Fermé</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
       {% endif %}
-      <td>
     </table>
   </div>
 </div>

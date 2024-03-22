@@ -33,43 +33,41 @@ const addInfoAnimalForm = document.getElementById('add-info-animal-form');
 
 addInfoAnimalBtn.addEventListener('click', addInfoAnimal);
 
-function addInfoAnimal() {
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
+async function addInfoAnimal() {
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
 
-    let dataForm = new FormData(addInfoAnimalForm);
+        let dataForm = new FormData(addInfoAnimalForm);
 
-    // Get the selected nourriture value directly
-    
+        // Get the selected nourriture value directly
+        let raw = JSON.stringify({
+            'animal': dataForm.get('animal'),
+            'etat': dataForm.get('animal-etat'),
+            'details': dataForm.get('animal-etat-details'),
+            'nourriture': dataForm.get('animal-nourriture'),
+            'grammage': dataForm.get('animal-grammage'),
+        });
 
-    let raw = JSON.stringify({
-        'animal': dataForm.get('animal'),
-        'etat': dataForm.get('animal-etat'),
-        'details': dataForm.get('animal-etat-details'),
-        'nourriture': dataForm.get('animal-nourriture'),
-        'grammage': dataForm.get('animal-grammage'),
-    });
+        let requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
 
-    let requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-    };
-
-    fetch('/veterinaire/animal/info/create', requestOptions)
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                console.log('Erreur : ' + requestOptions.body);
-                throw new Error('Erreur');
-            }
-        })
-        .then(result => {
-            window.location.reload();
-        })
-        .catch(error => console.log('error', error));
+        const response = await fetch('/veterinaire/animal/info/create', requestOptions);
+        
+        if (response.ok) {
+            const result = await response.json();
+            getAllAnimals();
+        } else {
+            console.log('Erreur : ' + requestOptions.body);
+            throw new Error('Erreur');
+        }
+    } catch (error) {
+        console.log('error', error);
+    }
 }
 
 //Rediriger vers /animal/show/:id

@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use App\Service\Sanitizer;
 
 
 use DateTime;
@@ -49,6 +49,7 @@ class AvisController extends AbstractController
     {
         try{
         $avis = $this->serializer->deserialize($request->getContent(), Avis::class, 'json');
+        $avis->setAvisContent((new Sanitizer())->sanitizeHtml($avis->getAvisContent()));
         $avis->setCreatedAt(new DateTimeImmutable());
         $avis->setValidation(false);
         $avis->setZoo($this->entityManager->getRepository(Zoo::class)->find(1));   
