@@ -1,24 +1,40 @@
-# Projet Arcadia
+# __Projet Arcadia__
 Le site d'un zoo fictif en bretagne
-## Getting Started
+## __Getting Started__
 
 Ces instructions vous permettront d'obtenir une copie du projet en cours d'exécution sur votre machine locale à des fins de développement et de test. Consultez le déploiement pour obtenir des notes sur la manière de déployer le projet sur un système en direct.
 
-### Prérequis
+### __Prérequis__
 
 PHP 8.2 or above </br>
-Symfony 5.7 or above </br>
+Symfony CLI 5.7 or above </br>
+Symfony 7.0.5 or above <br />
 mySQL </br>
 noSQL </br>
 MongoDB: 7.0.6 </br>
 VSCODE </br>
 GIT </br>
 
-### Installation
+### __Installation__
 Un guide pas à pas pour créer un environnement de développement fonctionnel.
 
+#### Installer Git
+
+__Windows__ </br>
+Installer Scoop
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+```
+Installer git
+```
+scoop install git
+````
+
 #### Installer Symfony CLI
-https://symfony.com/download
+```
+scoop install symfony-cli
+```
 
 #### Vérifier l'installation
 ```

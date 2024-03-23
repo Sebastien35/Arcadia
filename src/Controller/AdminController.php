@@ -31,6 +31,7 @@ use App\Entity\Animal;
 use App\Repository\AnimalRepository;
 use App\Form\EditAnimalType;
 use App\Entity\InfoAnimal;
+use App\Repository\InfoAnimalRepository;
 use App\Entity\Repas;
 
 use App\Entity\CommentaireHabitat;
@@ -46,6 +47,11 @@ use App\Entity\Avis;
 use PHPUnit\TextUI\XmlConfiguration\Groups;
 use PHPUnit\Util\Json;
 use App\Service\Sanitizer;
+
+
+use App\Exception\AnimalNotFoundException;
+use App\Exception\ServiceNotFound;
+use App\Exception\UserNotFound;
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
@@ -143,7 +149,7 @@ public function dashboard(Request $request): Response
         
         $service = $this->entityManager->getRepository(Service::class)->find($id);
         if (!$service) {
-            return new JsonResponse(['status' => 'Service not found'], Response::HTTP_NOT_FOUND);
+            throw new ServiceNotFound("Aucun service n'a été trouvé avec cet identifiant");
         }
         $form = $this->createForm(ServiceType::class, $service);
         $form->handleRequest($request);
@@ -188,8 +194,7 @@ public function dashboard(Request $request): Response
         $service=$this->entityManager->getRepository(Service::class)->find($id);
         
         if (!$service){
-            $this->addFlash('error', 'Service not found');
-            throw $this->createNotFoundException("No service found for {$id} id");
+            throw new ServiceNotFound("Aucun service n'a été trouvé avec cet identifiant");
         }
         
         $this->entityManager->remove($service);
@@ -203,37 +208,20 @@ public function dashboard(Request $request): Response
 
     /* ------------------------users------------------------ */
 
-    #[Route('/users', name: 'userAdmin', methods: ['GET'])]
-    public function indexUser(UserRepository $userRepo, ZooRepository $ZooRepo): Response
-    {
-        $users=$userRepo->findAll();
-        $zoos=$ZooRepo->findAll();
-        
-        return $this->render('admin/users.html.twig', [
-            'controller_name' => 'AdminController',
-            'users'=>$users,
-            'zoos'=>$zoos
-            ,
-        ]);
-    }
 
     #[Route('/user/delete/{id}', name: 'deleteUser', methods: ['DELETE'])]
-    public function deleteUser(int $id): Response
-    {
-        $user=$this->entityManager->getRepository(User::class)->find($id);
-        if(!$user){
-            $this->addFlash('error', 'User not found');
-            throw $this->createNotFoundException('No user found for id '.$id);
-        }else{
-            try{
-            $this->entityManager->remove($user);
-            $this->entityManager->flush();
-            $this->addFlash('success', 'User deleted successfully');
-            return new Response('User deleted successfully', 200);
-            }catch (\Exception $e) {
-                $this->addFlash('error', 'An error occured');
-                return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
-            }
+    public function deleteUser(int $id, UserRepository $userRepository): JsonResponse
+    {   
+        try{
+        $user = $userRepository->find($id);
+        if (!$user) {
+            throw new UserNotFound("Aucun utilisateur n'a été trouvé avec cet identifiant");    
+        }
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+        return new JsonResponse(['message' => 'User deleted successfully'], Response::HTTP_OK);
+        }catch (\Exception $e) {
+            return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -242,7 +230,7 @@ public function dashboard(Request $request): Response
     {
         $user = $this->entityManager->getRepository(User::class)->find($id);
         if (!$user) {
-            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+            throw new UserNotFound("Aucun utilisateur n'a été trouvé avec cet identifiant");
         }
         $data=json_decode($request->getContent(), true);
         if (isset($data['email']) && !empty($data['email'])) {
@@ -433,19 +421,15 @@ public function dashboard(Request $request): Response
 
     /* ------------------------infoAnimal------------------------ */
     #[Route('/infoAnimal/show/{id}',name: 'showInfoAnimal', methods: ['GET'])]
-    public function showInfoAnimal(int $id): Response
+    public function showInfoAnimal(int $id, InfoAnimalRepository $infoAnimalRepository): Response
     {
         try{
-        $infoAnimal = $this->entityManager->getRepository(InfoAnimal::class)->find($id);
+        $infoAnimal = $infoAnimalRepository->find($id);
         if (!$infoAnimal){
             throw $this->createNotFoundException(
                 'No infoAnimal found for id '.$id
             );
         }else{
-            if ($infoAnimal->getAuteur() == null){
-                $infoAnimal->setAuteur('Anonyme');
-
-            }
             return $this->render('admin/showInfoAnimal.html.twig', [
                 'controller_name' => 'AdminController',
                 'infoAnimal'=>$infoAnimal
@@ -456,10 +440,10 @@ public function dashboard(Request $request): Response
         }
     }
     #[ROute('/infoAnimal/delete/{id}', name: 'deleteInfoAnimal', methods: ['DELETE'])]
-    public function deleteInfoAnimal(int $id): JsonResponse
+    public function deleteInfoAnimal(int $id,InfoAnimalRepository $infoAnimalRepository): JsonResponse
     {   
         try{
-        $infoAnimal = $this->entityManager->getRepository(InfoAnimal::class)->find($id);
+        $infoAnimal = $infoAnimalRepository->find($id);
         if (!$infoAnimal) {
             return new JsonResponse(['error' => 'InfoAnimal not found'], Response::HTTP_NOT_FOUND);
         }
@@ -475,10 +459,10 @@ public function dashboard(Request $request): Response
     /* ------------------------Animal------------------------ */
     
     #[Route('/animal/all', name: 'getAnimals', methods: ['GET'])]
-    public function getAnimals(): JsonResponse
+    public function getAnimals(AnimalRepository $animalRepository): JsonResponse
     {
         try{
-        $animals = $this->entityManager->getRepository(Animal::class)->findAll();
+        $animals = $animalRepository->findAll();
         $context = ['groups' => 'animal:read'];
         return JsonResponse::fromJsonString($this->serializer->serialize(
             $animals, 'json', $context),
@@ -518,7 +502,7 @@ public function dashboard(Request $request): Response
     {
         $animal = $animalRepo->find($id);
         if (!$animal) {
-            return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
+            throw new AnimalNotFoundException("Aucun animal n'a été trouvé avec cet identifiant");
         }
         $repas = $this->entityManager->getRepository(repas::class)->findBy(['animal' => $id], ['datetime' => 'DESC']);
         if (!$repas){
@@ -539,7 +523,7 @@ public function dashboard(Request $request): Response
     {
         $animal = $animalRepo->find($id);
         if (!$animal) {
-            return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
+            throw new AnimalNotFoundException("Aucun animal n'a été trouvé avec cet identifiant");
         }
         $form = $this->createForm(EditAnimalType::class, $animal);
         $form->handleRequest($request);
@@ -586,7 +570,7 @@ public function dashboard(Request $request): Response
         $animal = $this->entityManager->getRepository(Animal::class)->find($id);
         if (!$animal) {
             $this->addFlash('error', 'Animal not found');
-            return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
+            throw new AnimalNotFoundException("Aucun animal n'a été trouvé avec cet identifiant");
         }else{
             $this->entityManager->remove($animal);
             $this->entityManager->flush();
