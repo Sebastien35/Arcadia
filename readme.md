@@ -111,6 +111,10 @@ mysql -u \votreUsername\ -p\votrePassword\
 ```
 source creation_db.sql
 ```
+- Revenir au dossier Arcadia:
+```
+cd ../../
+```
 #### Créer les comptes utilisateurs: </br>
 Toujours dans l'optique de pouvoir tester le site, il nous faut créer les différents comptes pour accéder au site.
 La création des comptes se fera à l'aide de fixtures doctrine.
