@@ -111,7 +111,7 @@ mysql -u \votreUsername\ -p\votrePassword\
 ```
 source creation_db.sql
 ```
-- Revenir au dossier Arcadia:
+Quitter mysql (ctrl / cmd + c) & Revenir au dossier Arcadia:
 ```
 cd ../../
 ```
@@ -124,8 +124,16 @@ La création des comptes se fera à l'aide de fixtures doctrine.
 symfony console doctrine:fixtures:load --append
 ```
 #### Ajouter des données: </br>
-Dans le dossier SQL, un fichier 'inser_data.sql' permettant d'ajouter des données à notre nouvelle base données et disponible.
-Se positionner dans le dossier SQL et à l'aide d'un terminal mySQL, effectuer la commande:
+Se positonner dans le dossier SQL.
+```
+cd documentation\sql
+```
+Ouvrir mySQL
+```
+mysql -u \votreUsername\ -p\votrePassword\
+```
+Un fichier 'inser_data.sql' permettant d'ajouter des données à notre nouvelle base données et disponible.
+
 ```
 source insert_data.sql
 ```
