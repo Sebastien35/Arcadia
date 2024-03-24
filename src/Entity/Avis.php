@@ -27,7 +27,8 @@ class Avis
     #[ORM\Column]
     private ?bool $validation = null;
 
-
+    #[ORM\ManyToOne(targetEntity: Zoo::class, inversedBy: 'avis')]
+    private ?Zoo $zoo = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -99,12 +100,24 @@ class Avis
         return $this;
     }
 
+    public function getZoo(): ?Zoo
+    {
+        return $this->zoo;
+    }
+
+    public function setZoo(?Zoo $zoo): static
+    {
+        $this->zoo = $zoo;
+
+        return $this;
+    }
 
     public function __construct(
         string $pseudo,
         string $Avis_content,
         int $note,
         bool $validation = false,
+        ?zoo $zoo = null,
 
         \DateTimeImmutable $createdAt = null
     ) {
@@ -112,6 +125,7 @@ class Avis
         $this->Avis_content = $Avis_content;
         $this->note = $note;
         $this->validation = $validation ?: false;
+        $this->zoo = $zoo;
  
         $this->createdAt = $createdAt ?: new \DateTimeImmutable();
     }

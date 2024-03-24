@@ -20,6 +20,8 @@ use App\Repository\AvisRepository;
 use App\Entity\Zoo;
 use App\Repository\ZooRepository;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use App\Form\AvisType;
 
 #[Route('/avis', name: 'app_avis_')]
 class AvisController extends AbstractController
@@ -38,21 +40,23 @@ class AvisController extends AbstractController
     public function index(): Response
     {
         $avisList = $this->entityManager->getRepository(Avis::class)->findAll();
+        $avisForm = $this->createForm(AvisType::class);
         return $this->render('avis/index.html.twig', [
             'controller_name' => 'AvisController',
-            'avisList'=>$avisList // Passer la variables avisList qui contient tous les avisList
+            'avisList'=>$avisList, // Passer la variables avisList qui contient tous les avisList
+            'avisForm'=>$avisForm->createView() // Passer la variable avisForm qui contient le formulaire d'ajout d'avis
         ]);
     }
 
     #[Route('/create', name: 'create', methods: 'POST')]
-    public function create(Request $request): JsonResponse
+    public function create(Request $request, ZooRepository $zooRepo, Serializer $serializer): JsonResponse
     {
         try{
-        $avis = $this->serializer->deserialize($request->getContent(), Avis::class, 'json');
+        $avis =$serializer->deserialize($request->getContent(), Avis::class, 'json');
         $avis->setAvisContent((new Sanitizer())->sanitizeHtml($avis->getAvisContent()));
         $avis->setCreatedAt(new DateTimeImmutable());
         $avis->setValidation(false);
-        $avis->setZoo($this->entityManager->getRepository(Zoo::class)->find(1));   
+        $avis->setZoo($zooRepo->find($request->get('zoo')));
 
         $this->entityManager->persist($avis);
         $this->entityManager->flush();

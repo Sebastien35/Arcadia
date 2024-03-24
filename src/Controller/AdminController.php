@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 
 use DateTimeImmutable;
 
@@ -70,6 +69,10 @@ class AdminController extends AbstractController
         $this->serializer = $serializer;
         $this->sanitizer = $sanitizer;
     }
+
+
+
+
 
     #[Route('/', name: 'index', methods: ['GET'])]
 public function dashboard(Request $request): Response
