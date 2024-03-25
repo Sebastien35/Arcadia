@@ -27,17 +27,18 @@ class AnimalVisitRepository{
             $animalIds[] = $animalId;
             
         }
-        
+        if(empty($animalIds)){
+            $additionalIds = $animalRepository->findfirstfourids(); 
+            $animalIds = array_merge($animalIds, $additionalIds);
+            
+        }
         if(4 > count($animalIds)){
             
             $additionalAnimalIds = $animalRepository->findTopAnimalsByName(4 - count($animalIds));
             $animalIds = array_merge($animalIds, $additionalAnimalIds);
         }
-        if(empty($animalIds)){
-            $animalRepository->findfirstfourids();
-        }
-            
         return $animalIds;
+        
     }
 }
 
