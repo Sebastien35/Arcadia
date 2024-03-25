@@ -46,7 +46,7 @@ class AcceuilController extends AbstractController
     $habitats = $habitatRepository->findAll();
     $services = $serviceRepository->findAll();
     $top4AnimalId = $visitRepository->top4($documentManager, $animalRepository);
-    $top4Animals = $animalRepository->findBy(['id' => $top4AnimalId]);
+    $top4Animals = $animalRepository->findIDs($top4AnimalId);
     
     return $this->render('accueil/index.html.twig', [
         'controller_name' => 'AcceuilController',
