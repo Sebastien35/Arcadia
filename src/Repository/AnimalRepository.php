@@ -20,31 +20,21 @@ class AnimalRepository extends ServiceEntityRepository
 {
     public function __construct(
         ManagerRegistry $registry,
-        EntityManagerInterface $entityManager
     )
     {
-        parent::__construct($registry, Animal::class);
-        
+        parent::__construct($registry, Animal::class); 
     }
     
-    public function get4Animals(
-        EntityManagerInterface $entityManager,
-        AnimalRepository $animalRepository)
-        {
-            $rsm = new ResultSetMapping();
-            $rsm->addEntityResult(Animal::class, 'a');
-            $rsm->addFieldResult('a', 'id', 'id');
-            $rsm->addFieldResult('a', 'prenom', 'prenom');
-            $rsm->addFieldResult('a', 'imageName', 'imageName');
+    public function findTopAnimalsByName($limit): array
+    {
+        return $this->createQueryBuilder("a")
+        ->select("a.id")
+        ->orderBy('a.prenom', 'ASC')
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
 
-            $query = $entityManager->createNativeQuery(
-                'SELECT * FROM animal ORDER BY RAND() LIMIT 4',
-                $rsm
-                
-            );
-            return $query->getResult();
-
-        }
+    }
     
 
 

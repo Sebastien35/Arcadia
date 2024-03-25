@@ -11,11 +11,13 @@ use App\Entity\Habitat;
 use App\Entity\Service;
 use App\Entity\Animal;
 use App\Repository\AnimalRepository;
+use App\Repository\AnimalVisitRepository;
 use App\Repository\HabitatRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Entity;
-
+use App\Repository\ServiceRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 
 class AcceuilController extends AbstractController
@@ -32,23 +34,27 @@ class AcceuilController extends AbstractController
     AvisRepository $avisRepository, 
     HoraireRepository $horaireRepository,
     HabitatRepository $habitatRepository,
-    EntityManagerInterface $entityManager,
-    AnimalRepository $animalRepository
+    ServiceRepository $serviceRepository,
+    AnimalRepository $animalRepository,
+    AnimalVisitRepository $visitRepository,
+    DocumentManager $documentManager
+
     ): Response
 {
     $avis = $avisRepository->findAll();
     $horaires = $horaireRepository->findAll();
-    $habitats = $this->entityManager->getRepository(Habitat::class)->findAll();
-    $services = $this->entityManager->getRepository(Service::class)->findAll();
+    $habitats = $habitatRepository->findAll();
+    $services = $serviceRepository->findAll();
+    $top4AnimalId = $visitRepository->top4($documentManager, $animalRepository);
+    $top4Animals = $animalRepository->findBy(['id' => $top4AnimalId]);
     
-
-
     return $this->render('accueil/index.html.twig', [
         'controller_name' => 'AcceuilController',
         'avis' => $avis,
         'horaires' => $horaires,
         'habitats' => $habitats,
         'services' => $services,
+        'animaux' => $top4Animals,
     ]);
 }
 

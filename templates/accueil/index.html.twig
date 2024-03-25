@@ -64,11 +64,22 @@
 <div class="dark" id="animal-container">
   <div class="text-center">
     <h2> Nos animaux</h2>
-    <p> Portraits de quelque-uns de nos animaux</p>
+    <p> Portraits de nos animaux les plus populaires</p>
   </div>
   <div class="container">
-    <div class="row" id="4animaux">
-      
+    <div class="d-flex justify-content-between" id="4animaux">
+      {% for animal in animaux %}
+        <div class="col-sm-12 col-lg-3 d-flex mt-3 mb-3">
+          <div class="card">
+            <a href="/animal/show/{{animal.id}}"><img src="{{ asset('images/animal/' ~ animal.imageName)}}" class="card-img-top animal-image" alt="..."></a>
+            <div class="card-body">
+              <h5 class="card-title text-dark text-center">{{ animal.prenom }}</h5>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
     </div>
   </div>
 
@@ -180,16 +191,4 @@
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-<script src="{{asset('js/accueil.js')}}"></script>
 {% endblock %}
