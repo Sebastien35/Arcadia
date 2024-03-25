@@ -21,9 +21,9 @@ use App\Entity\Repas;
 use App\Repository\RepasRepository;
 use App\Entity\DemandeContact;
 use App\Form\RepasType;
+use App\Repository\DemandeContactRepository;
 use PHPUnit\Util\Json;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use App\Service\MailerService;
 
 #[Route('/employe', name: 'app_employe_')]
@@ -116,16 +116,16 @@ public function newRepas(Request $request, SerializerInterface $serializer):Resp
 }
 
     #[Route('/demande/repondre/{id}', name: 'repondre_demande', methods:['POST'])]
-    public function repondreDemande(Request $request, MailerService $mailerService): Response
+    public function repondreDemande(Request $request, MailerService $mailerService, EntityManagerInterface $entityManager, DemandeContactRepository $demandeRepo): Response
     {
     try {
     
         $data = json_decode($request->getContent(), true);
         $text = $data['response'];
         $id = $request->attributes->get('id');
-        $destinataire = $this->entityManager->getRepository(DemandeContact::class)->find($id)->getMail();
+        $destinataire = $demandeRepo->find($id)->getMail();
         $mailerService->sendResponseMail($destinataire, $text);
-        $demande=$this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
+        $demande=$demandeRepo->find($request->attributes->get('id'));
         $demande->setAnsweredAt(new \DateTimeImmutable());
         $demande->setAnswered(true);
         $this->entityManager->persist($demande);
@@ -167,15 +167,8 @@ public function newRepas(Request $request, SerializerInterface $serializer):Resp
         $this->entityManager->flush();
         return new JsonResponse(null, Response::HTTP_OK);
 
-        }
-        
-
-        
+        }    
     }
-        
-
-
-
     #[Route('/avis/delete/{id}',name: 'delete', methods: 'DELETE')]
     public function delete(int $id):Response
     {
@@ -188,6 +181,20 @@ public function newRepas(Request $request, SerializerInterface $serializer):Resp
         $this->entityManager->remove($avis);
         $this->entityManager->flush();
         return new JsonResponse(null, Response::HTTP_OK);
+    }
+
+    #[Route('/avis/getNonValidated', name: 'getAllAvis', methods: ['GET'])]
+    public function getNonValidated(AvisRepository $avisRepo, SerializerInterface $serializer): JsonResponse
+    {   
+        try{
+        $avis = $avisRepo->findBy(
+            ['validation' => false]
+        );
+        $context = ['groups' => 'avis:read'];
+        return JsonResponse::fromJsonString($serializer->serialize($avis, 'json',$context), Response::HTTP_OK);
+        }   catch(\Exception $e){
+            return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
     }
 
 

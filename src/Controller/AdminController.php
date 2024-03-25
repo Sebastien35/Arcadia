@@ -43,9 +43,11 @@ use App\Service\MailerService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Document\AnimalVisit;
 use App\Entity\Avis;
+use App\Repository\AvisRepository;
 use PHPUnit\TextUI\XmlConfiguration\Groups;
 use PHPUnit\Util\Json;
 use App\Service\Sanitizer;
+
 
 
 use App\Exception\AnimalNotFoundException;
@@ -624,14 +626,22 @@ public function dashboard(Request $request): Response
 
 
     #[Route('/avis/getNonValidated', name: 'getAllAvis', methods: ['GET'])]
-    public function getNonValidated(): JsonResponse
-    {
-        $avis = $this->entityManager->getRepository(Avis::class)->findBy(
+    public function getNonValidated(AvisRepository $avisRepo): JsonResponse
+    {   
+        try{
+        if (!$this->isGranted('ROLE_AUTHENTICATED_FULLY')) {
+            return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+        $avis = $avisRepo->findBy(
             ['validation' => false]
         );
         $context = ['groups' => 'avis:read'];
         return JsonResponse::fromJsonString($this->serializer->serialize($avis, 'json',$context), Response::HTTP_OK);
+        }   catch(\Exception $e){
+            return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
     }
+
     #[Route('/avis/valider/{id}', name: 'validateAvis', methods: ['POST'])]
     public function validerAvis(int $id): JsonResponse
     {   

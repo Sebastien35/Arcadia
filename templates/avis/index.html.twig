@@ -36,26 +36,6 @@
     </div>
 </div>
     <div class="custom-container container mt-2 mb-5 d-none" id="create-avis-container">
-        <!-- <form action="/avis/create" id="createAvisForm">
-            <div class="mb-3">
-                <label for="pseudo" class="form-label">Entrez un nom:</label>
-                <input type="text" name="pseudo" id="pseudoInput" class="form-control" placeholder="Pseudo" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="note" class="form-label">Notez le parc:</label>
-                <input type="number" name="note" id="noteInput" class="form-control" min="0" max="5" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="Avis_content" class="form-label">Entrez votre avis:</label>
-                <textarea name="Avis_content" id="avisContentInput" class="form-control" placeholder="Avis" rows="5" required></textarea>
-            </div>
-            
-            <div class="mb-5 d-flex justify-content-center">
-            <button type="button" id="btnCreate" class="btn btn-primary ">Submit</button>
-            </div>
-        </form> -->
         {{ form_start(avisForm,{'action': path('app_avis_create'), 'method':'POST'}) }}
         <H1 class="text-center">Donner son avis</H1>
         <p> Mon avis concerne le zoo 

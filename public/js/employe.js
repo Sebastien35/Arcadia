@@ -1,13 +1,63 @@
-/*-----------Validation / Suppression avis 05/02/2024 ------------------ */
+
+/*-----------Affichage avis 14/02/2024 ------------------ */
+const avisBtns = document.querySelectorAll('.avisBtn');
 const avisContainer = document.getElementById('avisContainer');
-const BtnSupprimer = avisContainer.querySelectorAll('.BtnSupprimer');
 
-if(BtnSupprimer.length > 0){
-    BtnSupprimer.forEach(button=>{
-        button.addEventListener('click', deleteAvis);
-    });
-};
+avisBtns.forEach(button => button.addEventListener('click', function(){
+    flushFeatures();
+    FlushActive();
+    button.classList.add('active');
+    avisContainer.classList.remove('d-none');
+    getNonValidatedReviews();
+}));
 
+/*-----------Validation / Suppression avis 05/02/2024 ------------------ */
+async function getNonValidatedReviews(){
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        await fetch('/employe/avis/getNonValidated')
+        .then(response => {
+            if(response.ok){
+                return response.json();
+            } else {
+                throw new Error('Erreur');
+            }
+        })
+        .then(result => {
+            let avisContainer = document.getElementById('avisContainer');
+            let avisList = document.getElementById('avisList');
+            let avis = result;
+            avisList.innerHTML = '';
+            if(avis.length === 0){
+                avisList.innerHTML = '<p class="text-center">Aucun avis à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
+            }
+            avis.forEach(avis=>{
+                let card = document.createElement('div');
+                card.classList.add('col-12');
+                card.classList.add('card');
+                card.innerHTML = `
+                <div class="card-header">
+                    ${avis.pseudo}
+                </div>
+                <div class="card-body">
+                    <p class="card-text">${avis.note}</p>
+                    <p class="card-text">${avis.Avis_content}</p>
+                    <p class="card-text text-muted">${formatDate(avis.createdAt)}</p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-success" onclick="validerAvis(${avis.id})">Valider</button>
+                    <button class="btn btn-danger" onclick="supprimerAvis(${avis.id})">Supprimer</button>
+                </div>
+                `;
+                avisList.appendChild(card);
+            }
+            )
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 async function validerAvis($id) {
     try {
@@ -18,10 +68,10 @@ async function validerAvis($id) {
             headers:myHeaders,
             redirect:'follow'
         };
-        const response = await fetch('/employe/avis/valider/' + $id, requestOptions);
+        const response = await fetch('/admin/avis/valider/' + $id, requestOptions);
         if (response.status === 200) {
             console.log('Avis validé');
-            window.location.reload();
+            getNonValidatedReviews();
         } else {
             console.log('Avis non validé');
         }
@@ -41,41 +91,23 @@ async function supprimerAvis($id) {
             headers: myHeaders,
             redirect: 'follow'
         };
-        const response = await fetch('/employe/avis/delete/' + $id, requestOptions);
+        const response = await fetch('/admin/avis/delete/' + $id, requestOptions);
         if (response.status === 200) {
-            console.log('Avis supprimé');
-            window.location.reload();
+            getNonValidatedReviews();
         } else {
             console.log('Avis non supprimé');
         }
         const result = await response.json();
-        console.log('result', result);
     } catch(error) {
         console.log('error', error);
     }
 }
 
-document.addEventListener('DOMContentLoaded', function(){
-const avisList  = document.getElementById('avisList');
-if(avisList.children.length === 0){
-    avisList.innerHTML = '<p class="text-center">Aucun avis à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
-};
-});
 
 
 
 
-/*-----------Affichage avis 14/02/2024 ------------------ */
 
-const avisBtns = document.querySelectorAll('.avisBtn');
-
-avisBtns.forEach(button=>{button.addEventListener('click', function(){
-    flushFeatures();
-    FlushActive();
-    button.classList.add('active');
-    avisContainer.classList.remove('d-none');
-    });
-});
 
 
 /*-----------Affichage services 14/02/2024 ------------------ */
