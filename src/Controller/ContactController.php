@@ -53,7 +53,7 @@ public function index(Request $request): Response
                     $this->sanitizer->sanitizeHtml($form->get('mail')->getData()));
                 $demandeContact->setCreatedAt(new DateTimeImmutable());
                 $demandeContact->setAnswered(false);
-                $demandeContact->setZoo($this->entityManager->getRepository(Zoo::class)->find(1));
+                $demandeContact->setZoo($form->get('zoo')->getData());
                 $this->entityManager->persist($demandeContact);
                 $this->entityManager->flush();
                 
