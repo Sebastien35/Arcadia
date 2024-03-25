@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Animal;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * @extends ServiceEntityRepository<Animal>
@@ -16,33 +18,36 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AnimalRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry $registry,
+        EntityManagerInterface $entityManager
+    )
     {
         parent::__construct($registry, Animal::class);
+        
     }
+    
+    public function get4Animals(
+        EntityManagerInterface $entityManager,
+        AnimalRepository $animalRepository)
+        {
+            $rsm = new ResultSetMapping();
+            $rsm->addEntityResult(Animal::class, 'a');
+            $rsm->addFieldResult('a', 'id', 'id');
+            $rsm->addFieldResult('a', 'prenom', 'prenom');
+            $rsm->addFieldResult('a', 'imageName', 'imageName');
 
-//    /**
-//     * @return Animal[] Returns an array of Animal objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+            $query = $entityManager->createNativeQuery(
+                'SELECT * FROM animal ORDER BY RAND() LIMIT 4',
+                $rsm
+                
+            );
+            return $query->getResult();
 
-//    public function findOneBySomeField($value): ?Animal
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        }
+    
+
+
+
+
 }
