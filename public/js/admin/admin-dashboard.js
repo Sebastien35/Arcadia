@@ -816,7 +816,7 @@ async function getNonValidatedReviews(){
                 </div>
                 <div class="card-body">
                     <p class="card-text">${avis.note}</p>
-                    <p class="card-text">${avis.avisContent}</p>
+                    <p class="card-text">${avis.Avis_content}</p>
                     <p class="card-text text-muted">${formatDate(avis.createdAt)}</p>
                 </div>
                 <div class="card-footer">

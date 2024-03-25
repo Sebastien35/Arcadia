@@ -629,7 +629,8 @@ public function dashboard(Request $request): Response
         $avis = $this->entityManager->getRepository(Avis::class)->findBy(
             ['validation' => false]
         );
-        return JsonResponse::fromJsonString($this->serializer->serialize($avis, 'json'), Response::HTTP_OK);
+        $context = ['groups' => 'avis:read'];
+        return JsonResponse::fromJsonString($this->serializer->serialize($avis, 'json',$context), Response::HTTP_OK);
     }
     #[Route('/avis/valider/{id}', name: 'validateAvis', methods: ['POST'])]
     public function validerAvis(int $id): JsonResponse

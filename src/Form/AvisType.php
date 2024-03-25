@@ -17,13 +17,9 @@ class AvisType extends AbstractType
             ->add('pseudo')
             ->add('Avis_content')
             ->add('note')
-            ->add('validation')
-            ->add('createdAt', null, [
-                'widget' => 'single_text'
-            ])
             ->add('zoo', EntityType::class, [
                 'class' => Zoo::class,
-'choice_label' => 'id',
+'choice_label' => 'nom',
             ])
         ;
     }

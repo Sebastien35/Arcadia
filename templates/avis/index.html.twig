@@ -56,7 +56,13 @@
             <button type="button" id="btnCreate" class="btn btn-primary ">Submit</button>
             </div>
         </form> -->
-        {{ form_start(avisForm) }}
+        {{ form_start(avisForm,{'action': path('app_avis_create'), 'method':'POST'}) }}
+        <H1 class="text-center">Donner son avis</H1>
+        <p> Mon avis concerne le zoo 
+            
+            {{ form_widget(avisForm.zoo, {'attr': {'class': 'form-control', 'required': true}}) }}
+
+        </p>
         <div class="mb-3">
             {{ form_label(avisForm.pseudo, 'Entrez un nom:', {'label_attr': {'class': 'form-label'}}) }}
             {{ form_widget(avisForm.pseudo, {'attr': {'class': 'form-control', 'placeholder': 'Pseudo', 'required': true}}) }}
@@ -70,8 +76,9 @@
             {{ form_widget(avisForm.Avis_content, {'attr': {'class': 'form-control', 'placeholder': 'Avis', 'rows': 5, 'required': true}}) }}
         </div>
         
+        
         <div class="mb-5 d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary " id="btnCreate">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </div>
         {{ form_end(avisForm) }}
     </div>
