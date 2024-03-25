@@ -25,6 +25,16 @@ class AnimalRepository extends ServiceEntityRepository
         parent::__construct($registry, Animal::class); 
     }
     
+
+    public function findfirstfourIDs(): array
+    {
+        return $this->createQueryBuilder("a")
+        ->select("a.id")
+        ->orderBy('a.id', 'ASC')
+        ->setMaxResults(4)
+        ->getQuery()
+        ->getResult();
+    }
     public function findTopAnimalsByName($limit): array
     {
         return $this->createQueryBuilder("a")
@@ -34,6 +44,7 @@ class AnimalRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult();
 
+        
     }
     
 
