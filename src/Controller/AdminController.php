@@ -629,7 +629,7 @@ public function dashboard(Request $request): Response
     public function getNonValidated(AvisRepository $avisRepo): JsonResponse
     {   
         try{
-        if (!$this->isGranted('ROLE_AUTHENTICATED_FULLY')) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
         $avis = $avisRepo->findBy(

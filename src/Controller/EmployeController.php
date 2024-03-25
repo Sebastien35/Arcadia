@@ -25,6 +25,7 @@ use App\Repository\DemandeContactRepository;
 use PHPUnit\Util\Json;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Service\MailerService;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/employe', name: 'app_employe_')]
 class EmployeController extends AbstractController
@@ -187,6 +188,9 @@ public function newRepas(Request $request, SerializerInterface $serializer):Resp
     public function getNonValidated(AvisRepository $avisRepo, SerializerInterface $serializer): JsonResponse
     {   
         try{
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
         $avis = $avisRepo->findBy(
             ['validation' => false]
         );
