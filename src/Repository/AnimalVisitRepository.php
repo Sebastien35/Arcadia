@@ -34,9 +34,10 @@ class AnimalVisitRepository{
         }
         if(4 > count($animalIds)){
             
-            $additionalAnimalIds = $animalRepository->findTopAnimalsByName(4 - count($animalIds));
+            $additionalAnimalIds = $animalRepository->findMoreAnimals(4 - count($animalIds));
             $animalIds = array_merge($animalIds, $additionalAnimalIds);
         }
+        
         return $animalIds;
         
     }
