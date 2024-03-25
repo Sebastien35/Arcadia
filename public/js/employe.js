@@ -68,8 +68,8 @@ async function validerAvis($id) {
             headers:myHeaders,
             redirect:'follow'
         };
-        const response = await fetch('/admin/avis/valider/' + $id, requestOptions);
-        if (response.status === 200) {
+        const response = await fetch('/employe/avis/valider/' + $id, requestOptions);
+        if (response.ok) {
             console.log('Avis validé');
             getNonValidatedReviews();
         } else {
@@ -91,7 +91,7 @@ async function supprimerAvis($id) {
             headers: myHeaders,
             redirect: 'follow'
         };
-        const response = await fetch('/admin/avis/delete/' + $id, requestOptions);
+        const response = await fetch('/employe/avis/delete/' + $id, requestOptions);
         if (response.status === 200) {
             getNonValidatedReviews();
         } else {
@@ -304,7 +304,7 @@ async function sendResponse() {
         redirect: 'follow'
     };
     try {
-        let response = await fetch(`/admin/demande/repondre/${targetId}`, requestOptions);
+        let response = await fetch(`/employe/demande/repondre/${targetId}`, requestOptions);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -323,7 +323,7 @@ async function deleteDemande() {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         let targetId = document.getElementById('demandeId').value;
-        const response = await fetch(`/admin/demande/delete/${targetId}`, {
+        const response = await fetch(`/employe/demande/delete/${targetId}`, {
             method: 'DELETE',
             headers: myHeaders,
         });

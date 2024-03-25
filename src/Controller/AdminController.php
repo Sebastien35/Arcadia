@@ -490,7 +490,7 @@ public function dashboard(Request $request): Response
                 $animal->setPrenom($form->get('prenom')->getData());
                 $animal->setRace($form->get('race')->getData());
                 $animal->setHabitat($form->get('habitat')->getData());
-                $animal->setCreatedAt(new \DateTimeImmutable());
+                $animal->setCreatedAt(new DateTimeImmutable());
                 $animal->setImageFile($form->get('imageFile')->getData());
                 
                 $entityManager->persist($animal);
@@ -661,7 +661,7 @@ public function dashboard(Request $request): Response
         $avis->setValidation(true);
         $this->entityManager->persist($avis);
         $this->entityManager->flush();
-        return new JsonResponse(['message' => 'Avis validated successfully'], Response::HTTP_OK);
+        return new JsonResponse( Response::HTTP_OK);
     }catch(\Exception $e){
         return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }

@@ -43,7 +43,7 @@ async function getNonAdminUsers() {
                             </button>
                             <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
                                 <li class="btn btn-danger mb-1" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="${user.id}"><i class="fa-solid fa-trash"></i></li>
-                                <li class="btn btn-primary  mb-1" onClick="goEditUser(${user.id})"><i class="fa-solid fa-pencil"></i></li>
+                                <li class="btn btn-primary  mb-1" id="edit-user" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="${user.id}"><i class="fa-solid fa-pencil"></i></li>
                             </div> 
                         </div>
                     </td>
@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     });
 });
+
 
 const confirmEditUserBtn = document.getElementById('confirm-edit-user-btn');
 confirmEditUserBtn.addEventListener('click', editUser);
@@ -306,6 +307,9 @@ async function getAllInfoAnimals(){
         row.classList.add('infoAnimalRow');
         
         infoAnimals.forEach(infoAnimal=>{
+            if(infoAnimal.auteur === null){
+                infoAnimal.auteur = {email: 'Utilisateur supprimé'};
+            }
             row.setAttribute('data-animal-id', infoAnimal.animal.id);
             row.setAttribute('data-infoAnimal-date', toYMD(infoAnimal.createdAt));
             row.innerHTML = `

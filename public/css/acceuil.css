@@ -12,7 +12,9 @@ html{
 @media (max-width: 1280px) {
   .top-container{
     background-size:110%;
-    height: 30vh;
+    background-repeat: no-repeat;
+    background-color: var(--dark);
+    max-height: 30vh;
   }
 }
 
