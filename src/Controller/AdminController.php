@@ -390,7 +390,6 @@ public function dashboard(Request $request): Response
 
         if ($form->isSubmitted() && $form->isValid()){
             var_dump('form submitted & valid');
-            //dd($form->getData()); // Debug
             $habitat->setNom($form->get('nom')->getData());
             $habitat->setDescription($form->get('description')->getData());
             $habitat->setImageFile($form->get('imageFile')->getData());
@@ -480,7 +479,9 @@ public function dashboard(Request $request): Response
     }
 
     #[Route('/animal/create', name: 'createAnimal', methods: ['POST'])]
-    public function createAnimal(Request $request){
+    public function createAnimal(Request $request, 
+    EntityManagerInterface $entityManager, 
+    DocumentManager $dm): Response{
         try{
             $animal= new Animal();
             $form = $this->createForm(animalFormType::class);
@@ -491,9 +492,16 @@ public function dashboard(Request $request): Response
                 $animal->setHabitat($form->get('habitat')->getData());
                 $animal->setCreatedAt(new \DateTimeImmutable());
                 $animal->setImageFile($form->get('imageFile')->getData());
-
-                $this->entityManager->persist($animal);
-                $this->entityManager->flush();
+                
+                $entityManager->persist($animal);
+                $entityManager->flush();
+                
+                $visit = new AnimalVisit();
+                $visit->setAnimalId($animal->getId());
+                $visit->setAnimalName($animal->getPrenom());
+                $visit->setVisits(0);
+                $dm->persist($visit);
+                $dm->flush();
                 $this->addFlash('success', 'Animal created successfully');
                 return $this->redirectToRoute('app_admin_index');
             }

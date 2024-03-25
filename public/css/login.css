@@ -5,7 +5,7 @@ body{
 .form-container{
     background-color:var(--white);
     position: absolute;
-    top: 30%;
+    top: 15vh;
     left:33vw;
     width: 33vw;
 

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello EmployeController!{% endblock %}
+{% block title %}Espace employé{% endblock %}
 
 {% block body %}
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
@@ -61,7 +61,7 @@
                         <p role="button" id="contactBtn" class="sidebar-item contactBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-envelope"></i> Contact</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <a class="nav-item btn btn-danger" href="/logout" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ></i>Se déconnecter</a>
                     </li>
                 </ul>
             </div>
