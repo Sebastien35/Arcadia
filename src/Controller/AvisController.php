@@ -23,6 +23,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use App\Form\AvisType;
 
+
 #[Route('/avis', name: 'app_avis_')]
 class AvisController extends AbstractController
 {
@@ -37,35 +38,42 @@ class AvisController extends AbstractController
     }
 
     #[Route('/', name: 'index')]
-    public function index(): Response
+    public function index(EntityManagerInterface $entityManager): Response
     {
         $avisList = $this->entityManager->getRepository(Avis::class)->findAll();
         $avisForm = $this->createForm(AvisType::class);
         return $this->render('avis/index.html.twig', [
             'controller_name' => 'AvisController',
-            'avisList'=>$avisList, // Passer la variables avisList qui contient tous les avisList
-            'avisForm'=>$avisForm->createView() // Passer la variable avisForm qui contient le formulaire d'ajout d'avis
+            'avisList'=>$avisList,
+            'avisForm'=>$avisForm->createView()
         ]);
     }
-
-    #[Route('/create', name: 'create', methods: 'POST')]
-    public function create(Request $request, ZooRepository $zooRepo, Serializer $serializer): JsonResponse
+    
+    #[Route('/create', name: 'create', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $entityManager, Sanitizer $sanitizer): Response
     {
-        try{
-        $avis =$serializer->deserialize($request->getContent(), Avis::class, 'json');
-        $avis->setAvisContent((new Sanitizer())->sanitizeHtml($avis->getAvisContent()));
-        $avis->setCreatedAt(new DateTimeImmutable());
-        $avis->setValidation(false);
-        $avis->setZoo($zooRepo->find($request->get('zoo')));
-
-        $this->entityManager->persist($avis);
-        $this->entityManager->flush();
-        return new JsonResponse($this->serializer->serialize($avis, 'json'), JsonResponse::HTTP_CREATED, [], true);
+        $form = $this->createForm(AvisType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $avis = new Avis();
+                $avis->setPseudo($sanitizer->sanitizeHtml($form->get('pseudo')->getData()));
+                $avis->setAvisContent($sanitizer->sanitizeHtml($form->get('Avis_content')->getData()));
+                $avis->setNote($form->get('note')->getData());
+                $avis->setZoo($form->get('zoo')->getData());
+                $avis->setCreatedAt(new DateTimeImmutable());
+                $avis->setValidation(false);              
+                $entityManager->persist($avis);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_avis_index');
+            } catch (\Exception $e) {
+                return $this->redirectToRoute('app_avis_index', ['error' => $e->getMessage()]);
+            }
         }
-        catch(\Exception $e){
-            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return $this->redirectToRoute('app_avis_index');
     }
+    
+
 
     #[Route('/show/{id}',name: 'show', methods: 'GET')]
     public function show(int $id):Response

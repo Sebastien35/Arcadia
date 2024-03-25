@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\AvisRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AvisRepository::class)]
@@ -12,25 +12,31 @@ class Avis
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['avis:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['avis:read'])]
     private ?string $pseudo = null;
 
     #[ORM\Column(length: 512)]
+    #[Groups(['avis:read'])]
     private ?string $Avis_content = null;
 
     #[ORM\Column]
+    #[Groups(['avis:read'])]
     #[Assert\Range(min: 0, max: 5)]
     private ?int $note = null;
 
     #[ORM\Column]
+    #[Groups(['avis:read'])]
     private ?bool $validation = null;
 
     #[ORM\ManyToOne(targetEntity: Zoo::class, inversedBy: 'avis')]
     private ?Zoo $zoo = null;
 
     #[ORM\Column]
+    #[Groups(['avis:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     public function getId(): ?int
@@ -112,22 +118,6 @@ class Avis
         return $this;
     }
 
-    public function __construct(
-        string $pseudo,
-        string $Avis_content,
-        int $note,
-        bool $validation = false,
-        ?zoo $zoo = null,
-
-        \DateTimeImmutable $createdAt = null
-    ) {
-        $this->pseudo = $pseudo;
-        $this->Avis_content = $Avis_content;
-        $this->note = $note;
-        $this->validation = $validation ?: false;
-        $this->zoo = $zoo;
- 
-        $this->createdAt = $createdAt ?: new \DateTimeImmutable();
-    }
+   
     
 }
