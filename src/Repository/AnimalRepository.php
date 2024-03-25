@@ -57,6 +57,16 @@ class AnimalRepository extends ServiceEntityRepository
 
     }
 
+    public function findMoreAnimals($limit):array
+    {
+        return $this->createQueryBuilder('a')
+        ->select('a.id')
+        ->orderBy('a.id', 'ASC')
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
+    }
+
     
 
 
