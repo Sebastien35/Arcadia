@@ -110,6 +110,15 @@ CREATE TABLE Users (
     zoo_id INT
 );
 
+CREATE TABLE additional_images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    image_name VARCHAR(255),
+    animal_id INT,
+    habitat_id INT
+);
+
+
+
 
 
 ALTER TABLE Animal ADD CONSTRAINT FK_habitat_for_animal FOREIGN KEY (habitat_id) REFERENCES Habitat(id) ON DELETE SET NULL;
@@ -132,6 +141,12 @@ ALTER TABLE repas ADD CONSTRAINT FK_auteur_for_repas FOREIGN KEY (auteur) REFERE
 ALTER TABLE Service ADD CONSTRAINT FK_zoo_id_for_service FOREIGN KEY (zoo_id) REFERENCES Zoo(id);
 
 ALTER TABLE Users ADD CONSTRAINT FK_zoo_id_for_user FOREIGN KEY (zoo_id) REFERENCES Zoo(id);
+
+ALTER TABLE additional_images ADD CONSTRAINT FK_animal_id_for_additional_images FOREIGN KEY (animal_id) REFERENCES Animal(id);
+ALTER TABLE additional_images ADD CONSTRAINT FK_habitat_id_for_additional_images FOREIGN KEY (habitat_id) REFERENCES Habitat(id);
+
+
+
 
 
 INSERT INTO zoo VALUES 
