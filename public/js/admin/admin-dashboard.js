@@ -39,11 +39,13 @@ async function getNonAdminUsers() {
                     <td>${user.roles}</td>
                     <td>
                         <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-secondary dropdown-toggle" type="button"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             </button>
-                            <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
+                            <div class="dropdown-menu mb-2" >  
+                                <ul>
                                 <li class="btn btn-danger mb-1" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="${user.id}"><i class="fa-solid fa-trash"></i></li>
-                                <li class="btn btn-primary  mb-1" id="edit-user" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="${user.id}"><i class="fa-solid fa-pencil"></i></li>
+                                <li class="btn btn-primary  mb-1"  data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="${user.id}"><i class="fa-solid fa-pencil"></i></li>
+                                </ul>  
                             </div> 
                         </div>
                     </td>
