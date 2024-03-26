@@ -215,6 +215,7 @@ async function getAllDemandes(){
             return response.json();
         } else {
             throw new Error('Erreur');
+            window.location.reload();
         }
     })
     .then(result => {
@@ -233,12 +234,12 @@ async function getAllDemandes(){
             card.classList.add('demande-card');
             card.classList.add('mb-5')
             card.setAttribute('data-demande-status', demande.answered);
-            card.setAttribute('data-demande-date', demande.createdAt);
+            card.setAttribute('data-demande-date', toYMD(demande.created_at));
             card.setAttribute('data-demande-id', demande.id);
             card.innerHTML = `
                 <div class="card-header d-flex justify-content-between">
                 <h5 class="card-title">${demande.titre}</h5>
-                <p class="text-muted">${formatDate(demande.createdAt)}</p>
+                <p class="text-muted">${toYMD(demande.created_at)}</p>
             </div>
             <div class="card-body">  
                 <p class="text-muted">${demande.mail}</p>                             
@@ -251,7 +252,7 @@ async function getAllDemandes(){
             `;
             if (demande.answered) {
                 card.querySelector('.card-footer').innerHTML = `
-                <p class="text-muted">Répondu le ${formatDate(demande.answeredAt)}</p>
+                <p class="text-muted">Répondu le ${formatDate(demande.answered_at)}</p>
                 <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
                 `;               
             }
