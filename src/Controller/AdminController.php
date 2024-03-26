@@ -62,11 +62,16 @@ use App\Service\Sanitizer;
 use App\Entity\Avis;
 use App\Repository\AvisRepository;
 
+use App\Entity\AdditionalImages;
+use App\Form\AdditionalImageType;
+use App\Repository\AdditionalImagesRepository;
+
 use App\Document\AnimalVisit;
 
 use App\Exception\AnimalNotFoundException;
 use App\Exception\ServiceNotFound;
 use App\Exception\UserNotFound;
+
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
@@ -496,8 +501,13 @@ public function dashboard(
             return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
         }
     }
-    #[Route('/animal/show/{id}', name: 'showAnimal', methods: ['GET'])]
-    public function showAnimal(int $id, AnimalRepository $animalRepo, EntityManagerInterface $em):Response
+    #[Route('/animal/show/{id}', name: 'showAnimal', methods: ['GET', 'POST'])]
+    public function showAnimal(
+        int $id, 
+        AnimalRepository $animalRepo, 
+        EntityManagerInterface $em,
+        request $request,
+        ):Response
     {
         $animal = $animalRepo->find($id);
         if (!$animal) {
@@ -509,11 +519,29 @@ public function dashboard(
         }
         $infoAnimal = $em->getRepository(InfoAnimal::class)->findBy
             (['animal' => $id], ['createdAt' => 'DESC']);
+
+        $form = $this->createForm(AdditionalImageType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try{
+            $additionalImage = $form->getData();
+            $additionalImage->setAnimal($animal);
+            $additionalImage->setCreatedAt(new DateTimeImmutable());
+            $em->persist($additionalImage);
+            $em->flush();
+            return $this->redirectToRoute('app_admin_showAnimal', ['id' => $id]);
+            }catch (\Exception $e) {
+                throw new \Exception('An error occured: ' . $e->getMessage());
+            }
+        }
+
         return $this->render('admin/showAnimal.html.twig', [
             'controller_name' => 'AdminController',
             'animal' => $animal,
             'repas'=>$repas,
-            'infoAnimals'=>$infoAnimal
+            'infoAnimals'=>$infoAnimal,
+            'form' => $form->createView()
+
         ]);
     }
     

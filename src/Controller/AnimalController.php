@@ -17,6 +17,7 @@ use App\Document\AnimalVisit;
 use App\Entity\InfoAnimal;
 use App\Exception\AnimalNotFoundException;
 use App\Repository\InfoAnimalRepository;
+use Doctrine\ORM\EntityManager;
 use PHPUnit\Util\Json;
 
 #[Route('/animal', name: 'app_animal_')]
@@ -65,6 +66,21 @@ class AnimalController extends AbstractController
             'infoAnimal' => $infoAnimal,
         ]);
     }
+
+    #[Route('/getImages/{id}', name: 'getImages', methods: ['GET'])]
+    public function getImages(int $id, AnimalRepository $animalRepo): JsonResponse
+    {   
+        try{
+        $animal = $animalRepo->find($id);
+        if(!$animal){
+            throw new AnimalNotFoundException(); 
+        }
+        $images = $animal->getAdditionalImages();
+        return new JsonResponse($images);
+        }catch(\Exception $e){
+            return new JsonResponse('error');}
+        }
+    
 
     
 }

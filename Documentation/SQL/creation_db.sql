@@ -115,6 +115,8 @@ CREATE TABLE additional_images (
     image_name VARCHAR(255),
     animal_id INT,
     habitat_id INT
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NULL
 );
 
 

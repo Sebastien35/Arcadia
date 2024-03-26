@@ -4,7 +4,11 @@ namespace App\Entity;
 
 use App\Repository\AdditionalImagesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+use Symfony\Component\HttpFoundation\File\File;
+
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: AdditionalImagesRepository::class)]
 class AdditionalImages
 {
@@ -13,30 +17,29 @@ class AdditionalImages
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $imageName = null;
-
     #[ORM\ManyToOne(inversedBy: 'additionalImages')]
     private ?habitat $habitat = null;
 
     #[ORM\ManyToOne(inversedBy: 'additionalImages')]
     private ?animal $animal = null;
 
+    #[Vich\UploadableField(mapping: "additionnal_images", fileNameProperty: "imageName")]
+    private $imageFile;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+
+
+    #[ORM\Column(type: "string",length:255, nullable: true)]
+    private ?string $imageName = null;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getImageName(): ?string
-    {
-        return $this->imageName;
-    }
-
-    public function setImageName(string $imageName): static
-    {
-        $this->imageName = $imageName;
-
-        return $this;
     }
 
     public function getHabitat(): ?habitat
@@ -62,4 +65,56 @@ class AdditionalImages
 
         return $this;
     }
+
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageName(?string $imageName): static
+    {
+        $this->imageName = $imageName;
+
+        return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+        if (null !== $imageFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    
 }

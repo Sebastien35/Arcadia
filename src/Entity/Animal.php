@@ -42,7 +42,6 @@ class Animal
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[Vich\UploadableField(mapping: "animal", fileNameProperty: "imageName")]
-    
     private $imageFile;
 
     #[ORM\Column(type: "string",length:255, nullable: true)]
