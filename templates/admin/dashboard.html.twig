@@ -14,13 +14,13 @@
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 <ul class="mt-5">
                     <li class="mt-2 mb-3" >
-                        <H5 class="nav-item" role="button" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse"><i class="fa-solid fa-user-tie"></i>Espace administrateur</H5>
+                        <H5 class="nav-item" role="button"  data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse"><i class="fa-solid fa-user-tie"></i>Espace administrateur</H5>
                     </li>
                     <li class="mt-3 mb-3">
                         <p class="nav-item userBtn" id="userBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-user"></i> Utilisateurs</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item habitatBtn" id="habitatBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-igloo"></i></i> Habitats</p>
+                        <p class="nav-item habitatBtn" id="habitatBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-igloo"></i> Habitats</p>
                     </li>
                     <li class="mt-2 mb-3">
                         <p class="nav-item animalBtn" id="animalBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-dog"></i> Animaux</p>
@@ -66,28 +66,28 @@
                         <H5 class="nav-item" role="button" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse"><i class="fa-solid fa-user-tie"></i>Espace administrateur</H5>
                     </li>
                     <li class="mt-5 mb-3">
-                        <p class="nav-item userBtn" id="userBtn" role="button"><i class="fa-regular fa-user"></i> Utilisateurs</p>
+                        <p class="nav-item userBtn" role="button"><i class="fa-regular fa-user"></i> Utilisateurs</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item habitatBtn" id="habitatBtn" role="button"><i class="fa-solid fa-igloo"></i></i> Habitats</p>
+                        <p class="nav-item habitatBtn"  role="button"><i class="fa-solid fa-igloo"></i>Habitats</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item animalBtn" id="animalBtn" role="button"><i class="fa-solid fa-dog"></i> Animaux</p>
+                        <p class="nav-item animalBtn"  role="button"><i class="fa-solid fa-dog"></i> Animaux</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item infoAnimalBtn" id="infoAnimalBtn" role="button"><i class="fa-regular fa-clipboard"></i> Comptes-rendus vétérinaires</p>
+                        <p class="nav-item infoAnimalBtn"  role="button"><i class="fa-regular fa-clipboard"></i> Comptes-rendus vétérinaires</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item servicesBtn" id="servicesBtn" role="button"><i class="fa-solid fa-shop"></i> Services</p>
+                        <p class="nav-item servicesBtn"  role="button"><i class="fa-solid fa-shop"></i> Services</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <p class="nav-item horairesBtn" id="horairesBtn" role="button"><i class="fa-regular fa-clock"></i> Horaires</p>
+                        <p class="nav-item horairesBtn"  role="button"><i class="fa-regular fa-clock"></i> Horaires</p>
                     </li>
                     <li class="my-2">
-                        <p class="nav-item contactBtn" id="contactBtn" role="button"><i class="fa-solid fa-envelope"></i> Contact</p>
+                        <p class="nav-item contactBtn"  role="button"><i class="fa-solid fa-envelope"></i> Contact</p>
                     </li>
                     <li class="my-2">
-                        <p class="nav-item consultationContainerBtn" role="button" id="consultationContainerBtn"><i class="fa-solid fa-chart-simple"></i> Consultations</p>
+                        <p class="nav-item consultationContainerBtn" role="button" ><i class="fa-solid fa-chart-simple"></i> Consultations</p>
                     </li> 
                     <li class="my-2">
                         <p class="nav-item avisBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-comment"></i>Avis clients</p>
@@ -135,20 +135,8 @@
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {% for user in users %}
-                                    {% if user.roles[0] != "ROLE_ADMIN" %}
-                                        <tr>
-                                            <td>{{ user.id }}</td>
-                                            <td>{{ user.email }}</td>
-                                            <td>{{ user.roles[0] }}</td>
-                                            <td>
-                                                <button class="btn btn-danger" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="{{ user.id }}"><i class="fa-solid fa-user-xmark"></i></button>
-                                                <button class="btn btn-primary" id="edit-user" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="{{ user.id }}"><i class="fa-solid fa-user-edit"></i></button>
-                                            </td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
+                            <tbody id="userTableBody">
+                                
                             </tbody>
                         </table>
                     </div>
@@ -157,7 +145,7 @@
             
                 
                 {# Modal for creating user #}
-                <div class="modal modal-fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+                <div class="modal modal-fade" id="addUserModal" tabindex="-1"  aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -167,17 +155,18 @@
                             <div class="modal-body">
                                 <h1>Créer un nouvel utilisateur:</h1>
                                 <form action="/register" method="POST">
-                                    <label for="email">Adresse mail:</label></br>
-                                        <input type="email" name="email" id="email" required></br>
-                                    <label for="Roles">Rôle:</label></br>
+                                    <label for="email">Adresse mail:</label><br>
+                                        <input type="email" name="email" id="email" required><br>
+                                    <label for="Roles">Rôle:</label><br>
                                         <select name="Roles" id="Roles" required>
+                                            <option value="" disabled selected  hidden>Choisir un rôle</option>
                                             <option value="ROLE_EMPLOYE">Employé</option>
                                             <option value="ROLE_VET">Vétérinaire</option>
-                                        </select></br></br>
-                                    <label for="plainPassword">Mot de passe:</label></br>
-                                    <input type="password" Placeholder="Password" name="plainPassword" id="password" required></br>
-                                    <label for="plainPassword">Confirmation mot de passe:</label></br>
-                                    <input type="password" placeholder="Confirm password" name="plainPassword" id="password" required></br></br>
+                                        </select><br><br>
+                                    <label for="plainPassword">Mot de passe:</label><br>
+                                    <input type="password" Placeholder="Password" name="plainPassword" id="password" required><br>
+                                    <label for="plainPassword">Confirmation mot de passe:</label><br>
+                                    <input type="password" placeholder="Confirm password" name="plainPassword" required><br><br>
                                     
                             </div>
                             <div class="modal-footer">
@@ -190,7 +179,7 @@
                 </div>
 
                 {# Modal for deleting user #}
-                <div class="modal modal-fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+                <div class="modal modal-fade" id="deleteUserModal" tabindex="-1"  aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -210,7 +199,7 @@
                 </div>
 
                 {# Modal for editing user #}
-                <div class="modal modal-fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                <div class="modal modal-fade" id="editUserModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -221,7 +210,7 @@
                                 <h1>Modifier les informations de l'utilisateur:</h1>
                                 <form autocomplete="off" onsubmit="editUser(); return false;"> <!-- Add onsubmit attribute -->
                                     <input type="hidden" id="edit-user-id" value="">
-                                    <label for="edit-email">Adresse mail:</label><br> <!-- Add prefix "edit-" to IDs -->
+                                    <label for="edit-email">Adresse mail:</label><br /> <!-- Add prefix "edit-" to IDs -->
                                     <input type="email" name="edit-email" id="edit-email" autocomplete="off"><br>
                                     <label for="edit-role">Rôle:</label><br>
                                     <select name="edit-role" id="edit-role">
@@ -263,8 +252,8 @@
                                         <h5 class="card-title">{{ singlehabitat.getNom }}</h5>
                                     </div>
                                     <div class="card-header-buttons">
-                                        <button type="button" data-bs-target="#deleteHabitatModal" data-bs-toggle="modal" data-habitat-id="{{ singlehabitat.id }}" class="btn btn-danger" id="delete-habitat"><i class="fa-solid fa-trash"></i></button>
-                                        <button type="button" class="btn btn-primary" id="edit-habitat" onclick="window.location=('/admin/habitats/update/'+ {{ singlehabitat.id }} )"><i class="fa-solid fa-pen-to-square"></i></button>
+                                        <button type="button " data-bs-target="#deleteHabitatModal" data-bs-toggle="modal" data-habitat-id="{{ singlehabitat.id }}" class="btn btn-danger" ><i class="fa-solid fa-trash"></i></button>
+                                        <button type="button " class="btn btn-primary"  onclick="window.location=('/admin/habitats/update/'+ {{ singlehabitat.id }} )"><i class="fa-solid fa-pen-to-square"></i></button>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -273,13 +262,16 @@
                                 </div>
                                 <div class="card-footer scrollable-container">
                                     <p class="card-text commentsBt" role="button" data-habitat-id="{{singlehabitat.id}}"><i class="fa-regular fa-comment"></i> Commentaires</p>
-                                    <div class="d-none" id="commentsDiv">
+                                    <div class="d-none">
                                         {% for commentaire in commentaires %}
                                             {% if commentaire.getHabitat.id == singlehabitat.id %}
                                                 <div class="card">
-                                                    {% if commentaire.auteur.id != 0 %}                    
+                                                    {% if commentaire.auteur is not null %}
                                                         <p class="text-muted">{{ commentaire.getcreatedAt | date ('d m Y') }}, {{ commentaire.auteur.email }}</p>
-                                                        <p class="card-text"">{{commentaire.commentaire }} </p>
+                                                        <p class="card-text">{{ commentaire.commentaire }}</p>
+                                                    {% else %}
+                                                        <p class="text-muted">{{ commentaire.getcreatedAt | date ('d m Y') }}, Compte supprimé</p>
+                                                        <p class="card-text">{{ commentaire.commentaire }}</p>
                                                     {% endif %}
                                                 </div>
                                             {% endif %}
@@ -293,7 +285,7 @@
                     </div>
                 </div>  
                 {# Modal for creating habitat #}
-                <div class="modal modal-fade" tabindex="-1" id="addHabitatModal" aria-labelledby="addHabitatModalLabel" aria-hidden="true">
+                <div class="modal modal-fade" tabindex="-1" id="addHabitatModal"  aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -304,11 +296,11 @@
                                 {{ form_start(createHabitatForm, {'action':('/admin/habitats/create')}) }}
                                 {{ form_errors(createHabitatForm)}}
                                 <div class="mb-3">
-                                    {{ form_label(createHabitatForm.nom) }}</br>
+                                    {{ form_label(createHabitatForm.nom) }}<br>
                                     {{ form_widget(createHabitatForm.nom) }}
                                 </div>
                                 <div class="mb-3">
-                                    {{ form_label(createHabitatForm.description) }}</br>
+                                    {{ form_label(createHabitatForm.description) }}<br>
                                     {{ form_widget(createHabitatForm.description) }}
                                 </div>
                                 <div class="mb-3">
@@ -324,7 +316,7 @@
                     </div>
                 </div>
                 {# Modal for deleting habitat #}
-                <div class="modal modal-fade" tabindex="-1" id="deleteHabitatModal" aria-labelledby="deleteHabitatModalLabel" aria-hidden="true">
+                <div class="modal modal-fade" tabindex="-1" id="deleteHabitatModal"  aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -359,7 +351,7 @@
                     </div>
                 </div>
                 {# Modal for creating animal #}
-                <div class="modal modal-fade" id="add-animal-modal" tabindex="-1" aria-labelledby="add-animal-modal-label" aria-hidden="true">
+                <div class="modal modal-fade" id="add-animal-modal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -370,19 +362,19 @@
                                     {{ form_start(createAnimalForm, {'action':('/admin/animal/create')}) }}
                                     {{ form_errors(createAnimalForm)}}
                                 <div class="mb-3">
-                                    {{ form_label(createAnimalForm.prenom) }}</br>
+                                    {{ form_label(createAnimalForm.prenom) }}<br>
                                     {{ form_widget(createAnimalForm.prenom) }}
                                 </div>
                                 <div class="mb-3">
-                                    {{ form_label(createAnimalForm.race) }}</br>
+                                    {{ form_label(createAnimalForm.race) }}<br>
                                     {{ form_widget(createAnimalForm.race) }}
                                 </div>
                                 <div class="mb-3">
-                                    {{ form_label(createAnimalForm.habitat) }}</br>
+                                    {{ form_label(createAnimalForm.habitat) }}<br>
                                     {{ form_widget(createAnimalForm.habitat) }}
                                 </div>
                                 <div class="mb-3">
-                                    {{ form_label(createAnimalForm.imageFile) }}</br>
+                                    {{ form_label(createAnimalForm.imageFile) }}<br>
                                     {{ form_widget(createAnimalForm.imageFile) }}
                                 </div>
                             </div>
@@ -395,7 +387,7 @@
                     </div>
                 </div> 
                 {# Modal for deleting animal #}
-                <div class="modal modal-fade" id="delete-animal-Modal" tabindex="-1" aria-labelledby="delete-animal-Modal-label" aria-hidden="true">
+                <div class="modal modal-fade" id="delete-animal-Modal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -441,7 +433,7 @@
                 </div>
                 <div class="container-body mt-2 scrollable-container">
                     <div class="table-responsive">
-                    <table class="table table-striped " aria-labelledby="Comptes-rendus">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
@@ -459,7 +451,7 @@
                     </div>
                 </div>
                 {# Modal for deleting infoAnimal #}
-                <div class="modal modal-fade" tabindex="-1" id="deleteInfoAnimalModal" aria-labelledby="deleteInfoAnimalModalLabel" aria-hidden="true">
+                <div class="modal modal-fade" tabindex="-1" id="deleteInfoAnimalModal"  aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -471,7 +463,7 @@
                                 <input type="hidden" id="infoAnimal-id" value="">
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" id="confirm-delete-infoAnimal-btn">Supprimer</button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"  id="confirm-delete-infoAnimal-btn">Supprimer</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                             </div>
                         </div>
@@ -490,7 +482,7 @@
                 </div>
                 <div class="container-body mt-2 scrollable-container">
                     <div class="table-responsive">
-                    <table class="table table-striped" aria-labelledby="services">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
@@ -506,7 +498,7 @@
                 </div>
 
                 {# Modal for deleting service #}
-                <div class="modal modal-fade" tabindex="-1" id="deleteServiceModal" aria-labelledby="deleteServiceModalLabel" aria-hidden="true">
+                <div class="modal modal-fade" tabindex="-1" id="deleteServiceModal"  aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -518,14 +510,14 @@
                                 <input type="hidden" id="service-id" value="">
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" id="confirm-delete-service-btn">Supprimer</button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="confirm-delete-service-btn">Supprimer</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 {# Modal for creating Service #}
-                <div class="modal modal-fade" tabindex="-1" id="createServiceModal" aria-labelledby="createServiceModalLabel" aria-hidden="true">
+                <div class="modal modal-fade" tabindex="-1" id="createServiceModal" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -537,11 +529,11 @@
                                 {{ form_start(serviceForm, {'action':('/admin/services/create')}) }}
                                 {{ form_errors(serviceForm)}}
                                 <div class="mb-3">
-                                    {{ form_label(serviceForm.nom) }}</br>
+                                    {{ form_label(serviceForm.nom) }}<br>
                                     {{ form_widget(serviceForm.nom) }}
                                 </div>
                                 <div class="mb-3">
-                                    {{ form_label(serviceForm.description) }}</br>
+                                    {{ form_label(serviceForm.description) }}<br>
                                     {{ form_widget(serviceForm.description) }}
                                 </div>
                                 <div class="mb-3">
@@ -567,7 +559,7 @@
                 </div>
                 <div class="container-body">
                     <div class="table-responsive">
-                        <table class="table table-striped"aria-labelledby="horaires">
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">Jour</th>
@@ -588,7 +580,8 @@
                                     <td>Fermé</td>
                                     {% endif %}
                                     <td>
-                                        <button class="btn btn-primary" id="edit-horaire" data-bs-toggle="modal" data-bs-target="#editHoraireModal" data-horaire-id="{{ horaire.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                        <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#editHoraireModal" data-horaire-id="{{ horaire.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -597,7 +590,7 @@
                 </div>
 
                 {# Modal for editing horaire #}
-                <div class="modal modal-fade" tabindex="-1" id="editHoraireModal" aria-labelledby="editHoraireModalLabel" aria-hidden="true">
+                <div class="modal modal-fade" tabindex="-1" id="editHoraireModal"  aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -671,7 +664,7 @@
                                     
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary mt-2 mb-2" id="btnConfirmRepondre">Envoyer</button>
+                                <button type="button" class="btn btn-primary mt-2 mb-2" data-bs-dismiss="modal" id="btnConfirmRepondre">Envoyer</button>
                                 <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
                             </form>
                             </div>
@@ -691,7 +684,7 @@
                                 <input type="hidden" id="demandeId" name="demandeId">
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" id="btnConfirmDeleteDemande">Supprimer</button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="btnConfirmDeleteDemande">Supprimer</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                             </div>
                         </div>
@@ -733,8 +726,10 @@
                         <p> Avis </p>
                     </div>
                 </div>
-                <div class="row" id="avisList">
-                    
+                <div class="container-body mt-3 scrollable-container">
+                    <div class="row" id="avisList">
+                        
+                    </div>
                 </div>
             </div>
 
@@ -743,6 +738,7 @@
 
 <script src="{{ asset('js//admin/admin-dashboard.js') }}"></script>
 <script src="{{ asset('js/admin/admin_dashboard_allVisits.js') }}"></script>
+<script src="{{ asset('js/filtre_DDC.js') }}"></script>
 <script src="{{ asset('js/allAnimals.js') }}"></script>
 <script src="{{ asset('js/sanitizer.js') }}"></script>
 {% endblock %}

@@ -5,17 +5,10 @@ body{
 .form-container{
     background-color:var(--white);
     position: absolute;
-    top: 30%;
-    left:33vw;
-    width: 33vw;
+    top: 10vh;
+    height: auto;
+    left:10vw;
+    width: 80vw;
 
 }
 
-@media (max-width: 768px) {
-    .form-container{
-        width: 80%;
-        left:10%;
-        position: absolute;
-        top:10%;
-    }
-}

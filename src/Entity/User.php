@@ -14,20 +14,22 @@ use Symfony\Component\Validator\Constraints\Json;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: "users")]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['info_animal'])]
+    #[Groups(['info_animal', 'user_info'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['info_animal'])]
+    #[Groups(['info_animal', 'user_info'])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['user_info'])]
     private array $roles = [];
 
     #[ORM\Column]
@@ -45,7 +47,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'auteur', targetEntity: InfoAnimal::class)]
     private Collection $infoAnimals;
 
+    #[ORM\Column]
+    private int $zoo_id;
 
+    public function getZooId(): ?int
+    {
+        return $this->zoo_id;
+    }
+    public function setZooId(int $zoo_id): static
+    {
+        $this->zoo_id = $zoo_id;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -142,15 +156,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
-    public function __construct(string $email, string $password, array $roles, \DateTimeImmutable $createdAt, ?\DateTimeImmutable $updatedAt,)
+    public function __construct(
+        string $email, 
+        string $password, 
+        array $roles, 
+        \DateTimeImmutable $createdAt, 
+        ?\DateTimeImmutable $updatedAt,
+        int $zoo_id
+        )
     {
         $this->email = $email;
         $this->password = $password;
         $this->roles = $roles;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
-        $this->commentaireHabitats = new ArrayCollection();
-        $this->infoAnimals = new ArrayCollection();
+        $this->zoo_id = $zoo_id;
         
         
     }

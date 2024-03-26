@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Animal;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * @extends ServiceEntityRepository<Animal>
@@ -16,33 +18,58 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AnimalRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry $registry,
+    )
     {
-        parent::__construct($registry, Animal::class);
+        parent::__construct($registry, Animal::class); 
+    }
+    
+
+    public function findfirstfourIDs(): array
+    {
+        return $this->createQueryBuilder("a")
+        ->select("a.id")
+        ->orderBy('a.id', 'ASC')
+        ->setMaxResults(4)
+        ->getQuery()
+        ->getResult();
+    }
+    public function findTopAnimalsByName($limit): array
+    {
+        return $this->createQueryBuilder("a")
+        ->select("a.id")
+        ->orderBy('a.prenom', 'ASC')
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
     }
 
-//    /**
-//     * @return Animal[] Returns an array of Animal objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findIDs($ids):array
+    {
+        return $this->createQueryBuilder('a')
+        ->select('a')
+        ->where('a.id IN (:ids)')
+        ->setParameter('ids', $ids)
+        ->orderBy('a.id', 'ASC')
+        ->getQuery()
+        ->getResult();
 
-//    public function findOneBySomeField($value): ?Animal
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    }
+
+    public function findMoreAnimals($limit):array
+    {
+        return $this->createQueryBuilder('a')
+        ->select('a.id')
+        ->orderBy('a.id', 'ASC')
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
+    }
+
+    
+
+
+
+
 }

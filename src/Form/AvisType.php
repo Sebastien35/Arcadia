@@ -2,24 +2,24 @@
 
 namespace App\Form;
 
-use App\Entity\DemandeContact;
+use App\Entity\Avis;
+use App\Entity\Zoo;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use App\Entity\Zoo;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class DemandeContactType extends AbstractType
+class AvisType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('titre')
-            ->add('message')
-            ->add('mail')
+            ->add('pseudo')
+            ->add('Avis_content')
+            ->add('note')
             ->add('zoo', EntityType::class, [
                 'class' => Zoo::class,
-                'choice_label' => 'nom',
+'choice_label' => 'nom',
             ])
         ;
     }
@@ -27,7 +27,7 @@ class DemandeContactType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => DemandeContact::class,
+            'data_class' => Avis::class,
         ]);
     }
 }

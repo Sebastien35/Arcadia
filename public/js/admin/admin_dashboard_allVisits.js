@@ -16,6 +16,7 @@ async function getConsultations(){
         }
         let result = await response.json();
         let visits = result; // Assuming result directly contains the visits array
+        
         let visitTableBody = document.getElementById('visitTable');
         // Mettre le tableau à 0
         visitTableBody.innerHTML = '';

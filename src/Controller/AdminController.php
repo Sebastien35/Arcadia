@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 
 use DateTimeImmutable;
 
@@ -31,6 +30,7 @@ use App\Entity\Animal;
 use App\Repository\AnimalRepository;
 use App\Form\EditAnimalType;
 use App\Entity\InfoAnimal;
+use App\Repository\InfoAnimalRepository;
 use App\Entity\Repas;
 
 use App\Entity\CommentaireHabitat;
@@ -43,7 +43,16 @@ use App\Service\MailerService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Document\AnimalVisit;
 use App\Entity\Avis;
+use App\Repository\AvisRepository;
+use PHPUnit\TextUI\XmlConfiguration\Groups;
+use PHPUnit\Util\Json;
+use App\Service\Sanitizer;
 
+
+
+use App\Exception\AnimalNotFoundException;
+use App\Exception\ServiceNotFound;
+use App\Exception\UserNotFound;
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
@@ -53,18 +62,24 @@ class AdminController extends AbstractController
         private SerializerInterface $serializer,
         private HoraireRepository  $horaireRepository,
         private DocumentManager $dm,
+        private Sanitizer $sanitizer
 
         )
     {
         $this->entityManager=$entityManager;
         $this->dm = $dm;
+        $this->serializer = $serializer;
+        $this->sanitizer = $sanitizer;
     }
 
+
+
+
+
     #[Route('/', name: 'index', methods: ['GET'])]
-public function dashboard(Request $request, PaginatorInterface $paginator): Response
+public function dashboard(Request $request): Response
 {
     $animaux = $this->entityManager->getRepository(Animal::class)->findAll();
-    $users = $this->entityManager->getRepository(User::class)->findAll();
     $zoos = $this->entityManager->getRepository(Zoo::class)->findAll();
     $horaires = $this->entityManager->getRepository(Horaire::class)->findAll();
     $habitats = $this->entityManager->getRepository(Habitat::class)->findAll();
@@ -76,7 +91,6 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
 
     return $this->render('admin/dashboard.html.twig', [
         'controller_name' => 'AdminController',
-        'users' => $users,
         'zoos' => $zoos,
         'horaires' => $horaires,
         'habitats' => $habitats,
@@ -112,10 +126,13 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
             $form = $this->createForm(ServiceType::class, $service);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $service->setNom($form->get('nom')->getData());
-                $service->setDescription($form->get('description')->getData());
+                $service->setNom
+                ($this->sanitizer->sanitizeHtml($form->get('nom')->getData()));
+                $service->setDescription
+                ($this->sanitizer->sanitizeHtml($form->get('description')->getData()));
                 $service->setCreatedAt(new \DateTimeImmutable());
                 $service->setImageFile($form->get('imageFile')->getData());
+                $service->setZoo($this->entityManager->getRepository(Zoo::class)->find(1));
                 $this->entityManager->persist($service);
                 $this->entityManager->flush();
                 $this->addFlash('success', 'Service created successfully');
@@ -134,20 +151,21 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
     public function editService(Request $request,int $id): Response
     {
     try {
+        
         $service = $this->entityManager->getRepository(Service::class)->find($id);
         if (!$service) {
-            return new JsonResponse(['status' => 'Service not found'], Response::HTTP_NOT_FOUND);
+            throw new ServiceNotFound("Aucun service n'a été trouvé avec cet identifiant");
         }
         $form = $this->createForm(ServiceType::class, $service);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if(isset($form['nom'])){
-                $service->setNom($form['nom']->getData());
+                $service->setNom($this->sanitizer->sanitizeHtml($form['nom']->getData()));
             }else{
                 $service->setNom($service->getNom());
             }
             if(isset($form['description'])){
-                $service->setDescription($form['description']->getData());
+                $service->setDescription($this->sanitizer->sanitizeHtml($form['description']->getData()));
             }else{
                 $service->setDescription($service->getDescription());
             }
@@ -175,60 +193,40 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
     }
 
     #[Route('/services/delete/{id}',name: 'deleteService', methods: 'DELETE')]
-    public function delete(int $id):Response
+    public function delete(int $id):JsonResponse
     {
         try{
         $service=$this->entityManager->getRepository(Service::class)->find($id);
         
         if (!$service){
-            $this->addFlash('error', 'Service not found');
-            throw $this->createNotFoundException("No service found for {$id} id");
+            throw new ServiceNotFound("Aucun service n'a été trouvé avec cet identifiant");
         }
         
         $this->entityManager->remove($service);
         $this->entityManager->flush();
-        $this->addFlash('success', 'Service deleted successfully');
-        $this->addFlash('Success', 'Le service a été supprimé avec succès!');
-        return new Response('Service deleted successfully', 200);
+        return new JsonResponse(Response::HTTP_OK); 
         }catch (\Exception $e) {
             $this->addFlash('error', 'An error occured');
-            return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
+            return new JsonResponse(Response::HTTP_INTERNAL_SERVER_ERROR);    
         }
     }
 
     /* ------------------------users------------------------ */
 
-    #[Route('/users', name: 'userAdmin', methods: ['GET'])]
-    public function indexUser(UserRepository $userRepo, ZooRepository $ZooRepo): Response
-    {
-        $users=$userRepo->findAll();
-        $zoos=$ZooRepo->findAll();
-        
-        return $this->render('admin/users.html.twig', [
-            'controller_name' => 'AdminController',
-            'users'=>$users,
-            'zoos'=>$zoos
-            ,
-        ]);
-    }
 
     #[Route('/user/delete/{id}', name: 'deleteUser', methods: ['DELETE'])]
-    public function deleteUser(int $id): Response
-    {
-        $user=$this->entityManager->getRepository(User::class)->find($id);
-        if(!$user){
-            $this->addFlash('error', 'User not found');
-            throw $this->createNotFoundException('No user found for id '.$id);
-        }else{
-            try{
-            $this->entityManager->remove($user);
-            $this->entityManager->flush();
-            $this->addFlash('success', 'User deleted successfully');
-            return new Response('User deleted successfully', 200);
-            }catch (\Exception $e) {
-                $this->addFlash('error', 'An error occured');
-                return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
-            }
+    public function deleteUser(int $id, UserRepository $userRepository): JsonResponse
+    {   
+        try{
+        $user = $userRepository->find($id);
+        if (!$user) {
+            throw new UserNotFound("Aucun utilisateur n'a été trouvé avec cet identifiant");    
+        }
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+        return new JsonResponse(['message' => 'User deleted successfully'], Response::HTTP_OK);
+        }catch (\Exception $e) {
+            return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -237,7 +235,7 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
     {
         $user = $this->entityManager->getRepository(User::class)->find($id);
         if (!$user) {
-            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+            throw new UserNotFound("Aucun utilisateur n'a été trouvé avec cet identifiant");
         }
         $data=json_decode($request->getContent(), true);
         if (isset($data['email']) && !empty($data['email'])) {
@@ -260,6 +258,23 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         $this->entityManager->flush();
         return new JsonResponse(['message' => 'User updated successfully'], Response::HTTP_OK);
     }
+
+    #[Route('/user/nonAdmins', name: 'getNonAdmins', methods: ['GET'])]
+    public function getNonAdmins(): JsonResponse
+    {   
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+        $context = ['groups' => 'user_info'];
+        $nonAdmins = [];
+        foreach ($users as $user) {
+            if (!in_array('ROLE_ADMIN', $user->getRoles())) {
+                $nonAdmins[] = $user;
+            }
+        }
+        return JsonResponse::fromJsonString($this->serializer->serialize(
+            $nonAdmins, 'json', $context),
+            Response::HTTP_OK);
+    }
+    
 
     /* ------------------------Horaires------------------------ */
 
@@ -375,7 +390,6 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
 
         if ($form->isSubmitted() && $form->isValid()){
             var_dump('form submitted & valid');
-            //dd($form->getData()); // Debug
             $habitat->setNom($form->get('nom')->getData());
             $habitat->setDescription($form->get('description')->getData());
             $habitat->setImageFile($form->get('imageFile')->getData());
@@ -411,8 +425,10 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
 
     /* ------------------------infoAnimal------------------------ */
     #[Route('/infoAnimal/show/{id}',name: 'showInfoAnimal', methods: ['GET'])]
-    public function showInfoAnimal(int $id){
-        $infoAnimal = $this->entityManager->getRepository(InfoAnimal::class)->find($id);
+    public function showInfoAnimal(int $id, InfoAnimalRepository $infoAnimalRepository): Response
+    {
+        try{
+        $infoAnimal = $infoAnimalRepository->find($id);
         if (!$infoAnimal){
             throw $this->createNotFoundException(
                 'No infoAnimal found for id '.$id
@@ -423,15 +439,34 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
                 'infoAnimal'=>$infoAnimal
             ]);
         }
+        }catch (\Exception $e) {
+            throw new \Exception('An error occured: ' . $e->getMessage());
+        }
     }
+    #[ROute('/infoAnimal/delete/{id}', name: 'deleteInfoAnimal', methods: ['DELETE'])]
+    public function deleteInfoAnimal(int $id,InfoAnimalRepository $infoAnimalRepository): JsonResponse
+    {   
+        try{
+        $infoAnimal = $infoAnimalRepository->find($id);
+        if (!$infoAnimal) {
+            return new JsonResponse(['error' => 'InfoAnimal not found'], Response::HTTP_NOT_FOUND);
+        }
+        $this->entityManager->remove($infoAnimal);
+        $this->entityManager->flush();
+        return new JsonResponse(Response::HTTP_OK);
+        }catch (\Exception $e) {
+            return new JsonResponse(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     
     /* ------------------------Animal------------------------ */
     
     #[Route('/animal/all', name: 'getAnimals', methods: ['GET'])]
-    public function getAnimals(): JsonResponse
+    public function getAnimals(AnimalRepository $animalRepository): JsonResponse
     {
         try{
-        $animals = $this->entityManager->getRepository(Animal::class)->findAll();
+        $animals = $animalRepository->findAll();
         $context = ['groups' => 'animal:read'];
         return JsonResponse::fromJsonString($this->serializer->serialize(
             $animals, 'json', $context),
@@ -444,7 +479,9 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
     }
 
     #[Route('/animal/create', name: 'createAnimal', methods: ['POST'])]
-    public function createAnimal(Request $request){
+    public function createAnimal(Request $request, 
+    EntityManagerInterface $entityManager, 
+    DocumentManager $dm): Response{
         try{
             $animal= new Animal();
             $form = $this->createForm(animalFormType::class);
@@ -453,11 +490,18 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
                 $animal->setPrenom($form->get('prenom')->getData());
                 $animal->setRace($form->get('race')->getData());
                 $animal->setHabitat($form->get('habitat')->getData());
-                $animal->setCreatedAt(new \DateTimeImmutable());
+                $animal->setCreatedAt(new DateTimeImmutable());
                 $animal->setImageFile($form->get('imageFile')->getData());
-
-                $this->entityManager->persist($animal);
-                $this->entityManager->flush();
+                
+                $entityManager->persist($animal);
+                $entityManager->flush();
+                
+                $visit = new AnimalVisit();
+                $visit->setAnimalId($animal->getId());
+                $visit->setAnimalName($animal->getPrenom());
+                $visit->setVisits(0);
+                $dm->persist($visit);
+                $dm->flush();
                 $this->addFlash('success', 'Animal created successfully');
                 return $this->redirectToRoute('app_admin_index');
             }
@@ -471,7 +515,7 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
     {
         $animal = $animalRepo->find($id);
         if (!$animal) {
-            return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
+            throw new AnimalNotFoundException("Aucun animal n'a été trouvé avec cet identifiant");
         }
         $repas = $this->entityManager->getRepository(repas::class)->findBy(['animal' => $id], ['datetime' => 'DESC']);
         if (!$repas){
@@ -492,7 +536,7 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
     {
         $animal = $animalRepo->find($id);
         if (!$animal) {
-            return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
+            throw new AnimalNotFoundException("Aucun animal n'a été trouvé avec cet identifiant");
         }
         $form = $this->createForm(EditAnimalType::class, $animal);
         $form->handleRequest($request);
@@ -539,7 +583,7 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         $animal = $this->entityManager->getRepository(Animal::class)->find($id);
         if (!$animal) {
             $this->addFlash('error', 'Animal not found');
-            return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
+            throw new AnimalNotFoundException("Aucun animal n'a été trouvé avec cet identifiant");
         }else{
             $this->entityManager->remove($animal);
             $this->entityManager->flush();
@@ -562,7 +606,6 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         $demande=$this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
         $demande->setAnsweredAt(new \DateTimeImmutable());
         $demande->setAnswered(true);
-        $this->addFlash('success', 'Votre réponse a bien été envoyée.');
         $this->entityManager->persist($demande);
         $this->entityManager->flush();
     } catch (\Exception $e) {
@@ -572,8 +615,9 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
     }
 
     #[Route('/demande/delete/{id}', name: 'delete_demande', methods:['DELETE'])]
-    public function deleteDemande(Request $request): Response
-    {
+    public function deleteDemande(Request $request, int $id): Jsonresponse
+    {   
+        try{
         $demande=$this->entityManager->getRepository(DemandeContact::class)->find($request->attributes->get('id'));
         if (!$demande){
             $this->addFlash('error', 'Demande not found');
@@ -581,19 +625,31 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         }
         $this->entityManager->remove($demande);
         $this->entityManager->flush();
-        $this->addFlash('success', 'Demande deleted successfully');
-        return new Response('Demande deleted successfully', 200);
+        return new JsonResponse('Demande deleted successfully', 200);
+    }catch (\Exception $e) {
+        $this->addFlash('error', 'Une erreur est survenue pendant la suppression de la demande de contact. Si le problème perisiste, veuillez contacter l\'administrateur du site.');
+        return new JsonResponse('Une erreur est survenue : ' . $e->getMessage(), 500);
+    }
     }
 
 
     #[Route('/avis/getNonValidated', name: 'getAllAvis', methods: ['GET'])]
-    public function getNonValidated(): JsonResponse
-    {
-        $avis = $this->entityManager->getRepository(Avis::class)->findBy(
+    public function getNonValidated(AvisRepository $avisRepo): JsonResponse
+    {   
+        try{
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+        $avis = $avisRepo->findBy(
             ['validation' => false]
         );
-        return JsonResponse::fromJsonString($this->serializer->serialize($avis, 'json'), Response::HTTP_OK);
+        $context = ['groups' => 'avis:read'];
+        return JsonResponse::fromJsonString($this->serializer->serialize($avis, 'json',$context), Response::HTTP_OK);
+        }   catch(\Exception $e){
+            return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
     }
+
     #[Route('/avis/valider/{id}', name: 'validateAvis', methods: ['POST'])]
     public function validerAvis(int $id): JsonResponse
     {   
@@ -605,13 +661,40 @@ public function dashboard(Request $request, PaginatorInterface $paginator): Resp
         $avis->setValidation(true);
         $this->entityManager->persist($avis);
         $this->entityManager->flush();
-        return new JsonResponse(['message' => 'Avis validated successfully'], Response::HTTP_OK);
+        return new JsonResponse( Response::HTTP_OK);
     }catch(\Exception $e){
         return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
     }
 
+    #[Route('/avis/delete/{id}', name: 'deleteAvis', methods: ['DELETE'])]
+    public function deleteAvis(int $id): JsonResponse
+    {
+        $avis = $this->entityManager->getRepository(Avis::class)->find($id);
+        if (!$avis) {
+            return new JsonResponse(['error' => 'Avis not found'], Response::HTTP_NOT_FOUND);
+        }
+        $this->entityManager->remove($avis);
+        $this->entityManager->flush();
+        return new JsonResponse(['message' => 'Avis deleted successfully'], Response::HTTP_OK);
+    }
 
-
+    #[Route('/commentaires/delete/{id}', name: 'deleteCommentaire', methods: ['DELETE'])] 
+    public function deleteCommentaireHabitat(int $id): JsonResponse
+    {   try{
+        if (!$this->isGranted('ROLE_AUTHENTICATED_FULLY')) {
+            return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }   
+        $commentaire = $this->entityManager->getRepository(CommentaireHabitat::class)->find($id);
+        if (!$commentaire) {
+            return new JsonResponse(['error' => 'Commentaire not found'], Response::HTTP_NOT_FOUND);
+        }
+        $this->entityManager->remove($commentaire);
+        $this->entityManager->flush();
+        return new JsonResponse(['message' => 'Commentaire deleted successfully'], Response::HTTP_OK);
+    }catch(\Exception $e){
+        return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
+    } 
+}
     
 }

@@ -3,51 +3,93 @@
 /*---------------- Display User Container ------------------*/
 const userContainer = document.getElementById('user-container');
 const userBtns = document.querySelectorAll('.userBtn');
-
 userBtns.forEach(button => button.addEventListener('click', function() {
     FlushFeatures();
     FlushActive();
-    
+    getNonAdminUsers() 
     userContainer.classList.remove('d-none');
     button.classList.add('active'); // Use 'button' instead of 'userBtn' because 'button' is the current button being clicked
 }));
+//get all users
+async function getNonAdminUsers() {
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    await fetch('/admin/user/nonAdmins')
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Erreur');
+            }
+        })
+        .then(result => {
+            let userTableBody = document.getElementById('userTableBody');
+            userTableBody.innerHTML = '';
+            let users = result;
+            if (users.length === 0) {
+                userTableBody.innerHTML = '<p class="text-center">Aucun utilisateur à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
+            }
+            users.forEach(user => {
+                let row = document.createElement('tr');
+                row.classList.add('userRow');
+                row.setAttribute('data-user-id', user.id);
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.email}</td>
+                    <td>${user.roles}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu mb-2" >  
+                                <ul>
+                                <li class="btn btn-danger mb-1" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="${user.id}"><i class="fa-solid fa-trash"></i></li>
+                                <li class="btn btn-primary  mb-1"  data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="${user.id}"><i class="fa-solid fa-pencil"></i></li>
+                                </ul>  
+                            </div> 
+                        </div>
+                    </td>
+                `;
+                userTableBody.appendChild(row);
+            });
+
+            // Now, attach event listeners to delete buttons after they have been created
+            const deleteUserBtns = document.querySelectorAll('[data-user-id]');
+            deleteUserBtns.forEach(button => {
+                button.addEventListener('click', function () {
+                    const userId = button.getAttribute('data-user-id');
+                    const userIdContainer = document.getElementById('user-id');
+                    userIdContainer.value = userId;
+                });
+            });
+        });
+}
 
 // Delete User:
-document.addEventListener('DOMContentLoaded', function(){
-    const deleteUserBtns = document.querySelectorAll('[data-user-id]');
-    deleteUserBtns.forEach(button=>{
-        button.addEventListener('click', function(){
-            const userId = button.getAttribute('data-user-id');
-            const userIdContainer = document.getElementById('user-id');
-            userIdContainer.value = userId;
-        });
-    });
-});
-
 const confirmDeleteUserBtn = document.getElementById('confirm-delete-user-btn');
 confirmDeleteUserBtn.addEventListener('click', deleteUser);
 
-function deleteUser(){
-    let targetId = document.getElementById('user-id').value; // Use 'user-id' instead of 'userId'
+function deleteUser() {
+    let targetId = document.getElementById('user-id').value;
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
-    fetch(`/admin/user/delete/${targetId}`, { // Use template literal for URL
-        method: 'DELETE',
-        headers: myHeaders,
-        redirect: 'follow'
-    })
-    .then(response => {
-        if(response.ok){
+    fetch(`/admin/user/delete/${targetId}`, {
+            method: 'DELETE',
+            headers: myHeaders,
+            redirect: 'follow'
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();
+                return response.json();
+            } else {
+                throw new Error('Erreur');
+            }
+        })
+        .then(result => {
             window.location.reload();
-            return response.json();
-        }else{
-            throw new Error('Erreur');
-        }
-    })
-    .then(result => {
-        window.location.reload();
-    })
-    .catch(error => console.log(error));
+        })
+        .catch(error => console.log(error));
 }
 
 // Edit User:
@@ -61,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     });
 });
+
 
 const confirmEditUserBtn = document.getElementById('confirm-edit-user-btn');
 confirmEditUserBtn.addEventListener('click', editUser);
@@ -266,6 +309,9 @@ async function getAllInfoAnimals(){
         row.classList.add('infoAnimalRow');
         
         infoAnimals.forEach(infoAnimal=>{
+            if(infoAnimal.auteur === null){
+                infoAnimal.auteur = {email: 'Utilisateur supprimé'};
+            }
             row.setAttribute('data-animal-id', infoAnimal.animal.id);
             row.setAttribute('data-infoAnimal-date', toYMD(infoAnimal.createdAt));
             row.innerHTML = `
@@ -279,7 +325,7 @@ async function getAllInfoAnimals(){
                     </button>
                     <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
                         <li class="btn btn-danger mb-1" id="delete-infoAnimal" data-bs-toggle="modal" data-bs-target="#deleteInfoAnimalModal" data-infoAnimal-id="${infoAnimal.id}"><i class="fa-solid fa-trash"></i></li>
-                        <li class="brn btn-info  mb-1" onClick="goSeeInfoAnimal(${infoAnimal.id})"><i class="fa-regular fa-eye"></i></li>
+                        <li class="btn btn-info  mb-1" onClick="goSeeInfoAnimal(${infoAnimal.id})"><i class="fa-regular fa-eye"></i></li>
                     </div> 
                 </div>
             </td>
@@ -287,6 +333,14 @@ async function getAllInfoAnimals(){
             infoAnimalTableBody.appendChild(row);
             row = document.createElement('tr');
             row.classList.add('infoAnimalRow');
+        });
+        const btndelteinfoAnimals = document.querySelectorAll('[data-infoAnimal-id]');
+        btndelteinfoAnimals.forEach(button=>{
+            button.addEventListener('click', function(){
+            const infoAnimalId = button.getAttribute('data-infoAnimal-id');
+            const infoAnimalIdContainer = document.getElementById('infoAnimal-id');
+            infoAnimalIdContainer.value = infoAnimalId;
+            });
         });
     });
 }
@@ -302,14 +356,7 @@ function goSeeInfoAnimal(id){
     window.location.href = '/admin/infoAnimal/show/'+id;
 }
 
-const btndelteinfoAnimals = document.querySelectorAll('[data-infoAnimal-id]');
-btndelteinfoAnimals.forEach(button=>{
-    button.addEventListener('click', function(){
-        const infoAnimalId = button.getAttribute('data-infoAnimal-id');
-        const infoAnimalIdContainer = document.getElementById('infoAnimal-id');
-        infoAnimalIdContainer.value = infoAnimalId;
-    });
-});
+
 
 const confirmDeleteinfoAnimalBtn = document.getElementById('confirm-delete-infoAnimal-btn');
 confirmDeleteinfoAnimalBtn.addEventListener('click', deleteInfoAnimal);
@@ -319,13 +366,13 @@ async function deleteInfoAnimal() {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         let targetId = document.getElementById('infoAnimal-id').value;        
-        const response = await fetch(`/admin/infoAnimals/delete/${targetId}`, {
+        const response = await fetch(`/admin/infoAnimal/delete/${targetId}`, {
             method: 'DELETE',
             headers: myHeaders,
         });
         if (response.ok) {
             const result = await response.json();
-            window.location.reload();
+            getAllInfoAnimals();
             return result;
         } else {
             throw new Error('Erreur');
@@ -376,59 +423,71 @@ servicesBtns.forEach(button => button.addEventListener('click', function(){
     button.classList.add('active');
 }));
 
-async function getAllServices(){
+async function getAllServices() {
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     await fetch('/services/all')
-    .then(response => {
-        if(response.ok){
-            return response.json();
-        } else {
-            throw new Error('Erreur');
-        }
-    })
-    .then(result => {
-        let servicesList = document.getElementById('servicesList');
-        servicesList.innerHTML = '';
-        let services = result;
-        if(services.length === 0){
-            servicesList.innerHTML = '<p class="text-center">Aucun service à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
-        }
-        services.forEach(service=>{
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Erreur');
+            }
+        })
+        .then(result => {
+            let servicesList = document.getElementById('servicesList');
+            servicesList.innerHTML = '';
+            let services = result;
+            if (services.length === 0) {
+                servicesList.innerHTML = '<p class="text-center">Aucun service à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
+            }
             let serviceTableBody = document.getElementById('servicesList');
             serviceTableBody.innerHTML = '';
-            let row = document.createElement('tr');
-            row.innerHTML = `
-            <td>${service.id}</td>
-            <td>${service.nom}</td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    </button>
-                    <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
-                        <li class="btn btn-danger mb-1" id="delete-service" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" data-service-id="${service.id}"><i class="fa-solid fa-trash"></i></li>
-                        <li class="btn btn-primary  mb-1" onClick="goEditService(${service.id})"><i class="fa-solid fa-pencil"></i></li>
-                        <li class="btn btn-info  mb-1" onClick="goSeeService(${service.id})"><i class="fa-regular fa-eye"></i></li>
-                    </div> 
-                </div>
-            </td>
-            `;
-            serviceTableBody.appendChild(row);
-
-        });
-    })
+            services.forEach(service => {
+                let row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${service.id}</td>
+                    <td>${service.nom}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
+                                <li class="btn btn-danger mb-1" id="delete-service" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" data-delete-service-id="${service.id}"><i class="fa-solid fa-trash"></i></li>
+                                <li class="btn btn-primary  mb-1" onClick="goEditService(${service.id})"><i class="fa-solid fa-pencil"></i></li>
+                                <li class="btn btn-info  mb-1" onClick="goSeeService(${service.id})"><i class="fa-regular fa-eye"></i></li>
+                            </div> 
+                        </div>
+                    </td>
+                `;
+                serviceTableBody.appendChild(row);
+            });
+            // Now, attach event listeners to delete buttons after they have been created
+            const deleteServiceBtns = document.querySelectorAll('[data-delete-service-id]');
+            deleteServiceBtns.forEach(button => {
+                button.addEventListener('click', function () {
+                    const serviceId = button.getAttribute('data-delete-service-id');
+                    const serviceIdContainer = document.getElementById('service-id');
+                    serviceIdContainer.value = serviceId;
+                });
+            });
+        })
+        .catch(error => console.log(error));
+    
 }
 
 // Supprimer un service:
 
-const deleteServiceBtns = document.querySelectorAll('[data-service-id]');
+const deleteServiceBtns=document.querySelectorAll('[data-delete-service-id]');
 deleteServiceBtns.forEach(button=>{
+    console.log('deleteServiceBtns', button);
     button.addEventListener('click', function(){
         const serviceId = button.getAttribute('data-service-id');
         const serviceIdContainer = document.getElementById('service-id');
         serviceIdContainer.value = serviceId;
     });
 });
+
 const confirmDeleteServiceBtn = document.getElementById('confirm-delete-service-btn');
 confirmDeleteServiceBtn.addEventListener('click', deleteService);
 function deleteService(){
@@ -442,17 +501,17 @@ function deleteService(){
     })
     .then(response => {
         if(response.ok){
-            window.location.reload();
             return response.json();
         } else {
             throw new Error('Erreur');
         }
     })
     .then(result => {
-        window.location.reload();
+        getAllServices();
     })
-    .catch(error => alert('Une erreur est survenue', error));
+    .catch(error => console.log(error), getAllServices());
 }
+
 
 function goSeeService($id){
     window.location.href = '/services/show/'+$id;
@@ -543,6 +602,7 @@ async function getAllDemandes(){
             return response.json();
         } else {
             throw new Error('Erreur');
+            window.location.reload();
         }
     })
     .then(result => {
@@ -560,24 +620,29 @@ async function getAllDemandes(){
             card.classList.add('card');
             card.classList.add('demande-card');
             card.classList.add('mb-5')
-            card.setAttribute('data-demande-status', demande.reponse);
-            card.setAttribute('data-demande-date', demande.createdAt);
+            card.setAttribute('data-demande-status', demande.answered);
+            card.setAttribute('data-demande-date', toYMD(demande.created_at));
             card.setAttribute('data-demande-id', demande.id);
             card.innerHTML = `
                 <div class="card-header d-flex justify-content-between">
                 <h5 class="card-title">${demande.titre}</h5>
-                <p class="text-muted">${formatDate(demande.createdAt)}</p>
+                <p class="text-muted">${toYMD(demande.created_at)}</p>
             </div>
             <div class="card-body">  
                 <p class="text-muted">${demande.mail}</p>                             
                 <p class="card-text">${demande.message}</p>
-
             </div>
             <div class="card-footer mb-5">
                 <button type="button" class="btn btn-primary actionBtn" data-bs-toggle="modal" data-bs-target="#repondreModal" data-demande-id="${demande.id}">Répondre</button>
                 <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
             </div>
             `;
+            if (demande.answered) {
+                card.querySelector('.card-footer').innerHTML = `
+                <p class="text-muted">Répondu le ${formatDate(demande.answered_at)}</p>
+                <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
+                `;               
+            }
             demandesList.appendChild(card);
             let actionBtns = card.querySelectorAll('.actionBtn');
             actionBtns.forEach(button => button.addEventListener('click', function(){
@@ -595,6 +660,15 @@ function formatDate(dateString) {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear().toString().slice(-2);
     return `${day}-${month}-${year}`;
+}
+
+function toYMD(dateISO){
+    let date = new Date(dateISO);
+    let year = date.getFullYear();
+    let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed, so add 1
+    let day = date.getDate().toString().padStart(2, '0');
+    let formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
 }
 
 
@@ -626,7 +700,7 @@ async function sendResponse() {
         }
         // Handle success
         console.log('Response sent successfully');
-        window.location.reload();
+        getAllDemandes();
     } catch (error) {
         // Handle error
         console.error('Error:', error);
@@ -647,7 +721,7 @@ async function deleteDemande() {
             headers: myHeaders,
         });
         if (response.ok) {
-            window.location.reload();
+            getAllDemandes();
             return await response.json();
         } else {
             throw new Error('Erreur');
@@ -661,34 +735,34 @@ async function deleteDemande() {
 
 
 
-// Filtrer les demandes de contact
-function applyDemandeContactFilter(){
-    const targetedStatus = document.getElementById('demandeStatusSelect').value;
-    const targetedDate = document.getElementById('demande-date-select').value;
-    const demandeEntry = document.querySelectorAll('.demande-card');    
-    demandeEntry.forEach(item => {
-        const status = item.getAttribute('data-demande-status') === 'true' || item.getAttribute('data-demande-status') === ''; // Modifier cette ligne
-        let statusMatch;
-        if (targetedStatus === '*') {
-            statusMatch = true; // Si '*' est sélectionné, toutes les demandes sont considérées comme correspondantes
-        } else {
-            statusMatch = (targetedStatus === '1' && status) || (targetedStatus === '0' && !status); // Inverser la comparaison
-        }
-        const dateMatch = (targetedDate === '') || (item.getAttribute('data-demande-date') === targetedDate);
-        if (statusMatch && dateMatch) {
-            item.classList.remove('d-none');
-        } else {
-            item.classList.add('d-none');
-        }
-    });
-}
-const demandeStatusSelect = document.getElementById('demandeStatusSelect');
-demandeStatusSelect.addEventListener('change', applyDemandeContactFilter);
+// // Filtrer les demandes de contact
+// function applyDemandeContactFilter(){
+//     const targetedStatus = document.getElementById('demandeStatusSelect').value;
+//     const targetedDate = document.getElementById('demande-date-select').value;
+//     const demandeEntry = document.querySelectorAll('.demande-card');    
+//     demandeEntry.forEach(item => {
+//         const status = item.getAttribute('data-demande-status') === 'true' || item.getAttribute('data-demande-status') === ''; // Modifier cette ligne
+//         let statusMatch;
+//         if (targetedStatus === '*') {
+//             statusMatch = true; // Si '*' est sélectionné, toutes les demandes sont considérées comme correspondantes
+//         } else {
+//             statusMatch = (targetedStatus === '1' && status) || (targetedStatus === '0' && !status); // Inverser la comparaison
+//         }
+//         const dateMatch = (targetedDate === '') || (item.getAttribute('data-demande-date') === targetedDate);
+//         if (statusMatch && dateMatch) {
+//             item.classList.remove('d-none');
+//         } else {
+//             item.classList.add('d-none');
+//         }
+//     });
+// }
+// const demandeStatusSelect = document.getElementById('demandeStatusSelect');
+// demandeStatusSelect.addEventListener('change', applyDemandeContactFilter);
 
-const demandeDateSelect = document.getElementById('demande-date-select');
-demandeDateSelect.addEventListener('change', applyDemandeContactFilter);
+// const demandeDateSelect = document.getElementById('demande-date-select');
+// demandeDateSelect.addEventListener('change', applyDemandeContactFilter);
 
-applyDemandeContactFilter();
+// applyDemandeContactFilter();
 
 /*----------------- Consultations des animaux -----------------*/
 
@@ -740,7 +814,7 @@ async function getNonValidatedReviews(){
             }
             avis.forEach(avis=>{
                 let card = document.createElement('div');
-                card.classList.add('col-10');
+                card.classList.add('col-12');
                 card.classList.add('card');
                 card.innerHTML = `
                 <div class="card-header">
@@ -748,8 +822,8 @@ async function getNonValidatedReviews(){
                 </div>
                 <div class="card-body">
                     <p class="card-text">${avis.note}</p>
-                    <p class="card-text">${avis.avisContent}</p>
-                    <p class="card-text text-muted">${avis.createdAt}</p>
+                    <p class="card-text">${avis.Avis_content}</p>
+                    <p class="card-text text-muted">${formatDate(avis.createdAt)}</p>
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-success" onclick="validerAvis(${avis.id})">Valider</button>
@@ -777,7 +851,7 @@ async function validerAvis($id) {
         const response = await fetch('/admin/avis/valider/' + $id, requestOptions);
         if (response.status === 200) {
             console.log('Avis validé');
-            window.location.reload();
+            getNonValidatedReviews();
         } else {
             console.log('Avis non validé');
         }
@@ -799,13 +873,11 @@ async function supprimerAvis($id) {
         };
         const response = await fetch('/admin/avis/delete/' + $id, requestOptions);
         if (response.status === 200) {
-            console.log('Avis supprimé');
-            window.location.reload();
+            getNonValidatedReviews();
         } else {
             console.log('Avis non supprimé');
         }
         const result = await response.json();
-        console.log('result', result);
     } catch(error) {
         console.log('error', error);
     }
