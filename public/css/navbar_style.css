@@ -9,6 +9,7 @@
 @media (max-width:767px){
 
     .nav-item{ font-size:3vh;}
+    
         
     
 }
@@ -61,7 +62,11 @@
 
 footer{
     position: absolute;
+    left: -5%;
     z-index: 1000;
-    min-width: 100vh;
     --bs-gutter-x: 0 !important;
+}
+
+footer .navbar {
+    width: 120vw;
 }

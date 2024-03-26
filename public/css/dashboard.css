@@ -10,7 +10,10 @@
     .custom-container{
         margin-top: 0vh !important;
         overflow-x: scroll;
-        height: auto !important;
+        height: 80vh !important;
+    }
+    .container-header{
+        height: 2em !important;
     }
     #content{
         padding-left: 1vw !important;
