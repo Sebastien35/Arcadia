@@ -1,8 +1,35 @@
-const dateInput = document.getElementById('dateInput');
+/*-----------------------------------------------------------------------------------*/
+/*---------------------Affichage des informations de l'animal------------------------*/
+/*-----------------------------------------------------------------------------------*/
+
+document.addEventListener('DOMContentLoaded', function() {
+const infoBtn = document.querySelectorAll('.infoBtn');
+const infoContainer = document.getElementById('infoContainer');
+
+// userBtns.forEach(button => button.addEventListener('click', function() {
+//     FlushFeatures();
+//     FlushActive();
+//     getNonAdminUsers() 
+//     userContainer.classList.remove('d-none');
+//     button.classList.add('active'); // Use 'button' instead of 'userBtn' because 'button' is the current button being clicked
+// }));
+
+infoBtn.forEach(button=>button.addEventListener('click', function(){
+    flushActive();
+    flushFeatures();
+    infoContainer.classList.remove('d-none');
+    button.classList.add('active');
+}));
+
+
+/*-----------------------Trier informations -----------------------------------*/
+document.addEventListener('DOMContentLoaded', function() {
+const dateInput = document.querySelectorAll('.dateInput');
 const repas = document.querySelectorAll('.repas');
 const repasDate = document.querySelectorAll('.repasdate');
 
-dateInput.addEventListener('change', function() {
+if (dateInput) {
+dateInput.forEach(button=>button.addEventListener('click', function(){
     // Quelle option a été sélectionnée ?
     let selectedOption = parseInt(dateInput.value);
     // Quelle est la date d'aujourd'hui ?
@@ -47,6 +74,8 @@ dateInput.addEventListener('change', function() {
                 repasItem.classList.remove('d-none');
         }
     });
+}));
+}   
 });
 
 function isSameDay(date1, date2) {
@@ -60,6 +89,7 @@ const infoAnimalDateInput = document.getElementById('infoAnimalDateInput');
     const infoAnimal = document.querySelectorAll('.infoAnimal');
     const infoAnimalDate = document.querySelectorAll('.infoAnimalDate');
 
+    if (infoAnimalDateInput) {
     infoAnimalDateInput.addEventListener('change', function() {
         // Quelle option a été sélectionnée ?
         let selectedOption = parseInt(infoAnimalDateInput.value);
@@ -105,9 +135,137 @@ const infoAnimalDateInput = document.getElementById('infoAnimalDateInput');
             }
         });
     });
+    }
 
     function isSameDay(date1, date2) {
         return date1.getFullYear() === date2.getFullYear() &&
             date1.getMonth() === date2.getMonth() &&
             date1.getDate() === date2.getDate();
     }
+
+
+/*-----------------------------------------------------------------------------------*/
+/*---------------------Affichage des images de l'animal------------------------------*/
+/*-----------------------------------------------------------------------------------*/
+
+const imageBtn = document.querySelectorAll('.imageBtn');
+const imageContainer=document.getElementById('imageContainer');
+
+imageBtn.forEach(button=>button.addEventListener('click', function(){
+    flushActive();
+    flushFeatures();
+    // getAnimalImages();
+    imageContainer.classList.remove('d-none');
+    button.classList.add('active');
+}));
+
+
+
+
+// Supprimer une image:
+// 1. Récupérer l'id de l'image
+let deleteImageBtn = document.querySelectorAll('[data-image-id]');
+deleteImageBtn.forEach(button=>button.addEventListener('click', function(){
+    let imageId = button.getAttribute('data-image-id');
+    let imageIdContainer = document.getElementById('imageId');
+    imageIdContainer.value = imageId;
+    // console.log(imageId);
+}));
+
+// 2. Supprimer l'image
+let confirmDeleteImageBtn = document.getElementById('confirm-delete-image-btn');
+confirmDeleteImageBtn.addEventListener('click', deleteImage);
+async function deleteImage(){
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    let imageId = document.getElementById('imageId').value;
+    await fetch('/admin/image/delete/'+imageId, {
+        method: 'DELETE',
+        headers: myHeaders,
+        redirect: 'follow'
+    })
+    .then(response=>{
+        if(response.ok){
+        window.location.reload();
+        }else{
+            throw new Error('Erreur de suppression de l\'image');
+        }
+    })
+    .catch(error=>console.log('Erreur de suppression de l\'image', error));
+}
+
+
+
+
+
+// async function getAnimalImages(){
+//     $animalId = document.getElementById('animalId').value;
+//     await fetch('/animal/getImages/'+$animalId)
+//     .then(response=>{
+//         if(response.ok){
+//             return response.json();
+//         }else{
+//             throw new Error('Erreur de chargement des images');
+//         }
+//     })
+//     .then(result=>{
+//         let imageList = document.getElementById('imageList');
+//         imageList.innerHTML='';
+//         let images = result;
+//         if (images.length === 0) {
+//             imageList.innerHTML = '<p class="text-center">Pas d\'images disponibles</p>';
+//         }
+//         images.forEach(image=>{
+//             let imageElement = document.createElement('img');
+//             imageElement.src = '/images/additionnal_images'+image.imageName;
+//             imageElement.classList.add('img-fluid');
+//             imageElement.classList.add('m-2');
+//             imageList.appendChild(imageElement);
+//         })
+//     })
+    
+        
+            
+// }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function flushFeatures(){
+    infoContainer.classList.add('d-none');
+    imageContainer.classList.add('d-none');
+}
+
+function flushActive(){
+    infoBtn.forEach(button=>button.classList.remove('active'));
+    imageBtn.forEach(button=>button.classList.remove('active'));
+}
+
+function defaultBehavior(){
+    infoBtn.forEach(button=>button.classList.add('active'));
+    infoContainer.classList.remove('d-none');
+}
+
+defaultBehavior();
+
+});
