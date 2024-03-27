@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\AdditionalImagesRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -23,8 +24,7 @@ class AdditionalImages
     #[ORM\ManyToOne(inversedBy: 'additionalImages')]
     private ?animal $animal = null;
 
-    #[Vich\UploadableField(mapping: "additionnal_images", fileNameProperty: "imageName")]
-    private $imageFile;
+    
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -32,7 +32,9 @@ class AdditionalImages
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-
+    #[Assert\File(maxSize: "1024k", mimeTypes: ["image/webp"], mimeTypesMessage: "Please upload a valid image file")]
+    #[Vich\UploadableField(mapping: "additionnal_images", fileNameProperty: "imageName")]
+    private $imageFile;
 
     #[ORM\Column(type: "string",length:255, nullable: true)]
     private ?string $imageName = null;

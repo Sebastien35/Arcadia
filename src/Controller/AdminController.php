@@ -506,20 +506,30 @@ public function dashboard(
         int $id, 
         AnimalRepository $animalRepo, 
         EntityManagerInterface $em,
-        request $request,
+        InfoAnimalRepository $infoAnimalRepository,
+        RepasRepository $repasRepository,
+        AdditionalImagesRepository $additionalImagesRepository,
+        Request $request
         ):Response
     {
         $animal = $animalRepo->find($id);
         if (!$animal) {
             throw new AnimalNotFoundException("Aucun animal n'a été trouvé avec cet identifiant");
         }
-        $repas = $em->getRepository(repas::class)->findBy(['animal' => $id], ['datetime' => 'DESC']);
+        $repas = $repasRepository->findBy(['animal' => $id], ['datetime' => 'DESC']);
         if (!$repas){
             $repas = null;
         }
-        $infoAnimal = $em->getRepository(InfoAnimal::class)->findBy
+        $infoAnimal = $infoAnimalRepository->findBy
             (['animal' => $id], ['createdAt' => 'DESC']);
+        if (!$infoAnimal){
+            $infoAnimal = null;
+        }
 
+        $animalImages =  $additionalImagesRepository->findBy(['animal' => $id], ['createdAt' => 'DESC']);  
+        if (!$animalImages){
+            $animalImages = null;
+        }
         $form = $this->createForm(AdditionalImageType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -529,8 +539,10 @@ public function dashboard(
             $additionalImage->setCreatedAt(new DateTimeImmutable());
             $em->persist($additionalImage);
             $em->flush();
+            $this->addFlash('success', 'Image ajoutée avec succès');
             return $this->redirectToRoute('app_admin_showAnimal', ['id' => $id]);
             }catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
                 throw new \Exception('An error occured: ' . $e->getMessage());
             }
         }
@@ -540,7 +552,8 @@ public function dashboard(
             'animal' => $animal,
             'repas'=>$repas,
             'infoAnimals'=>$infoAnimal,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'animalImages' => $animalImages,
 
         ]);
     }
@@ -706,7 +719,23 @@ public function dashboard(
         return new JsonResponse(['message' => 'Commentaire deleted successfully'], Response::HTTP_OK);
     }catch(\Exception $e){
         return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
-    } 
+    }
+    }
+
+    #[Route('/image/delete/{id}', name: 'delete_image', methods: ['DELETE'])]
+    public function deleteImage(int $id, EntityManagerInterface $em, AdditionalImagesRepository $additionalImagesRepository): JsonResponse
+    {
+        try{
+        $image = $additionalImagesRepository->find($id);
+        if (!$image) {
+            return new JsonResponse(['error' => 'Image not found'], Response::HTTP_NOT_FOUND);
+        }
+        $em->remove($image);
+        $em->flush();
+        return new JsonResponse(['message' => 'Image deleted successfully'], Response::HTTP_OK);
+        }catch(\Exception $e){
+            return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 }
     
 }

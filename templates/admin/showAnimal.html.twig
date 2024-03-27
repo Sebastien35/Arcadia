@@ -106,7 +106,7 @@
         <div class="card-body">
             <table class="table table-striped" aria-labelledby="Repas de l'animal">
                 <label for="date">Trier par date</label>
-                <select id="dateInput" class="form-select">
+                <select  class="form-select dateInput">
                     <option value="" disabled selected>Choisir une option</option>"
                     <option value="0">Tous les repas</option>
                     <option value="1">Aujourd'hui</option>
@@ -144,8 +144,22 @@
 
 
 {# image container #}
+{% for flashMessage in app.flashes('success') %}
+<div class="alert alert-success" role="alert">
+    {{ flashMessage }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
 
-<div class="custom-container" id="imageContainer">
+{% for flashMessage in app.flashes('error') %}
+<div class="alert alert-danger" role="alert">
+    {{ flashMessage }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+
+<div id="imageContainer" class="d-none">
     <div class="container-header d-flex">
         <div class="container-header-title">
             <p>Images</p>
@@ -156,7 +170,22 @@
     </div>  
     <div class="container-body">
         <div class="row" id="imageList">
-            
+            {% for image in animalImages %}
+            <div class="col-lg-4 col-md-12 col-sm-12">
+                <div class="card">
+                    <img src="{{ asset('images/additionnal_images/' ~ image.imageName) }}" class="card-img-top" alt="image_{{ animal.getPrenom }}">
+                    <div class="card-body d-flex justify-content-around">
+                        <p class="card-text">{{ image.createdAt | date('d-m-Y') }}</p>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><p class="deleteImage" id="toggleDeleteImage" data-image-id="{{ image.id }}" data-bs-toggle="modal" data-bs-target="#deleteImageModal">Supprimer</p></li>
+                            </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
@@ -172,6 +201,7 @@
             <div class="modal-body">
                 <p> .WEBP Uniquement!</p>
                 {{ form_start(form) }}
+                {{ form_errors(form)}}
                 {{ form_row(form.imageFile) }}
             </div>
             <div class="modal-footer">
@@ -182,6 +212,29 @@
         </div>
     </div>
 </div>
+
+<div class="modal modal-fade" tabindex="-1" id="deleteImageModal" aria-labelledby="deleteImageModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Supprimer l'image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cette image?</p>
+                <input type="hidden" id="imageId">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-image-btn">Supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
 
 
 <script src="{{ asset('js/showAnimal.js') }}"></script>

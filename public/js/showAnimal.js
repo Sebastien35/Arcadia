@@ -2,6 +2,7 @@
 /*---------------------Affichage des informations de l'animal------------------------*/
 /*-----------------------------------------------------------------------------------*/
 
+document.addEventListener('DOMContentLoaded', function() {
 const infoBtn = document.querySelectorAll('.infoBtn');
 const infoContainer = document.getElementById('infoContainer');
 
@@ -22,11 +23,13 @@ infoBtn.forEach(button=>button.addEventListener('click', function(){
 
 
 /*-----------------------Trier informations -----------------------------------*/
-const dateInput = document.getElementById('dateInput');
+document.addEventListener('DOMContentLoaded', function() {
+const dateInput = document.querySelectorAll('.dateInput');
 const repas = document.querySelectorAll('.repas');
 const repasDate = document.querySelectorAll('.repasdate');
 
-dateInput.addEventListener('change', function() {
+if (dateInput) {
+dateInput.forEach(button=>button.addEventListener('click', function(){
     // Quelle option a été sélectionnée ?
     let selectedOption = parseInt(dateInput.value);
     // Quelle est la date d'aujourd'hui ?
@@ -71,6 +74,8 @@ dateInput.addEventListener('change', function() {
                 repasItem.classList.remove('d-none');
         }
     });
+}));
+}   
 });
 
 function isSameDay(date1, date2) {
@@ -84,6 +89,7 @@ const infoAnimalDateInput = document.getElementById('infoAnimalDateInput');
     const infoAnimal = document.querySelectorAll('.infoAnimal');
     const infoAnimalDate = document.querySelectorAll('.infoAnimalDate');
 
+    if (infoAnimalDateInput) {
     infoAnimalDateInput.addEventListener('change', function() {
         // Quelle option a été sélectionnée ?
         let selectedOption = parseInt(infoAnimalDateInput.value);
@@ -129,6 +135,7 @@ const infoAnimalDateInput = document.getElementById('infoAnimalDateInput');
             }
         });
     });
+    }
 
     function isSameDay(date1, date2) {
         return date1.getFullYear() === date2.getFullYear() &&
@@ -153,6 +160,39 @@ imageBtn.forEach(button=>button.addEventListener('click', function(){
 }));
 
 
+
+
+// Supprimer une image:
+// 1. Récupérer l'id de l'image
+let deleteImageBtn = document.querySelectorAll('[data-image-id]');
+deleteImageBtn.forEach(button=>button.addEventListener('click', function(){
+    let imageId = button.getAttribute('data-image-id');
+    let imageIdContainer = document.getElementById('imageId');
+    imageIdContainer.value = imageId;
+    // console.log(imageId);
+}));
+
+// 2. Supprimer l'image
+let confirmDeleteImageBtn = document.getElementById('confirm-delete-image-btn');
+confirmDeleteImageBtn.addEventListener('click', deleteImage);
+async function deleteImage(){
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    let imageId = document.getElementById('imageId').value;
+    await fetch('/admin/image/delete/'+imageId, {
+        method: 'DELETE',
+        headers: myHeaders,
+        redirect: 'follow'
+    })
+    .then(response=>{
+        if(response.ok){
+        window.location.reload();
+        }else{
+            throw new Error('Erreur de suppression de l\'image');
+        }
+    })
+    .catch(error=>console.log('Erreur de suppression de l\'image', error));
+}
 
 
 
@@ -228,3 +268,4 @@ function defaultBehavior(){
 
 defaultBehavior();
 
+});

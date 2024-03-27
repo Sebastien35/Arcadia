@@ -10,6 +10,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichFileType;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class AdditionalImageType extends AbstractType
 {
@@ -21,6 +23,7 @@ class AdditionalImageType extends AbstractType
             'required' => false,
             'allow_delete' => true,
             'download_uri' => true,
+            
         ]);
     }
 
