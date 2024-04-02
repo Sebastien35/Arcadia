@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      SSHPASS: ${{ secrets.SSHPASS }}
+      SSHPASS: ${{ secrets.SSHPASS }} #avc
 
     steps: 
       - uses: actions/checkout@v2
