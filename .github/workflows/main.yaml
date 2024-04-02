@@ -11,12 +11,13 @@ jobs:
       SSHPASS: ${{ secrets.SSHPASS }}
 
     steps: 
-    - uses: actions/checkout@v2
-    - name: Install sshpass & update apt 
-      run: |
-        sudo apt update
-        sudo apt install sshpass
+      - uses: actions/checkout@v2
+      
+      - name: Install sshpass & update apt 
+        run: |
+          sudo apt update
+          sudo apt install sshpass
 
-    - name: deploy
-      run: |
-        sshpass -e ssh -o strictHostKeyChecking=no -p $SSHPASS ${{APP_USER}}@${{APP_HOST}} "cd www/ && git pull origin main && composer install"
+      - name: deploy
+        run: |
+          sshpass -e ssh -o strictHostKeyChecking=no -p $SSHPASS ${{ secrets.APP_USER }}@${{ secrets.APP_HOST }} "cd www/ && git pull origin main && composer install"
