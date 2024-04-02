@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      SSHPASS: ${{ secrets.SSHPASS }}
+      SSHPASS: ${{ secrets.APP_PASS }}
 
     steps: 
     - uses: actions/checkout@v2
@@ -20,4 +20,4 @@ jobs:
 
     - name: deploy
       run: |
-        sshpass -e ssh -o strictHostKeyChecking=no -p $SSHPASS ${{APP_USER}}@${{APP_HOST}} "cd www/ && git pull origin main && composer install"
+        sshpass -e ssh -o strictHostKeyChecking=no -p $SSHPASS ${{ secrets.APP_USER}}@${{ secrets.APP_HOST}} "cd www/ && git pull origin main && composer install"
