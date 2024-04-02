@@ -1,28 +1,22 @@
 name: CD
-on 
+on:
   push:
     branches:
       - main
 jobs:
   deploy:
-    runs-on : ubuntu-latest
+    runs-on: ubuntu-latest
     
     env:
       SSHPASS: ${{ secrets.SSHPASS }}
 
     steps: 
-    - uses : actions/checkout@v2
+    - uses: actions/checkout@v2
     - name: Install sshpass & update apt 
-      run: sudo apt update && sudo apt install sshpass
+      run: |
+        sudo apt update
+        sudo apt install sshpass
 
-
-    - name: test deploy
-      run: 
-      sshpass -e ssh -o strictHostKeyChecking=no -p $SSHPASS ${{APP_USER}}@${{APP_HOST}} 
-      " cd www/ &&
-      git pull origin main &&
-      composer install
-      "
-
-
-      
+    - name: deploy
+      run: |
+        sshpass -e ssh -o strictHostKeyChecking=no -p $SSHPASS ${{APP_USER}}@${{APP_HOST}} "cd www/ && git pull origin main && composer install"
