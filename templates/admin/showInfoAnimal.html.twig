@@ -16,7 +16,7 @@
 </style>
 
 <nav class="nav navbar bg-dark mt-5">
-    <a class="nav-item" href="/admin/dashboard">Espace administrateur</a>
+    <a class="nav-item" href="/admin/">Espace administrateur</a>
 </nav>
 
 <div class="container">
@@ -27,7 +27,11 @@
         <div class="container-body justify-content-center">
             <p> Le {{infoAnimal.createdAt|date('d-m-Y')}} </p></br>
             <p> Animal: {{ infoAnimal.animal.prenom }}</p>
+            {% if infoAnimal.animal.habitat is not null %}
             <p>Habitat:{{infoAnimal.animal.habitat.nom}}</p><br>
+            {% else %}
+            <p>Habitat: Aucun habitat n'est associé à cet animal.</p><br>
+            {% endif %}
             <p>Etat:{{infoAnimal.etat}} </p>
             <p>Details: 
             {% if infoAnimal.details != null %}

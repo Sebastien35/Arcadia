@@ -13,6 +13,7 @@ use DateTimeImmutable;
 use App\Service\Sanitizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
+use App\Entity\Zoo;
 
 
 #[Route('/contact', name: 'app_contact_')]
@@ -52,6 +53,7 @@ public function index(Request $request): Response
                     $this->sanitizer->sanitizeHtml($form->get('mail')->getData()));
                 $demandeContact->setCreatedAt(new DateTimeImmutable());
                 $demandeContact->setAnswered(false);
+                $demandeContact->setZoo($form->get('zoo')->getData());
                 $this->entityManager->persist($demandeContact);
                 $this->entityManager->flush();
                 
@@ -61,7 +63,7 @@ public function index(Request $request): Response
                 // Rediriger vers la page de contact
                 return $this->redirectToRoute('app_contact_index');
             } catch (\Exception $e) {
-                $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage() );
+                $this->addFlash('error', 'Une erreur est survenue');
             }
         }
     }
@@ -81,7 +83,10 @@ public function index(Request $request): Response
         try{
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         $contacts = $this->entityManager->getRepository(DemandeContact::class)->findAll();
-        return JsonResponse::fromJsonString($this->serializer->serialize($contacts, 'json'), Response::HTTP_OK);
+        $context = ['groups' => 'demande:read'];
+        return JsonResponse::fromJsonString($this->serializer->serialize
+        ($contacts, 'json', $context), 
+        Response::HTTP_OK);
     }   catch(\Exception $e){
         throw new \Exception($e->getMessage());
     }

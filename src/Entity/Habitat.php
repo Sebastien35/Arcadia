@@ -40,13 +40,17 @@ class Habitat
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'habitat', targetEntity: CommentaireHabitat::class)]
+    #[ORM\OneToMany(mappedBy: 'Habitat', targetEntity: CommentaireHabitat::class, cascade: ['remove'])]
     private Collection $commentaireHabitats;
+
+    #[ORM\OneToMany(mappedBy: 'habitat', targetEntity: AdditionalImages::class)]
+    private Collection $additionalImages;
 
     public function __construct()
     {
         $this->animals = new ArrayCollection();
         $this->commentaireHabitats = new ArrayCollection();
+        $this->additionalImages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -170,6 +174,36 @@ class Habitat
             // set the owning side to null (unless already changed)
             if ($commentaireHabitat->getHabitat() === $this) {
                 $commentaireHabitat->setHabitat(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AdditionalImages>
+     */
+    public function getAdditionalImages(): Collection
+    {
+        return $this->additionalImages;
+    }
+
+    public function addAdditionalImage(AdditionalImages $additionalImage): static
+    {
+        if (!$this->additionalImages->contains($additionalImage)) {
+            $this->additionalImages->add($additionalImage);
+            $additionalImage->setHabitat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdditionalImage(AdditionalImages $additionalImage): static
+    {
+        if ($this->additionalImages->removeElement($additionalImage)) {
+            // set the owning side to null (unless already changed)
+            if ($additionalImage->getHabitat() === $this) {
+                $additionalImage->setHabitat(null);
             }
         }
 

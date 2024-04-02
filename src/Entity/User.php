@@ -47,7 +47,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'auteur', targetEntity: InfoAnimal::class)]
     private Collection $infoAnimals;
 
+    #[ORM\Column]
+    private int $zoo_id;
 
+    public function getZooId(): ?int
+    {
+        return $this->zoo_id;
+    }
+    public function setZooId(int $zoo_id): static
+    {
+        $this->zoo_id = $zoo_id;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -82,9 +94,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every User at least has ROLE_USER
-        $roles[] = 'ROLE_EMPLOYE';
-
         return array_unique($roles);
     }
 
@@ -144,13 +153,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
-    public function __construct(string $email, string $password, array $roles, \DateTimeImmutable $createdAt, ?\DateTimeImmutable $updatedAt,)
+    public function __construct(
+        string $email, 
+        string $password, 
+        array $roles, 
+        \DateTimeImmutable $createdAt, 
+        ?\DateTimeImmutable $updatedAt,
+        int $zoo_id
+        )
     {
         $this->email = $email;
         $this->password = $password;
         $this->roles = $roles;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->zoo_id = $zoo_id;
         
         
     }

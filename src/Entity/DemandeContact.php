@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\DemandeContactRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DemandeContactRepository::class)]
 class DemandeContact
@@ -12,26 +13,48 @@ class DemandeContact
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("demande:read")]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups("demande:read")]
     private ?string $titre = null;
 
+    #[Groups("demande:read")]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $message = null;
 
+    #[Groups("demande:read")]
     #[ORM\Column(length: 255)]
     private ?string $mail = null;
 
+    #[Groups("demande:read")]
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
+    #[Groups("demande:read")]
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $answered_at = null;
 
+    #[Groups("demande:read")]
     #[ORM\Column]
     private ?bool $answered = null;
 
+    #[ORM\ManyToOne(inversedBy: 'demandeContacts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Zoo $zoo = null;
+
+    public function getZoo(): ?ZOO
+    {
+        return $this->zoo;
+    }
+    public function setZoo(?ZOO $zoo): static
+    {
+        $this->zoo = $zoo;
+
+        return $this;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

@@ -30,12 +30,15 @@ class RegistrationController extends AbstractController
         MailerService $mailerService,
     ): Response
     {
+    try{
+        
     $user = new User(
         $request->request->get('email'),
         $request->request->get('plainPassword'),
         [$request->request->get('Roles')],
         new \DateTimeImmutable(),
         null,
+        1
     );
     $email = $request->request->get('email');
     $context = ['user'=>$user];
@@ -49,6 +52,9 @@ class RegistrationController extends AbstractController
     
     $mailerService->sendWelcomeEmail($email, $context);
     return $this->redirectToRoute('app_admin_index');
+    }catch(\Exception $e){
+    return $this->json(['error' => $e->getMessage()], 500);
+    }
 }
 
 

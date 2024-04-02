@@ -15,6 +15,9 @@ use App\Entity\Animal;
 use App\Repository\AnimalRepository;
 use App\Document\AnimalVisit;
 use App\Entity\InfoAnimal;
+use App\Exception\AnimalNotFoundException;
+use App\Repository\InfoAnimalRepository;
+use Doctrine\ORM\EntityManager;
 use PHPUnit\Util\Json;
 
 #[Route('/animal', name: 'app_animal_')]
@@ -33,43 +36,51 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/show/{id}', name: 'show', methods: ['GET'])]
-    public function showAnimal(int $id): Response
+    public function showAnimal(int $id, 
+    AnimalRepository $animalRepo, 
+    DocumentManager $dm, 
+    InfoAnimalRepository $infoAnimalRepo, 
+    ): Response
     {   
-        $animal = $this->entityManager->getRepository(Animal::class)->find($id);
+        $animal = $animalRepo->find($id);
         if(!$animal){
-            throw $this->createNotFoundException("No service found for {$id} id");
+            throw new AnimalNotFoundException(); 
         }
-        
-        $infoAnimal = $this->entityManager->getRepository(InfoAnimal::class)->findBy(
+        $infoAnimal = $infoAnimalRepo->findBy(
             ['animal' => $id],
             ['createdAt' => 'DESC'],
             1
         );
-        return $this->render('animal/show.html.twig', [
-            'animal' => $animal,
-            'infoAnimal' => $infoAnimal,
-            
-        ]);
-    }
 
-    #[Route('/visit/{id}', name: 'visit', methods: ['POST'])]
-    public function incrementVisit(int $id): JsonResponse
-    {
-        try{
-        $visit = $this->dm->getRepository(AnimalVisit::class)->findOneBy(['animalId' => $id]);
+        $visit = $dm->getRepository(AnimalVisit::class)->findOneBy(['animalId' => $id]);
         if(!$visit){
             $visit = new AnimalVisit();
             $visit->setAnimalId($id);
-            $visit->setAnimalName($this->entityManager->getRepository(Animal::class)->find($id)->getPrenom());
+            $visit->setAnimalName($animalRepo->find($id)->getPrenom());
         }
         $visit->incrementVisits();
+        $dm->persist($visit);
+        $dm->flush();
+        return $this->render('animal/show.html.twig', [
+            'animal' => $animal,
+            'infoAnimal' => $infoAnimal,
+        ]);
+    }
 
-        $this->dm->persist($visit);
-        $this->dm->flush();
-        return new JsonResponse(status: 200);
-    }catch(\Exception $e){
-        return new JsonResponse('error' . $e->getMessage()  , 500);
-    }
-    return new Response('error');
-    }
+    #[Route('/getImages/{id}', name: 'getImages', methods: ['GET'])]
+    public function getImages(int $id, AnimalRepository $animalRepo): JsonResponse
+    {   
+        try{
+        $animal = $animalRepo->find($id);
+        if(!$animal){
+            throw new AnimalNotFoundException(); 
+        }
+        $images = $animal->getAdditionalImages();
+        return new JsonResponse($images);
+        }catch(\Exception $e){
+            return new JsonResponse('error');}
+        }
+    
+
+    
 }

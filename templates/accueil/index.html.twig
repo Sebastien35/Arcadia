@@ -64,20 +64,22 @@
 <div class="dark" id="animal-container">
   <div class="text-center">
     <h2> Nos animaux</h2>
-    <p> Portraits de quelque-uns de nos animaux</p>
+    <p> Portraits de nos animaux les plus populaires</p>
   </div>
   <div class="container">
-    <div class="row">
+    <div class="row" id="4animaux">
       {% for animal in animaux %}
         <div class="col-sm-12 col-lg-3 d-flex mt-3 mb-3">
-          <div class="card animal-card">
+          <div class="card">
             <a href="/animal/show/{{animal.id}}"><img src="{{ asset('images/animal/' ~ animal.imageName)}}" class="card-img-top animal-image" alt="..."></a>
-            <div class="card-body darker">
-              <h5 class="card-title text-white text-center">{{ animal.prenom }}</h5>
+            <div class="card-body">
+              <h5 class="card-title text-dark text-center">{{ animal.prenom }}</h5>
             </div>
           </div>
         </div>
       {% endfor %}
+    </div>
+
     </div>
   </div>
 
@@ -114,6 +116,9 @@
   <div id="carouselAvis" class="carousel slide carousel-fade">
     <div class="container">
       <div class="carousel-inner">
+        {% if avis is empty %}
+          <p>Il n'y a pas encore d'avis</p>
+        {% endif %}
         {% for singleAvis in avis %}
           {% if singleAvis.validation == 1 %}
           {% if loop.first %}
@@ -124,9 +129,7 @@
               <div class="card avis-card  mt-3 mb-5">
                 <div class="card-header d-flex justify-content-between text-white">
                   <h5 class="card-title">{{singleAvis.pseudo}}</h5>
-                  <p class="card-text">{{singleAvis.getCreatedAt|date('d/m/Y')}}</p>
-                </div>
-                <div class="card-body text-dark">
+                  <div class="notation">
                   {% for star in range(1, 5) %}  <!-- Adjusted to iterate up to 5 for half stars -->
                     {% if star <= singleAvis.note %}  <!-- Full star logic -->
                         <i class="fa-solid fa-star"></i>
@@ -138,7 +141,12 @@
                         {% endif %}
                     {% endif %}
                   {% endfor %}
-                  <p class="card-text">{{ singleAvis.getAvisContent }}</p>
+                  </div>
+                  
+                </div>
+                <div class="card-body text-dark">
+                  <p class="card-text text-muted text-center">{{singleAvis.getCreatedAt|date('d/m/Y')}}</p>
+                  <p class="card-text text-center">{{ singleAvis.getAvisContent }}</p>
                 </div>
               </div>
             </div>
@@ -166,34 +174,21 @@
       <p>Les horaires ne sont pas encore disponibles</p>
       {% else %}
       {% for horaire in horaires %}
-      <tr>
-        <td>{{ horaire.jour }}</td>
-        {% if horaire.isOuvert %}
-        <td>{{ horaire.HOuverture|date ('H:i')  }}</td>
-        <td>{{ horaire.HFermeture|date ('H:i') }}</td>
-        {% else %}
-        <td>Fermé</td>
-        <td>Fermé</td>
-        {% endif %}
-      </tr>
-      {% endfor %}
+        <tr>
+          <td>{{ horaire.jour }}</td>
+          {% if horaire.isOuvert %}
+          <td>{{ horaire.HOuverture|date ('H:i')  }}</td>
+          <td>{{ horaire.HFermeture|date ('H:i') }}</td>
+          {% else %}
+          <td>Fermé</td>
+          <td>Fermé</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
       {% endif %}
-      <td>
     </table>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 {% endblock %}

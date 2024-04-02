@@ -20,6 +20,11 @@
                     {{ form_start(form, {'action': path('app_contact_index'), 'method':'POST'}) }}
                     {{ form_errors(form) }}
                     <div class="mb-3">
+                        <p> Mon avis concerne le zoo
+                            {{ form_widget(form.zoo, {'attr': {'class': 'form-control', 'required': true}}) }}
+                        </p>
+                    </div>
+                    <div class="mb-3">
                         {{ form_label(form.titre, 'Titre')}}
                         {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
                         {{ form_errors(form.titre) }}

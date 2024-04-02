@@ -31,7 +31,6 @@ class Animal
     #[ORM\Column]
     private ?string $race = null;
 
-    
     #[ORM\ManyToOne(inversedBy: 'animals')]
     #[Groups("animal:read")]
     private ?Habitat $Habitat = null;
@@ -43,7 +42,6 @@ class Animal
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[Vich\UploadableField(mapping: "animal", fileNameProperty: "imageName")]
-    
     private $imageFile;
 
     #[ORM\Column(type: "string",length:255, nullable: true)]
@@ -52,17 +50,21 @@ class Animal
 
     
 
-    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Repas::class)]
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Repas::class, cascade: ["remove"])]
     private Collection $repas;
 
-    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: InfoAnimal::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: InfoAnimal::class, orphanRemoval: true, cascade: ["remove"])]
     private Collection $infoAnimals;
+
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: AdditionalImages::class)]
+    private Collection $additionalImages;
 
     
     public function __construct()
     {
         $this->repas = new ArrayCollection();
         $this->infoAnimals = new ArrayCollection();
+        $this->additionalImages = new ArrayCollection();
     }
 
     
@@ -216,6 +218,36 @@ class Animal
             // set the owning side to null (unless already changed)
             if ($infoAnimal->getAnimal() === $this) {
                 $infoAnimal->setAnimal(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AdditionalImages>
+     */
+    public function getAdditionalImages(): Collection
+    {
+        return $this->additionalImages;
+    }
+
+    public function addAdditionalImage(AdditionalImages $additionalImage): static
+    {
+        if (!$this->additionalImages->contains($additionalImage)) {
+            $this->additionalImages->add($additionalImage);
+            $additionalImage->setAnimal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdditionalImage(AdditionalImages $additionalImage): static
+    {
+        if ($this->additionalImages->removeElement($additionalImage)) {
+            // set the owning side to null (unless already changed)
+            if ($additionalImage->getAnimal() === $this) {
+                $additionalImage->setAnimal(null);
             }
         }
 

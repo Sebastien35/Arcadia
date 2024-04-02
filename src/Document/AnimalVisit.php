@@ -48,6 +48,13 @@ class AnimalVisit
         return $this;
     }
 
+    public function setVisits(int $visits): self
+    {
+        $this->visits = $visits;
+
+        return $this;
+    }
+
     public function getAnimalName(): ?string
     {
         return $this->animal_name;

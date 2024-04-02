@@ -1,12 +1,63 @@
-/*-----------Validation / Suppression avis 05/02/2024 ------------------ */
-const avisContainer = document.getElementById('avisContainer');
-const BtnSupprimer = avisContainer.querySelectorAll('.BtnSupprimer');
 
-if(BtnSupprimer.length > 0){
-    BtnSupprimer.forEach(button=>{
-        button.addEventListener('click', deleteAvis);
-    });
-};
+/*-----------Affichage avis 14/02/2024 ------------------ */
+const avisBtns = document.querySelectorAll('.avisBtn');
+const avisContainer = document.getElementById('avisContainer');
+
+avisBtns.forEach(button => button.addEventListener('click', function(){
+    flushFeatures();
+    FlushActive();
+    button.classList.add('active');
+    avisContainer.classList.remove('d-none');
+    getNonValidatedReviews();
+}));
+
+/*-----------Validation / Suppression avis 05/02/2024 ------------------ */
+async function getNonValidatedReviews(){
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        await fetch('/employe/avis/getNonValidated')
+        .then(response => {
+            if(response.ok){
+                return response.json();
+            } else {
+                throw new Error('Erreur');
+            }
+        })
+        .then(result => {
+            let avisContainer = document.getElementById('avisContainer');
+            let avisList = document.getElementById('avisList');
+            let avis = result;
+            avisList.innerHTML = '';
+            if(avis.length === 0){
+                avisList.innerHTML = '<p class="text-center">Aucun avis à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
+            }
+            avis.forEach(avis=>{
+                let card = document.createElement('div');
+                card.classList.add('col-12');
+                card.classList.add('card');
+                card.innerHTML = `
+                <div class="card-header">
+                    ${avis.pseudo}
+                </div>
+                <div class="card-body">
+                    <p class="card-text">${avis.note}</p>
+                    <p class="card-text">${avis.Avis_content}</p>
+                    <p class="card-text text-muted">${formatDate(avis.createdAt)}</p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-success" onclick="validerAvis(${avis.id})">Valider</button>
+                    <button class="btn btn-danger" onclick="supprimerAvis(${avis.id})">Supprimer</button>
+                </div>
+                `;
+                avisList.appendChild(card);
+            }
+            )
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 async function validerAvis($id) {
     try {
@@ -18,9 +69,9 @@ async function validerAvis($id) {
             redirect:'follow'
         };
         const response = await fetch('/employe/avis/valider/' + $id, requestOptions);
-        if (response.status === 200) {
+        if (response.ok) {
             console.log('Avis validé');
-            window.location.reload();
+            getNonValidatedReviews();
         } else {
             console.log('Avis non validé');
         }
@@ -42,39 +93,21 @@ async function supprimerAvis($id) {
         };
         const response = await fetch('/employe/avis/delete/' + $id, requestOptions);
         if (response.status === 200) {
-            console.log('Avis supprimé');
-            window.location.reload();
+            getNonValidatedReviews();
         } else {
             console.log('Avis non supprimé');
         }
         const result = await response.json();
-        console.log('result', result);
     } catch(error) {
         console.log('error', error);
     }
 }
 
-document.addEventListener('DOMContentLoaded', function(){
-const avisList  = document.getElementById('avisList');
-if(avisList.children.length === 0){
-    avisList.innerHTML = '<p class="text-center">Aucun avis à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
-};
-});
 
 
 
 
-/*-----------Affichage avis 14/02/2024 ------------------ */
 
-const avisBtns = document.querySelectorAll('.avisBtn');
-
-avisBtns.forEach(button=>{button.addEventListener('click', function(){
-    flushFeatures();
-    FlushActive();
-    button.classList.add('active');
-    avisContainer.classList.remove('d-none');
-    });
-});
 
 
 /*-----------Affichage services 14/02/2024 ------------------ */
@@ -160,7 +193,7 @@ nourritureBtns.forEach(button=>{
     });
 });
 
-/*-----------demandes de contact 05/03/2024 ------------------ */
+//*-----------demandes de contact 05/03/2024 ------------------ */
 const contactContainer = document.getElementById('contactContainer');
 const contactBtns = document.querySelectorAll('.contactBtn');
 
@@ -182,6 +215,7 @@ async function getAllDemandes(){
             return response.json();
         } else {
             throw new Error('Erreur');
+            window.location.reload();
         }
     })
     .then(result => {
@@ -199,24 +233,29 @@ async function getAllDemandes(){
             card.classList.add('card');
             card.classList.add('demande-card');
             card.classList.add('mb-5')
-            card.setAttribute('data-demande-status', demande.reponse);
-            card.setAttribute('data-demande-date', demande.createdAt);
+            card.setAttribute('data-demande-status', demande.answered);
+            card.setAttribute('data-demande-date', toYMD(demande.created_at));
             card.setAttribute('data-demande-id', demande.id);
             card.innerHTML = `
                 <div class="card-header d-flex justify-content-between">
                 <h5 class="card-title">${demande.titre}</h5>
-                <p class="text-muted">${formatDate(demande.createdAt)}</p>
+                <p class="text-muted">${toYMD(demande.created_at)}</p>
             </div>
             <div class="card-body">  
                 <p class="text-muted">${demande.mail}</p>                             
                 <p class="card-text">${demande.message}</p>
-
             </div>
             <div class="card-footer mb-5">
                 <button type="button" class="btn btn-primary actionBtn" data-bs-toggle="modal" data-bs-target="#repondreModal" data-demande-id="${demande.id}">Répondre</button>
                 <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
             </div>
             `;
+            if (demande.answered) {
+                card.querySelector('.card-footer').innerHTML = `
+                <p class="text-muted">Répondu le ${formatDate(demande.answered_at)}</p>
+                <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
+                `;               
+            }
             demandesList.appendChild(card);
             let actionBtns = card.querySelectorAll('.actionBtn');
             actionBtns.forEach(button => button.addEventListener('click', function(){
@@ -236,6 +275,15 @@ function formatDate(dateString) {
     return `${day}-${month}-${year}`;
 }
 
+function toYMD(dateISO){
+    let date = new Date(dateISO);
+    let year = date.getFullYear();
+    let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed, so add 1
+    let day = date.getDate().toString().padStart(2, '0');
+    let formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+}
+
 
 // Répondre à une demande de contact
 
@@ -247,11 +295,9 @@ async function sendResponse() {
     myHeaders.append('Content-Type', 'application/json');
     let dataForm = new FormData(repondreForm);
     let targetId = document.getElementById('demandeId').value;
-    console.log('targetId', targetId)
     let raw = JSON.stringify({
         "response": dataForm.get('reponse')
     });
-    console.log('raw', raw);
     let requestOptions = {
         method: 'POST',
         headers: myHeaders,
@@ -263,9 +309,7 @@ async function sendResponse() {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        // Handle success
-        console.log('Response sent successfully');
-        window.location.reload();
+        getAllDemandes();
     } catch (error) {
         // Handle error
         console.error('Error:', error);
@@ -280,13 +324,12 @@ async function deleteDemande() {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         let targetId = document.getElementById('demandeId').value;
-        console.log('targetId', targetId);
         const response = await fetch(`/employe/demande/delete/${targetId}`, {
             method: 'DELETE',
             headers: myHeaders,
         });
         if (response.ok) {
-            window.location.reload();
+            getAllDemandes();
             return await response.json();
         } else {
             throw new Error('Erreur');
@@ -295,8 +338,6 @@ async function deleteDemande() {
         console.log(error);
     }
 }
-
-
 
 /* Affichage des fonctionnalités de l'employé 14/02/2024 ------------------ */
 

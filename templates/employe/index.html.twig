@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello EmployeController!{% endblock %}
+{% block title %}Espace employé{% endblock %}
 
 {% block body %}
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
@@ -61,7 +61,7 @@
                         <p role="button" id="contactBtn" class="sidebar-item contactBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-envelope"></i> Contact</p>
                     </li>
                     <li class="mt-2 mb-3">
-                        <a class="nav-item btn btn-danger" href="/logout" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ></i>Se déconnecter</a>
                     </li>
                 </ul>
             </div>
@@ -217,8 +217,10 @@
                     <div class="mb-3">
                         {{form_label(form.quantite, 'Quantité')}}
                         {{form_widget(form.quantite, {'attr': {'class': 'form-control'}})}}
-                    </div>             
-                    <button type="submit" class="btn btn-primary">Valider</button>       
+                    </div>          
+                    <div class="d-flex justify-content-center" >  
+                        <button type="submit" class="btn btn-primary">Valider</button>   
+                    </div>    
                     {{form_end(form)}}
                 </div>           
             </div>    
@@ -285,7 +287,7 @@
                             <input type="hidden" id="demandeId" name="demandeId">
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" id="btnConfirmDeleteDemande">Supprimer</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="btnConfirmDeleteDemande">Supprimer</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                         </div>
                     </div>

@@ -32,7 +32,8 @@ class UserFixtures extends Fixture
             $UD['password'],
             $UD['roles'],
             new \DateTimeImmutable(),
-            null
+            null,
+            1
         );
         $user->setPassword($this->passwordHasher->hashPassword($user, $UD['password']));
         $user->setCreatedAt(new \DateTimeImmutable());

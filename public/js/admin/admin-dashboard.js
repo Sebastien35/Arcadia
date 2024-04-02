@@ -11,86 +11,85 @@ userBtns.forEach(button => button.addEventListener('click', function() {
     button.classList.add('active'); // Use 'button' instead of 'userBtn' because 'button' is the current button being clicked
 }));
 //get all users
-async function getNonAdminUsers(){
+async function getNonAdminUsers() {
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     await fetch('/admin/user/nonAdmins')
-    .then(response => {
-        if(response.ok){
-            return response.json();
-        } else {
-            throw new Error('Erreur');
-        }   
-    })
-    .then(result => {
-        let userTableBody = document.getElementById('userTableBody');
-        userTableBody.innerHTML = '';
-        let users = result;
-        if(users.length === 0){
-            userTableBody.innerHTML = '<p class="text-center">Aucun utilisateur à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
-        }
-        let row = document.createElement('tr');
-        row.classList.add('userRow');
-        users.forEach(user=>{
-            row.setAttribute('data-user-id', user.id);
-            row.innerHTML = `
-            <td>${user.id}</td>
-            <td>${user.email}</td>
-            <td>${user.roles}</td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    </button>
-                    <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
-                        <li class="btn btn-danger mb-1" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="${user.id}"><i class="fa-solid fa-trash"></i></li>
-                        <li class="btn btn-primary  mb-1" onClick="goEditUser(${user.id})"><i class="fa-solid fa-pencil"></i></li>
-                    </div> 
-                </div>
-            </td>
-            `;
-            userTableBody.appendChild(row);
-            row = document.createElement('tr');
-            row.classList.add('userRow');
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Erreur');
+            }
+        })
+        .then(result => {
+            let userTableBody = document.getElementById('userTableBody');
+            userTableBody.innerHTML = '';
+            let users = result;
+            if (users.length === 0) {
+                userTableBody.innerHTML = '<p class="text-center">Aucun utilisateur à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
+            }
+            users.forEach(user => {
+                let row = document.createElement('tr');
+                row.classList.add('userRow');
+                row.setAttribute('data-user-id', user.id);
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.email}</td>
+                    <td>${user.roles}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu mb-2" >  
+                                <ul>
+                                <li class="btn btn-danger mb-1" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="${user.id}"><i class="fa-solid fa-trash"></i></li>
+                                <li class="btn btn-primary  mb-1"  data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="${user.id}"><i class="fa-solid fa-pencil"></i></li>
+                                </ul>  
+                            </div> 
+                        </div>
+                    </td>
+                `;
+                userTableBody.appendChild(row);
+            });
+
+            // Now, attach event listeners to delete buttons after they have been created
+            const deleteUserBtns = document.querySelectorAll('[data-user-id]');
+            deleteUserBtns.forEach(button => {
+                button.addEventListener('click', function () {
+                    const userId = button.getAttribute('data-user-id');
+                    const userIdContainer = document.getElementById('user-id');
+                    userIdContainer.value = userId;
+                });
+            });
         });
-});
 }
+
 // Delete User:
-document.addEventListener('DOMContentLoaded', function(){
-    const deleteUserBtns = document.querySelectorAll('[data-user-id]');
-    deleteUserBtns.forEach(button=>{
-        button.addEventListener('click', function(){
-            const userId = button.getAttribute('data-user-id');
-            const userIdContainer = document.getElementById('user-id');
-            userIdContainer.value = userId;
-        });
-    });
-});
-
-
 const confirmDeleteUserBtn = document.getElementById('confirm-delete-user-btn');
 confirmDeleteUserBtn.addEventListener('click', deleteUser);
 
-function deleteUser(){
-    let targetId = document.getElementById('user-id').value; // Use 'user-id' instead of 'userId'
+function deleteUser() {
+    let targetId = document.getElementById('user-id').value;
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
-    fetch(`/admin/user/delete/${targetId}`, { // Use template literal for URL
-        method: 'DELETE',
-        headers: myHeaders,
-        redirect: 'follow'
-    })
-    .then(response => {
-        if(response.ok){
+    fetch(`/admin/user/delete/${targetId}`, {
+            method: 'DELETE',
+            headers: myHeaders,
+            redirect: 'follow'
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();
+                return response.json();
+            } else {
+                throw new Error('Erreur');
+            }
+        })
+        .then(result => {
             window.location.reload();
-            return response.json();
-        }else{
-            throw new Error('Erreur');
-        }
-    })
-    .then(result => {
-        window.location.reload();
-    })
-    .catch(error => console.log(error));
+        })
+        .catch(error => console.log(error));
 }
 
 // Edit User:
@@ -104,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     });
 });
+
 
 const confirmEditUserBtn = document.getElementById('confirm-edit-user-btn');
 confirmEditUserBtn.addEventListener('click', editUser);
@@ -309,6 +309,9 @@ async function getAllInfoAnimals(){
         row.classList.add('infoAnimalRow');
         
         infoAnimals.forEach(infoAnimal=>{
+            if(infoAnimal.auteur === null){
+                infoAnimal.auteur = {email: 'Utilisateur supprimé'};
+            }
             row.setAttribute('data-animal-id', infoAnimal.animal.id);
             row.setAttribute('data-infoAnimal-date', toYMD(infoAnimal.createdAt));
             row.innerHTML = `
@@ -322,7 +325,7 @@ async function getAllInfoAnimals(){
                     </button>
                     <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
                         <li class="btn btn-danger mb-1" id="delete-infoAnimal" data-bs-toggle="modal" data-bs-target="#deleteInfoAnimalModal" data-infoAnimal-id="${infoAnimal.id}"><i class="fa-solid fa-trash"></i></li>
-                        <li class="brn btn-info  mb-1" onClick="goSeeInfoAnimal(${infoAnimal.id})"><i class="fa-regular fa-eye"></i></li>
+                        <li class="btn btn-info  mb-1" onClick="goSeeInfoAnimal(${infoAnimal.id})"><i class="fa-regular fa-eye"></i></li>
                     </div> 
                 </div>
             </td>
@@ -330,6 +333,14 @@ async function getAllInfoAnimals(){
             infoAnimalTableBody.appendChild(row);
             row = document.createElement('tr');
             row.classList.add('infoAnimalRow');
+        });
+        const btndelteinfoAnimals = document.querySelectorAll('[data-infoAnimal-id]');
+        btndelteinfoAnimals.forEach(button=>{
+            button.addEventListener('click', function(){
+            const infoAnimalId = button.getAttribute('data-infoAnimal-id');
+            const infoAnimalIdContainer = document.getElementById('infoAnimal-id');
+            infoAnimalIdContainer.value = infoAnimalId;
+            });
         });
     });
 }
@@ -345,14 +356,7 @@ function goSeeInfoAnimal(id){
     window.location.href = '/admin/infoAnimal/show/'+id;
 }
 
-const btndelteinfoAnimals = document.querySelectorAll('[data-infoAnimal-id]');
-btndelteinfoAnimals.forEach(button=>{
-    button.addEventListener('click', function(){
-        const infoAnimalId = button.getAttribute('data-infoAnimal-id');
-        const infoAnimalIdContainer = document.getElementById('infoAnimal-id');
-        infoAnimalIdContainer.value = infoAnimalId;
-    });
-});
+
 
 const confirmDeleteinfoAnimalBtn = document.getElementById('confirm-delete-infoAnimal-btn');
 confirmDeleteinfoAnimalBtn.addEventListener('click', deleteInfoAnimal);
@@ -362,13 +366,13 @@ async function deleteInfoAnimal() {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         let targetId = document.getElementById('infoAnimal-id').value;        
-        const response = await fetch(`/admin/infoAnimals/delete/${targetId}`, {
+        const response = await fetch(`/admin/infoAnimal/delete/${targetId}`, {
             method: 'DELETE',
             headers: myHeaders,
         });
         if (response.ok) {
             const result = await response.json();
-            window.location.reload();
+            getAllInfoAnimals();
             return result;
         } else {
             throw new Error('Erreur');
@@ -419,59 +423,71 @@ servicesBtns.forEach(button => button.addEventListener('click', function(){
     button.classList.add('active');
 }));
 
-async function getAllServices(){
+async function getAllServices() {
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     await fetch('/services/all')
-    .then(response => {
-        if(response.ok){
-            return response.json();
-        } else {
-            throw new Error('Erreur');
-        }
-    })
-    .then(result => {
-        let servicesList = document.getElementById('servicesList');
-        servicesList.innerHTML = '';
-        let services = result;
-        if(services.length === 0){
-            servicesList.innerHTML = '<p class="text-center">Aucun service à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
-        }
-        let serviceTableBody = document.getElementById('servicesList');
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Erreur');
+            }
+        })
+        .then(result => {
+            let servicesList = document.getElementById('servicesList');
+            servicesList.innerHTML = '';
+            let services = result;
+            if (services.length === 0) {
+                servicesList.innerHTML = '<p class="text-center">Aucun service à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
+            }
+            let serviceTableBody = document.getElementById('servicesList');
             serviceTableBody.innerHTML = '';
-        services.forEach(service=>{
-            let row = document.createElement('tr');
-            row.innerHTML = `
-            <td>${service.id}</td>
-            <td>${service.nom}</td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    </button>
-                    <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
-                        <li class="btn btn-danger mb-1" id="delete-service" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" data-service-id="${service.id}"><i class="fa-solid fa-trash"></i></li>
-                        <li class="btn btn-primary  mb-1" onClick="goEditService(${service.id})"><i class="fa-solid fa-pencil"></i></li>
-                        <li class="btn btn-info  mb-1" onClick="goSeeService(${service.id})"><i class="fa-regular fa-eye"></i></li>
-                    </div> 
-                </div>
-            </td>
-            `;
-            serviceTableBody.appendChild(row);
-
-        });
-    })
+            services.forEach(service => {
+                let row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${service.id}</td>
+                    <td>${service.nom}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
+                                <li class="btn btn-danger mb-1" id="delete-service" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" data-delete-service-id="${service.id}"><i class="fa-solid fa-trash"></i></li>
+                                <li class="btn btn-primary  mb-1" onClick="goEditService(${service.id})"><i class="fa-solid fa-pencil"></i></li>
+                                <li class="btn btn-info  mb-1" onClick="goSeeService(${service.id})"><i class="fa-regular fa-eye"></i></li>
+                            </div> 
+                        </div>
+                    </td>
+                `;
+                serviceTableBody.appendChild(row);
+            });
+            // Now, attach event listeners to delete buttons after they have been created
+            const deleteServiceBtns = document.querySelectorAll('[data-delete-service-id]');
+            deleteServiceBtns.forEach(button => {
+                button.addEventListener('click', function () {
+                    const serviceId = button.getAttribute('data-delete-service-id');
+                    const serviceIdContainer = document.getElementById('service-id');
+                    serviceIdContainer.value = serviceId;
+                });
+            });
+        })
+        .catch(error => console.log(error));
+    
 }
 
 // Supprimer un service:
 
-const deleteServiceBtns = document.querySelectorAll('[data-service-id]');
+const deleteServiceBtns=document.querySelectorAll('[data-delete-service-id]');
 deleteServiceBtns.forEach(button=>{
+    console.log('deleteServiceBtns', button);
     button.addEventListener('click', function(){
         const serviceId = button.getAttribute('data-service-id');
         const serviceIdContainer = document.getElementById('service-id');
         serviceIdContainer.value = serviceId;
     });
 });
+
 const confirmDeleteServiceBtn = document.getElementById('confirm-delete-service-btn');
 confirmDeleteServiceBtn.addEventListener('click', deleteService);
 function deleteService(){
@@ -485,17 +501,17 @@ function deleteService(){
     })
     .then(response => {
         if(response.ok){
-            window.location.reload();
             return response.json();
         } else {
             throw new Error('Erreur');
         }
     })
     .then(result => {
-        window.location.reload();
+        getAllServices();
     })
-    .catch(error => alert('Une erreur est survenue', error));
+    .catch(error => console.log(error), getAllServices());
 }
+
 
 function goSeeService($id){
     window.location.href = '/services/show/'+$id;
@@ -586,6 +602,7 @@ async function getAllDemandes(){
             return response.json();
         } else {
             throw new Error('Erreur');
+            window.location.reload();
         }
     })
     .then(result => {
@@ -604,12 +621,12 @@ async function getAllDemandes(){
             card.classList.add('demande-card');
             card.classList.add('mb-5')
             card.setAttribute('data-demande-status', demande.answered);
-            card.setAttribute('data-demande-date', demande.createdAt);
+            card.setAttribute('data-demande-date', toYMD(demande.created_at));
             card.setAttribute('data-demande-id', demande.id);
             card.innerHTML = `
                 <div class="card-header d-flex justify-content-between">
                 <h5 class="card-title">${demande.titre}</h5>
-                <p class="text-muted">${formatDate(demande.createdAt)}</p>
+                <p class="text-muted">${toYMD(demande.created_at)}</p>
             </div>
             <div class="card-body">  
                 <p class="text-muted">${demande.mail}</p>                             
@@ -622,7 +639,7 @@ async function getAllDemandes(){
             `;
             if (demande.answered) {
                 card.querySelector('.card-footer').innerHTML = `
-                <p class="text-muted">Répondu le ${formatDate(demande.answeredAt)}</p>
+                <p class="text-muted">Répondu le ${formatDate(demande.answered_at)}</p>
                 <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
                 `;               
             }
@@ -805,7 +822,7 @@ async function getNonValidatedReviews(){
                 </div>
                 <div class="card-body">
                     <p class="card-text">${avis.note}</p>
-                    <p class="card-text">${avis.avisContent}</p>
+                    <p class="card-text">${avis.Avis_content}</p>
                     <p class="card-text text-muted">${formatDate(avis.createdAt)}</p>
                 </div>
                 <div class="card-footer">
