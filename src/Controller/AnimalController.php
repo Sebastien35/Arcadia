@@ -19,6 +19,8 @@ use App\Exception\AnimalNotFoundException;
 use App\Repository\InfoAnimalRepository;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Util\Json;
+use App\Entity\AdditionalImages;
+use App\Repository\AdditionalImagesRepository;
 
 #[Route('/animal', name: 'app_animal_')]
 class AnimalController extends AbstractController
@@ -68,18 +70,19 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/getImages/{id}', name: 'getImages', methods: ['GET'])]
-    public function getImages(int $id, AnimalRepository $animalRepo): JsonResponse
+    public function getImages(int $id, AnimalRepository $animalRepo, AdditionalImagesRepository $imageRepo, SerializerInterface $serializer): JsonResponse
     {   
-        try{
-        $animal = $animalRepo->find($id);
-        if(!$animal){
-            throw new AnimalNotFoundException(); 
+    try{
+        $images = $imageRepo->findBy(['animal' => $id], ['createdAt' => 'DESC']);
+        if(!$images){
+            $animalImages = null; 
         }
-        $images = $animal->getAdditionalImages();
-        return new JsonResponse($images);
-        }catch(\Exception $e){
-            return new JsonResponse('error');}
-        }
+        return new JsonResponse($serializer->serialize($images, 'json', ['groups' => 'image:read']));
+    }
+    catch(\Exception $e){
+        return new JsonResponse($e->getMessage(), 500);
+    }
+    }
     
 
     

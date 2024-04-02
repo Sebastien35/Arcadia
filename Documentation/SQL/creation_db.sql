@@ -111,10 +111,10 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE additional_images (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    image_name VARCHAR(255),
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    image_name VARCHAR(255) NOT NULL,
     animal_id INT,
-    habitat_id INT
+    habitat_id INT,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NULL
 );
@@ -151,5 +151,5 @@ ALTER TABLE additional_images ADD CONSTRAINT FK_habitat_id_for_additional_images
 
 
 
-INSERT INTO zoo VALUES 
+INSERT INTO Zoo VALUES 
 (1, 'Arcadia');

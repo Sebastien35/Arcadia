@@ -4,16 +4,29 @@
 
 {% block body %}
 <link rel="stylesheet" href="{{ asset('css/showAnimal.css') }}">
+
 <style>
     body{
         background-image: url( {{asset('images/parc/jungle_bg_.jpg')}} );
     }
+
 </style>
 <div class="page-container">
-    <div class="nav navbar mt-5 animal-navbar">
-            <a class="navbar-brand mx-3" href="{{ path('app_habitat_index') }}">Voir les Habitats</a>  
+    {# navigation desktop #}
+    <div class="navbar mt-5 animal-navbar d-none d-lg-block">
+            <H2><a class="nav-item d-none d-lg-block ml-3" href="{{ path('app_habitat_index') }}">Voir les Habitats</a><H2>
+            <H2 class="nav-item d-none d-lg-block infoBtn text-white" role="button" aria-label="Informations animal"> Information sur l'animal</H2>
+            <H2 class="nav-item d-none d-lg-block imageBtn text-white" role="button" aria-label="Gallerie photos">Gallerie photo</H2>
     </div>
-    <div class="animal-presentation container">
+    {# navigation mobile #}
+    <div class="navbar animal-navbar mt-5 mb-2 d-flex justify-content-around d-lg-none">
+        <H2><a class="nav-item d-lg-none" href="{{ path('app_admin_index') }}"><i class="fa-solid fa-arrow-left"></i></a></H2>
+        <H2><a class="nav-item d-lg-none infoBtn" role="button" aria-label="Informations animal"><i class="fa-regular fa-clipboard"></i></a></H2>
+        <H2><a class="nav-item d-lg-none imageBtn" role="button" aria-label="Gallerie photos"><i class="fa-regular fa-image"></i></a></H2>
+    </div>
+
+
+    <div class="animal-presentation container" id="infoContainer">
         <div class="row">            
             <div class="col-lg-6 col-md-12 col-sm-12 d-flex justify-content-center">
                 <img src="{{asset('images/animal/'~ animal.imageName)}}" alt="animal" class="animal-image">
@@ -50,6 +63,21 @@
             </div>
         </div>
     </div>
+
+    <div  class="container" id="gallerie-container">
+        <div class="row" id="gallerie">
+
+        </div>
+    </div>
+
 </div>
 
+
+
+
+
+<script src="{{ asset('js/publicShowAnimal.js') }}"></script>
+{% endblock %}
+
+{% block javascripts %}
 {% endblock %}
