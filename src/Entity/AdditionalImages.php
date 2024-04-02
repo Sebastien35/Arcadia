@@ -8,6 +8,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: AdditionalImagesRepository::class)]
@@ -19,12 +20,10 @@ class AdditionalImages
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'additionalImages')]
-    private ?habitat $habitat = null;
+    private ?Habitat $habitat = null;
 
     #[ORM\ManyToOne(inversedBy: 'additionalImages')]
-    private ?animal $animal = null;
-
-    
+    private ?Animal $animal = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -37,6 +36,7 @@ class AdditionalImages
     private $imageFile;
 
     #[ORM\Column(type: "string",length:255, nullable: true)]
+    #[Groups(['image:read'])]
     private ?string $imageName = null;
 
     public function getId(): ?int

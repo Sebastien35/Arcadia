@@ -14,16 +14,21 @@
         <div id="avisList">
             {% for singleAvis in avisList %}
                 {% if singleAvis.isValidation == true %}
-                <div class="card">
-                    <div class="stars card-title">
-                        {% for star in range(1, 5) %}
-                            {% if star <= singleAvis.note %}
-                                <i class="fa-solid fa-star"></i>
-                            {% else %}
-                                <i class="fa-regular fa-star"></i>
-                            {% endif %}
-                        
-                        {% endfor %}
+                <div class="card my-2">
+                    <div class="card-header d-flex">
+                        <div class="stars card-title">
+                            {% for star in range(1, 5) %}
+                                {% if star <= singleAvis.note %}
+                                    <i class="fa-solid fa-star"></i>
+                                {% else %}
+                                    <i class="fa-regular fa-star"></i>
+                                {% endif %}
+                            
+                            {% endfor %}
+                        </div>
+                        {% if is_granted ('ROLE_ADMIN')  or is_granted ('ROLE_EMPLOYE') %}
+                        <btn class="btn btn-danger delete-avis" data-id = "{{ singleAvis.id }}" data-bs-toggle="modal" data-bs-target="#deleteAvisModal"><i class="fa-solid fa-trash"></i></btn>
+                        {% endif %}
                     </div>
                     <div class="card-body">
                         <p class="card-text">{{ singleAvis.getAvisContent }}</p>
@@ -63,6 +68,26 @@
         {{ form_end(avisForm) }}
     </div>
 </div>
+
+<div class="modal modal-fade" tabindex="-1" id="deleteAvisModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Suppression d'un avis</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cet avis ?</p>
+                <input type="hidden" id="userIdContainer" value="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" id="btn-confirm-delete" data-bs-dismiss="modal" >Supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="{{ asset('js/avis.js') }}"></script>
 <script src="{{ asset('js/sanitizer.js') }}"> </script>
 {% endblock %}
