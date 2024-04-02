@@ -6,13 +6,19 @@
     color: var(--active);
     transition: all 0.3s ease;
 }
-.animal-navbar a, .animal-navbar a.active,  .animal-navbar a:visited{
+/* .animal-navbar a, .animal-navbar a.active,  .animal-navbar a:visited{
     color: var(--white);
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
     font-size: 17px;
+} */
+
+.active{
+    color: var(--active)!important;
+
 }
+
 
 .page-container{
     height:100vh;

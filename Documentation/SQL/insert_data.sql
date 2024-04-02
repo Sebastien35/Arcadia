@@ -15,8 +15,8 @@ INSERT INTO Horaire(jour, h_ouverture, h_fermeture, ouvert, zoo_id) VALUES
 ('Dimanche', '08:00:00', '18:00:00', 1, 1);
 
 INSERT INTO Habitat (id, nom, image_name, description, updated_at) VALUES
-(1,'Savane','65c4f28208809965150037.jpeg', 'Des plaines arides, où vivent des animaux légendaires.', null),
-(2,'Jungle','65cce69a4ed31928698932.jpeg', 'Une jungle luxuriante abritant des espèces rares et sauvages' , null),
+(1,'Savane','65f8173e8dd4c673947480.jpeg', 'Des plaines arides, où vivent des animaux légendaires.', null),
+(2,'Jungle','65f8171ab9f17598360842.jpeg', 'Une jungle luxuriante abritant des espèces rares et sauvages' , null),
 (3,'Montagne','65c605b27c6e1149964943.jpeg','Des pics rocheux enneigés abritant des espèces rares et captivantes', null),
 (4,'Forêt','65c505469a665418670019.jpeg', 'Une forêt peuple de différents animaux de différents origines', null),
 (5,'Marais','65e1f607678a1876940815.jpeg', 'Un écosystème riche en faune sauvage et en végétation luxuriante', null);
