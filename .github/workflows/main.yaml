@@ -21,4 +21,4 @@ jobs:
 
       - name: deploy
         run: |
-          sshpass -e ssh -o strictHostKeyChecking=no  ${{ secrets.APP_USER }}@$ssh-arcadia-studiecf.alwaysdata.net "cd www/ && git pull && composer install"
+          sshpass -e ssh -o strictHostKeyChecking=no ${{secrets.SSH_USER}}@${{secrets.SSH-IP}}  "cd www/ && git pull && composer install"
