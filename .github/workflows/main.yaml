@@ -21,4 +21,4 @@ jobs:
 
       - name: deploy
         run: |
-          sshpass -e ssh -o strictHostKeyChecking=no  root@${{secrets.SSH_IP}} "cd www/ && git pull origin main && composer install"
+          sshpass -e ssh -o strictHostKeyChecking=no  root@${{secrets.SSH_IP}} "cd www/ && git pull https://github.com/Sebastien35/Arcadia main && composer install"
