@@ -21,4 +21,5 @@ jobs:
 
       - name: deploy
         run: |
-          sshpass -e ssh -o strictHostKeyChecking=no ${{secrets.SSH_USER}}@${{secrets.SSH-IP}}  "cd www/ && git pull && composer install"
+          sshpass -e ssh -o strictHostKeyChecking=no ${{secrets.SSH_USER}}@77.37.86.19 
+          "cd www/ && git pull && composer install"
