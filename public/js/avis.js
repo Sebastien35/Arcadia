@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteAvisBtns.forEach(button => {
         button.addEventListener('click', function() {
             let avisId = this.getAttribute('data-id');
-            console.log(avisId);
             let avisIdContainer = document.getElementById('avisIdContainer');
             avisIdContainer.value = avisId;
         });
@@ -57,7 +56,6 @@ async function deleteAvis() {
             window.location.reload();
         }
     } catch (error) {
-        console.error('Une erreur est survenue :', error);
         alert('Une erreur est survenue lors de la suppression de l\'avis');
     }
 }
