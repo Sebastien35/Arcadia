@@ -31,7 +31,7 @@ class AcceuilController extends AbstractController
 
     #[Route('/', name: 'app_acceuil')]
     public function index(
-    AvisRepository $avisRepository, 
+    AvisRepository $avisRepository,
     HoraireRepository $horaireRepository,
     HabitatRepository $habitatRepository,
     ServiceRepository $serviceRepository,
@@ -41,7 +41,7 @@ class AcceuilController extends AbstractController
 
     ): Response
 {
-    $avis = $avisRepository->findAll();
+    $avis = $avisRepository->findBy(['validation' => 0]);
     $horaires = $horaireRepository->findAll();
     $habitats = $habitatRepository->findAll();
     $services = $serviceRepository->findAll();
