@@ -22,7 +22,7 @@ jobs:
 
       - name: Deploy application
         run: |
-          sshpass -e ssh -o strictHostKeyChecking=no -p 22 $SSHPASS ${{ secrets.SSH_USER}}@${{ secrets.SSH_IP}} "
+          sshpass -e ssh -o strictHostKeyChecking=no -p $SSHPASS 22 ${{ secrets.SSH_USER}}@${{ secrets.SSH_IP}} "
           cd htdocs
           cd arcadia-zoo.online/
           cd Arcadia
