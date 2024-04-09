@@ -29,40 +29,41 @@ createAvisBtn.addEventListener('click', function(){
 
 // Supprimer un avis:
 
-document.addEventListener('DOMContentLoaded', function(){
-    const deleteAvisBtns = document.querySelectorAll('[data-id]');
-    deleteAvisBtns.forEach(button=>{
-        button.addEventListener('click', function(){
-            const avisId = button.getAttribute('data-id');
-            const userIdContainer = document.getElementById('userId');
-            userIdContainer.value = avisId;
+document.addEventListener('DOMContentLoaded', function() {
+    let deleteAvisBtns = document.querySelectorAll('.delete-avis');
+    deleteAvisBtns.forEach(button => {
+        button.addEventListener('click', function() {
+            let avisId = this.getAttribute('data-id');
             console.log(avisId);
-        })
-    })
-    
-})
+            let avisIdContainer = document.getElementById('avisIdContainer');
+            avisIdContainer.value = avisId;
+        });
+    });
 
-async function deleteAvis(){
-    console.log('deleteAvis');
+    let confirmDeleteAvisBtn = document.getElementById('btn-confirm-delete');
+    confirmDeleteAvisBtn.addEventListener('click', deleteAvis);
+});
+
+async function deleteAvis() {
+    let avisId = document.getElementById('avisIdContainer').value;
     let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    let avisId= document.getElementById('userIdContainer').value;
-    let requestOptions = {
-        method: 'DELETE',
-        headers: myHeaders,
-        redirect: 'follow'
-    };
-    await fetch(`/avis/delete/${avisId}`, requestOptions)
-    .then(response => {
-        if(response.ok){
+    myHeaders.append("Content-Type", "application/json");
+    try {
+        const response = await fetch(`/avis/delete/${avisId}`, {
+            method: 'DELETE',
+            headers: myHeaders,
+        });
+        if (response.ok) {
             window.location.reload();
-        }else{
-            console.log('Erreur lors de la suppression de l\'avis')
         }
-    })
+    } catch (error) {
+        console.error('Une erreur est survenue :', error);
+        alert('Une erreur est survenue lors de la suppression de l\'avis');
+    }
 }
-btnConfirmDelete = document.getElementById('btn-confirm-delete');
-btnConfirmDelete.addEventListener('click', deleteAvis);
+
+
+
 
 
 
