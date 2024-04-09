@@ -53,7 +53,6 @@ async function getNonAdminUsers() {
                 userTableBody.appendChild(row);
             });
 
-            // Now, attach event listeners to delete buttons after they have been created
             const deleteUserBtns = document.querySelectorAll('[data-user-id]');
             deleteUserBtns.forEach(button => {
                 button.addEventListener('click', function () {

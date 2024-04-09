@@ -52,6 +52,33 @@ cd ECF_SB
 ```
 git clone https://github.com/Sebastien35/Arcadia.git
 ```
+
+#### Configurer les variables d'environnement:
+
+Afin de pouvoir tester correctement ce projet il nous faut également configurer les variables d'environnement:
+Se positionner dans le dossier Arcadia, créer un fichier nommé .env.local
+Dans ce fichier, ajouter les lignes suivantes:
+```
+cd Arcadia
+```
+Puis créer le fichier .env.local
+Windows powershell:
+```
+ni .env.local
+```
+Linux: 
+```
+touch .env.local
+```
+Dans ce fichier .env.local , ajouter les variables d'environnement:
+
+```
+DATABASE_URL="mysql://root@127.0.0.1:3306/arcadia_db?serverVersion=10.11.2-MariaDB&charset=utf8mb4" 
+
+MAILER_DSN=mailjet+smtp://104ac58d97c7d19f3df5a298c7359548:998fa0a0d4cdf5f2c4d42d859b8e6fef@in-v3.mailjet.com
+
+MONGODB_URL=mongodb://localhost:27017 
+```
 #### Installer les dépendances avec composer
 - A l'aide d'un terminal, se positionner dans le dossier ' Arcadia'
 ```
@@ -84,6 +111,10 @@ mysql -u \votreUsername\ -p\votrePassword\
 ```
 source creation_db.sql
 ```
+Quitter mysql (ctrl / cmd + c) & Revenir au dossier Arcadia:
+```
+cd ../../
+```
 #### Créer les comptes utilisateurs: </br>
 Toujours dans l'optique de pouvoir tester le site, il nous faut créer les différents comptes pour accéder au site.
 La création des comptes se fera à l'aide de fixtures doctrine.
@@ -93,8 +124,16 @@ La création des comptes se fera à l'aide de fixtures doctrine.
 symfony console doctrine:fixtures:load --append
 ```
 #### Ajouter des données: </br>
-Dans le dossier SQL, un fichier 'inser_data.sql' permettant d'ajouter des données à notre nouvelle base données et disponible.
-Se positionner dans le dossier SQL et à l'aide d'un terminal mySQL, effectuer la commande:
+Se positonner dans le dossier SQL.
+```
+cd documentation\sql
+```
+Ouvrir mySQL
+```
+mysql -u \votreUsername\ -p\votrePassword\
+```
+Un fichier 'inser_data.sql' permettant d'ajouter des données à notre nouvelle base données et disponible.
+
 ```
 source insert_data.sql
 ```
@@ -103,20 +142,8 @@ Nous avons également inséré en base de données les comptes utilisateurs qui 
 Un autre compte existe, mais représentant une personne extérieure au zoo, il n'a pas été inséré en base de données.
 Il servira à tester la fonctionnalité de mailing plus tard.
 
-#### Configurer les variables d'environnement:
-
-Afin de pouvoir tester correctement ce projet il nous faut également configurer les variables d'environnement:
-Se positionner dans le dossier Arcadia, créer un fichier nommé .env.local
-Dans ce fichier, ajouter les lignes suivantes:
-```
-DATABASE_URL="mysql://root@127.0.0.1:3306/arcadia_db?serverVersion=10.11.2-MariaDB&charset=utf8mb4" (3306 est le port par défaut mySQL, le remplacer si vous avez une configuration personnalisée.)
-
-MAILER_DSN=mailjet+smtp://104ac58d97c7d19f3df5a298c7359548:998fa0a0d4cdf5f2c4d42d859b8e6fef@in-v3.mailjet.com
-
-MONGODB_URL=mongodb://localhost:27017 (port par défaut mongodb en local, à remplacer dans le cas où vous auriez une configuration personnalisée)
-MONGODB_DB=symfony
-```
 
 
 
 
+aaaaa

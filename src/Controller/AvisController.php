@@ -75,19 +75,28 @@ class AvisController extends AbstractController
     
 
 
-    #[Route('/show/{id}',name: 'show', methods: 'GET')]
-    public function show(int $id):Response
+  
+
+    #[Route('/delete/{id}', name: 'delete', methods: ['DELETE'])]
+    public function deleteAvis(int $id, Avis $avis, EntityManagerInterface $entityManager, AvisRepository $avisrepo): Response
     {
-        $avis = $this->entityManager->getRepository(Avis::class)->find($id);
-        if (!$avis){
-            throw $this->createNotFoundException(
-                'No avis found for id '.$id
-            );
+        try{
+            if($this->getUser() == null){
+                throw new \Exception('403 Forbidden');
+            }
+            $avis = $avisrepo->findBy(['id' => $id]);
+            if (!$avis){
+                throw new \Exception('404 Not Found');
+            } else {
+                $entityManager->remove($avis[0]);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_avis_index');
+            }
+        } catch (\Exception $e) {
+            return new Response ('Une erreur est survenue');
         }
-        return $this->render('avis/show.html.twig', [
-            'controller_name' => 'AvisController',
-            'avis'=>$avis //
-        ]);
+
+        
     }
   
 

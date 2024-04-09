@@ -10,6 +10,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\InfoAnimal;
+use App\Repository\InfoAnimalRepository;
 
 #[Route('/infoanimal', name: 'app_info_animal')]
 class InfoAnimalController extends AbstractController
@@ -24,17 +25,17 @@ class InfoAnimalController extends AbstractController
     }
 
 
-   #[Route('/all', name: 'all', methods: ['GET'])]
-    public function all(): JsonResponse
+    #[Route('/all', name: 'all', methods: ['GET'])]
+    public function all(InfoAnimalRepository $infoAnimalRepository): JsonResponse
     {   
         if ($this->getUser() === null) {
             return JsonResponse::fromJsonString('Unauthorized', Response::HTTP_UNAUTHORIZED);
         }
         try{
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
-        $infoAnimals = $this->entityManager->getRepository(InfoAnimal::class)->findAll();
+        $infoAnimals = $infoAnimalRepository->findAll();
         return JsonResponse::fromJsonString($this->serializer->serialize($infoAnimals, 'json',
-    ['groups'=>['info_animal','animal:read']]), Response::HTTP_OK);
+            ['groups'=>['info_animal','animal:read']]), Response::HTTP_OK);
         } catch (\Exception $e) {
             return JsonResponse::fromJsonString($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
