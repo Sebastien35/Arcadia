@@ -61,12 +61,21 @@
 }
 
 footer{
+    margin-top: 2vh;
     position: absolute;
     left: -5%;
     z-index: 1000;
     --bs-gutter-x: 0 !important;
 }
 
+
 footer .navbar {
+    margin-top: 2vh;
     width: 120vw;
 }
+.social{
+    font-size: 1.2em;
+    position: relative;
+    top: 0;
+}
+
