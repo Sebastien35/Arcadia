@@ -3,13 +3,12 @@ on:
   push:
     branches:
       - main
-      - dev 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     
     env:
-      SSHPASS: ${{ secrets.SSHPASS }} #avc
+      SSHPASS: ${{ secrets.APP_PASS }}
 
     steps: 
       - uses: actions/checkout@v2
@@ -19,7 +18,4 @@ jobs:
           sudo apt update
           sudo apt install sshpass
 
-      - name: deploy
-        run: |
-          sshpass -e ssh -o strictHostKeyChecking=no seb@${{secrets.SSH_HOST}}
-          "cd www && git pull && composer install"
+
