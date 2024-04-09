@@ -5,6 +5,7 @@
 {% block body %}
 <link rel="stylesheet" href="{{ asset('css/repas.css') }}">
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ asset('css/showAnimal.css') }}">
 
 
 <div class="navbar bg-dark mt-5  d-none d-lg-block">
@@ -167,21 +168,14 @@
             <button class="header-btn" id="add-animal-btn"><i class="fa-solid fa-plus" data-bs-toggle="modal" data-bs-target="#add-image-modal"></i></button>
         </div>
     </div>  
-    <div class="container-body">
+    <div class="container-body container">
         <div class="row" id="imageList">
             {% for image in animalImages %}
-            <div class="col-lg-4 col-md-12 col-sm-12">
-                <div class="card">
-                    <img src="{{ asset('images/additionnal_images/' ~ image.imageName) }}" class="card-img-top" alt="image_{{ animal.getPrenom }}">
-                    <div class="card-body d-flex justify-content-around">
-                        <p class="card-text">{{ image.createdAt | date('d-m-Y') }}</p>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><p class="deleteImage" id="toggleDeleteImage" data-image-id="{{ image.id }}" data-bs-toggle="modal" data-bs-target="#deleteImageModal">Supprimer</p></li>
-                            </ul>
-                    </div>
+            <div class="card mt-5">
+                <img src="{{ asset('images/additionnal_images/' ~ image.imageName) }}" alt="image_{{ animal.getPrenom }}" class="additionnal_image">
+                <div class="card-footer text-center">
+                    <p class="card-text">{{ image.createdAt | date('d-m-Y') }}</p>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteImageModal" data-image-id="{{ image.id }}">Supprimer</button>
                 </div>
             </div>
             {% endfor %}

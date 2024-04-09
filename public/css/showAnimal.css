@@ -19,6 +19,13 @@
 
 }
 
+.additionnal_image{
+    max-height: 50vh;
+    max-width: 600px;
+    position: center;
+
+}
+
 
 .page-container{
     height:100vh;
