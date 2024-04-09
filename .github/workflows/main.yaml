@@ -3,10 +3,7 @@ on:
   push:
     branches:
       - main
-<<<<<<< HEAD
-      
-=======
->>>>>>> dc524dd0dd92033ac720a713ab66c3ef35ae04f5
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -15,17 +12,14 @@ jobs:
       SSHPASS: ${{ secrets.SSHPASS }}
 
     steps: 
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
       
       - name: Install sshpass & update apt 
         run: |
           sudo apt update
           sudo apt install sshpass
 
-
-<<<<<<< HEAD
-    - name: deploy
-      run: |
-        sshpass -e ssh -o strictHostKeyChecking=no -p $SSHPASS ${{ secrets.SSH_USER}}@${{ secrets.SSH_IP}} 
-=======
->>>>>>> dc524dd0dd92033ac720a713ab66c3ef35ae04f5
+      - name: Deploy application
+        run: |
+          sshpass -e ssh -o strictHostKeyChecking=no -p $SSHPASS ${{ secrets.SSH_USER}}@${{ secrets.SSH_IP}} "cd /home/arcadia-zoo/htdocs/arcadia-zoo.online/Arcadia && git pull"
