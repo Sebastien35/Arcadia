@@ -6,12 +6,14 @@
 }
 
 
-@media (max-width:767px){
+@media (max-width:980px){
 
     .nav-item{ font-size:3vh;}
-    
-        
-    
+    .social{
+        position: relative;
+        top: -1.8vh;
+
+    }
 }
 
 .navbar-custom , a:active, a:visited,a {
@@ -71,11 +73,9 @@ footer{
 
 footer .navbar {
     margin-top: 2vh;
-    width: 120vw;
+    width: 110vw;
 }
 .social{
     font-size: 1.2em;
-    position: relative;
-    top: 0;
 }
 
