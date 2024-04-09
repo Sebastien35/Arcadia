@@ -542,7 +542,7 @@ public function dashboard(
             $this->addFlash('success', 'Image ajoutée avec succès');
             return $this->redirectToRoute('app_admin_showAnimal', ['id' => $id]);
             }catch (\Exception $e) {
-                throw new \Exception('Une erreur est survenue. Merci de réessayer plus tard.");
+                throw new \Exception('Une erreur est survenue. Merci de réessayer plus tard.');
             }
         }
 
