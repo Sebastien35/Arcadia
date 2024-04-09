@@ -120,8 +120,7 @@
           <p>Il n'y a pas encore d'avis</p>
         {% endif %}
         {% for singleAvis in avis %}
-          {% if singleAvis.validation == 1 %}
-          {% if loop.first %}
+          {% if loop.first  %}
             <div class="carousel-item active">
           {% else %}
             <div class="carousel-item">
@@ -130,11 +129,11 @@
                 <div class="card-header d-flex justify-content-between text-white">
                   <h5 class="card-title">{{singleAvis.pseudo}}</h5>
                   <div class="notation">
-                  {% for star in range(1, 5) %}  <!-- Adjusted to iterate up to 5 for half stars -->
-                    {% if star <= singleAvis.note %}  <!-- Full star logic -->
+                  {% for star in range(1, 5) %}  
+                    {% if star <= singleAvis.note %} 
                         <i class="fa-solid fa-star"></i>
                     {% else %}
-                        {% if star - 0.5 <= singleAvis.note %}  <!-- Half star logic -->
+                        {% if star - 0.5 <= singleAvis.note %} 
                             <i class="fa-solid fa-star-half"></i>
                         {% else %}
                             <i class="fa-regular fa-star"></i>
@@ -150,7 +149,6 @@
                 </div>
               </div>
             </div>
-          {% endif %}
         {% endfor %}
       </div>
     </div>
