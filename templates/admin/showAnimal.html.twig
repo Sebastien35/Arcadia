@@ -171,11 +171,13 @@
     <div class="container-body container">
         <div class="row" id="imageList">
             {% for image in animalImages %}
-            <div class="card mt-5">
-                <img src="{{ asset('images/additionnal_images/' ~ image.imageName) }}" alt="image_{{ animal.getPrenom }}" class="additionnal_image">
-                <div class="card-footer text-center">
-                    <p class="card-text">{{ image.createdAt | date('d-m-Y') }}</p>
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteImageModal" data-image-id="{{ image.id }}">Supprimer</button>
+            <div class="col-sm-12 col-lg-3 col-md-6">
+                <div class="card mb-5">
+                    <img src="{{ asset('images/additionnal_images/' ~ image.imageName) }}" alt="image_{{ animal.getPrenom }}" class="additionnal_image">
+                    <div class="card-footer text-center">
+                        <p class="card-text">{{ image.createdAt | date('d-m-Y') }}</p>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteImageModal" data-image-id="{{ image.id }}">Supprimer</button>
+                    </div>
                 </div>
             </div>
             {% endfor %}
