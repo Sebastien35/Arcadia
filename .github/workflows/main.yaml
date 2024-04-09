@@ -3,13 +3,13 @@ on:
   push:
     branches:
       - main
-      - dev
+      
 jobs:
   deploy:
     runs-on: ubuntu-latest
     
     env:
-      SSHPASS: ${{ secrets.APP_PASS }}
+      SSHPASS: ${{ secrets.SSHPASS }}
 
     steps: 
     - uses: actions/checkout@v2
@@ -20,4 +20,4 @@ jobs:
 
     - name: deploy
       run: |
-        sshpass -e ssh -o strictHostKeyChecking=no -p $SSHPASS ${{ secrets.APP_USER}}@${{ secrets.APP_HOST}} "cd www/ && git pull origin main && composer install"
+        sshpass -e ssh -o strictHostKeyChecking=no -p $SSHPASS ${{ secrets.SSH_USER}}@${{ secrets.SSH_IP}} 
