@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      SSHPASS: hostingerPipeline2K24
+      SSHPASS: ${{ secrets.SSHPASS }}
 
     steps: 
       - name: Checkout repository
