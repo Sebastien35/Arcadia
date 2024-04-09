@@ -1,7 +1,5 @@
 <?php
-
-namespace App\Exception;
-
+Namespace App\Exception;    
 use Exception;
 
 class AnimalNotFoundException extends Exception
