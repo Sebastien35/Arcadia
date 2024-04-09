@@ -31,7 +31,7 @@ class AdditionalImages
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[Assert\File(maxSize: "1024k", mimeTypes: ["image/webp"], mimeTypesMessage: "Please upload a valid image file")]
+    #[Assert\File(maxSize: "10024k", mimeTypes: ["image/webp"], mimeTypesMessage: "Please upload a valid image file")]
     #[Vich\UploadableField(mapping: "additionnal_images", fileNameProperty: "imageName")]
     private $imageFile;
 
