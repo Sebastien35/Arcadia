@@ -22,5 +22,10 @@ jobs:
 
       - name: Deploy application
         run: |
-          sshpass -e ssh -o strictHostKeyChecking=no -p 22 $SSHPASS ${{ secrets.SSH_USER}}@${{ secrets.SSH_IP}} "cd /home/arcadia-zoo/htdocs/arcadia-zoo.online/Arcadia && git pull" 
+          sshpass -e ssh -o strictHostKeyChecking=no -p 22 $SSHPASS ${{ secrets.SSH_USER}}@${{ secrets.SSH_IP}} "
+          cd htdocs
+          cd arcadia-zoo.online/
+          cd Arcadia
+          git pull
+
 #deploy test
