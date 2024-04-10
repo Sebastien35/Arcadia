@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Entity\Zoo;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class DemandeContactType extends AbstractType
 {
@@ -16,7 +17,14 @@ class DemandeContactType extends AbstractType
         $builder
             ->add('titre')
             ->add('message')
-            ->add('mail')
+            ->add('mail', null, [
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/',
+                        'message' => 'Veuillez entrer une adresse mail valide',
+                    ]),
+                ],
+            ])
             ->add('zoo', EntityType::class, [
                 'class' => Zoo::class,
                 'choice_label' => 'nom',
