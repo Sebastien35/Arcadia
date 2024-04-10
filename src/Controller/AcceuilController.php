@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Entity;
 use App\Repository\ServiceRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use App\Form\AvisType;
 
 
 class AcceuilController extends AbstractController
@@ -47,6 +48,7 @@ class AcceuilController extends AbstractController
     $services = $serviceRepository->findAll();
     $top4AnimalId = $visitRepository->top4($documentManager, $animalRepository);
     $top4Animals = $animalRepository->findIDs($top4AnimalId);
+    $avisForm = $this->createForm(AvisType::class);
     
     return $this->render('accueil/index.html.twig', [
         'controller_name' => 'AcceuilController',
@@ -55,6 +57,7 @@ class AcceuilController extends AbstractController
         'habitats' => $habitats,
         'services' => $services,
         'animaux' => $top4Animals,
+        'avisForm' => $avisForm->createView()
     ]);
 }
 
