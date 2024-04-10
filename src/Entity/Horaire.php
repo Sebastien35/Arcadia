@@ -82,20 +82,7 @@ class Horaire
         return $this;
     }
 
-    public function __construct(
-        
-        ?int $jour = null,
-        ?bool $ouvert = true,
-        ?\DateTimeInterface $h_ouverture = null,
-        ?\DateTimeInterface $h_fermeture = null
-    ) {
-         // $this->id_etablissement = $id_etablissement;
-        
-        $this->$jour = $jour;
-        $this->ouvert = $ouvert;
-        $this->h_ouverture = $h_ouverture;
-        $this->h_fermeture = $h_fermeture;
-    }
+    
 
     public function isOuvert(): ?bool
     {
@@ -109,4 +96,17 @@ class Horaire
         return $this;
     }
     
+
+    public function __construct(
+        
+        ?int $jour = null,
+        ?bool $ouvert = true,
+        ?\DateTimeInterface $h_ouverture = null,
+        ?\DateTimeInterface $h_fermeture = null
+    ) {
+        $this->$jour = $jour;
+        $this->ouvert = $ouvert;
+        $this->h_ouverture = $h_ouverture;
+        $this->h_fermeture = $h_fermeture;
+    }
 }

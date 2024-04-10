@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block title %}Edition d'un habitat{% endblock %}
+
+{% block body %}
+
+<link rel="stylesheet" href="{{asset('css/admin-dashboard.css')}}"/>
+
+<nav class="nav navbar bg-dark mt-5">
+    <a class="nav-link" href="{{path('app_admin_index')}}">Retour à l'accueil</a>
+</nav>
+
+<div class="container mt-2">
+    <div class="custom-container"  style="height:50%" >
+        <div class="container-header">
+            <div class="container-header-title">
+                <h1>Edition d'un habitat</h1>
+            </div>
+        </div>
+        <div class="container-body">
+            {{form_start(form, {'action': path('app_admin_updateHabitat', {'id':habitat.id}), 'method':'POST', 'enctype': 'multipart/form-data'}) }}
+            {{ form_errors(form) }}
+            <div class="mb-3">
+                {{form_label(form.nom, "Nom")}}
+                {{form_widget(form.nom, {'attr': {'class': 'form-control'}})}}
+            </div>
+            <div class="mb-3">
+                {{form_label(form.description, "Description")}}
+                {{form_widget(form.description, {'attr': {'class': 'form-control'}})}}
+            </div>
+            <div class="mb-3">
+                {{form_label(form.imageFile, "Image")}}
+                {{form_widget(form.imageFile, {'attr': {'class': 'form-control'}})}}
+            </div>
+            <div class="mb-3 d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Modifier</button>
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ path('app_admin_index') }}'">Retour</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+        
+            
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+

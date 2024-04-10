@@ -1,56 +1,302 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello EmployeController!{% endblock %}
+{% block title %}Espace employé{% endblock %}
 
 {% block body %}
+<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 
-<div class="container avis-list-container mt-5">
-    <div class="row">
-        <h1 class="text-center">Avis en attente de validation:</h1>
-        <div class="col-12 avis-scroll-container" style="max-height: 400px; overflow-y: auto;">
-            <div id="avisList">
-                {% for singleAvis in avisList %}
-                    {% if singleAvis.isValidation == false %}
-                        <form id="validateAvisForm">
-                            <input type="hidden" name="id" value="{{ singleAvis.id }}">
-                            <div class="card" id="{{ singleAvis.id }}">
-                                <div class="stars card-title">
-                                    {% for star in range(1, 5) %}
-                                        {% if star <= singleAvis.note %}
-                                            <i class="fa-solid fa-star"></i>
-                                        {% else %}
-                                            <i class="fa-regular fa-star"></i>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-text">{{ singleAvis.getAvisContent }}</p>
-                                    <p class="card-text"><small class="text-muted">Posté par {{ singleAvis.pseudo }} le {{ singleAvis.getCreatedAt|date('d/m/Y') }}</small></p>
-                                    <button id='BtnValider' type="button" class="btn btn-primary valid-btn">Valider</button>
-                                    <button id='BtnSupprimer'type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger delete-btn">Supprimer</button>
-                                </div>
-                            </div>
-                        </form>
-                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteModalLabel">Confirmer la Suppression</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id="DelAvisForm">
-                                            <input type="hidden" name="id" value="{{singleAvis.id}}">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                            <button type="button" class="btn btn-danger" id="deleteAvis">Supprimer</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
+
+<div class="container-fluid page-container">
+    <div class="row flex-nowrap" id="agencement">
+        
+        <!-- Mobile navigation -->
+        <div class="collapse d-lg-none  px-sm-2 px-0 bg-dark" id="sidebarCollapse" aria-hidden="true">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="mt-5">
+                    <li class="mt-2 mb-3">
+                        <H5 class="nav-item" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"> <i class="fa-solid fa-user-tie" ></i>Espace Employé </H5>
+                    </li>
+                    <li class="my-2 mt-2">
+                        <p role="button" id="avisBtn" class="sidebar-item avisBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-comment"></i> Avis</p>
+                    </li>
+                    <li class="my-2">
+                        <p role="button" id="servicesBtn"class="sidebar-item servicesBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-shop"     ></i> Services</p>
+                    </li>
+                    <li class="my-2">
+                        <p role="button" id="foodBtn" class="sidebar-item foodBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-drumstick-bite"></i>Repas des animaux</p>
+                    </li>
+                    <li class="my-2">
+                        <p role="button" id="contactBtn" class="sidebar-item contactBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-envelope"></i> Contact</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <a class="nav-item btn btn-danger" href="/logout" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Sidebar Toggle Button (visible on small screens) -->
+        <div class="d-lg-none  px-sm-2 px-0 mt-5">
+            <button class="btn btn-primary w-100 toggle-btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse">
+                Menu
+            </button>
+        </div>
+
+        <div class="d-none d-lg-block col-lg-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="mt-5">
+                    <li class="mt-2 mb-3">
+                        <H5 class="nav-item"><i class="fa-solid fa-user-tie" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"></i>Espace Employé </H5>
+                    </li>
+                    <li class="my-2 mt-2">
+                        <p role="button" id="avisBtn" class="sidebar-item avisBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-comment"></i> Avis</p>
+                    </li>
+                    <li class="my-2">
+                        <p role="button" id="servicesBtn"class="sidebar-item servicesBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-shop"     ></i> Services</p>
+                    </li>
+                    <li class="my-2">
+                        <p role="button" id="foodBtn" class="sidebar-item foodBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-drumstick-bite"></i>Repas des animaux</p>
+                    </li>
+                    <li class="my-2">
+                        <p role="button" id="contactBtn" class="sidebar-item contactBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-envelope"></i> Contact</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ></i>Se déconnecter</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        
+        <div class="col py-3" id="content">
+            {# error & success messages #}
+            <div class="alerts">
+                {% for flashMessage in app.flashes('error') %}
+                    <div class="alert alert-danger mt-5" role="alert" style="height:10vh">
+                        {{ flashMessage }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.flashes('success') %}
+                    <div class="alert alert-success mt-5" role="alert" style="height:10vh">
+                        {{ flashMessage }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 {% endfor %}
             </div>
+
+            {# avis container #}
+            <div class="custom-container mt-5 d-none" id="avisContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <p>Avis</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 avis-scroll-container" style="max-height: 400px; overflow-y: auto;">
+                        <div id="avisList">
+                            {% for singleAvis in avisList %}
+                                {% if singleAvis.isValidation == false %}
+                                        <div class="card mx-5" id="{{ singleAvis.id }}">
+
+                                            <div class="stars card-title card-header">
+                                                {% for star in range(1, 5) %}
+                                                    {% if star <= singleAvis.note %}
+                                                        <i class="fa-solid fa-star"></i>
+                                                    {% else %}
+                                                        <i class="fa-regular fa-star"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">{{ singleAvis.getAvisContent }}</p>
+                                                <p class="card-text"><small class="text-muted">Posté par {{ singleAvis.pseudo }} le {{ singleAvis.getCreatedAt|date('d/m/Y') }}</small></p>
+                                            </div>
+                                            <div class="card-footer d-flex justify-content-around">
+                                                <button id='BtnValider' type="button" class="btn btn-primary BtnValider" onClick="validerAvis({{singleAvis.id }})">Valider</button>
+                                                <button id='BtnSupprimer'type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger delete-btn">Supprimer</button>
+                                            </div>
+                                        </div>
+                                    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel">Confirmer la Suppression</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="DelAvisForm">
+                                                        <input type="hidden" name="id" value="{{singleAvis.id}}">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                        <button type="button" class="btn btn-danger BtnSupprimer" id="deleteAvis" onClick="supprimerAvis({{ singleAvis.id }})">Supprimer</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {# services container #}
+            <div class=" custom-container mt-5 d-none" id="servicesContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <p>Services</p>
+                    </div>
+                </div>
+                <div class="container-body mt-3">
+                    <table class="table table-striped" aria-labelledby="services">
+                        <thead> 
+                            <th>Service</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            {% for service in services %}
+                                <tr>
+                                    <td>{{ service.getNom }}</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                <li><button class="dropdown-item" onClick='showService( {{service.id}} )'>Voir</button></li>
+                                                <li><button class="dropdown-item " href="#" data-bs-toggle="modal" data-bs-target="#editServiceModal" data-service-id="{{ service.id }}">Modifier</button></li>
+                                            </ul>
+                                        </div>                           
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                    </table>
+                    <div class="modal fade" id="editServiceModal" tabindex="-1" aria-labelledby="editServiceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editServiceModalLabel">Modifier</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editServiceForm">
+                                    <label for="nom">Nom</label>
+                                    <input type="text" id="nom" name="nom" class="form-control">
+                                    <label for="description">Description</label>
+                                    <textarea id="description" name="description" class="form-control"></textarea>
+                                    <input type="hidden" id="serviceId" name="serviceId">
+                                    <button type="button" class="btn btn-primary mt-2 mb-2" id="btnConfirmEditService">Modifier</button>
+                                    <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            
+            {# food container #}
+            <div class="custom-container mt-5 d-none" id="foodContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <p>Je nourris un animal</p>
+                    </div>
+                </div>
+                <div class="container-body mt-3">
+                    {{form_start(form, {'action': path('app_employe_createRepas'), 'method': 'POST'})}}
+                    {{form_errors(form)}}
+                    <div class="mb-3">
+                        {{form_label(form.animal, 'Animal')}}
+                        {{form_widget(form.animal, {'attr': {'class': 'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        {{form_label(form.datetime, 'Date')}}
+                        {{form_widget(form.datetime, {'attr': {'class': 'form-control'}})}}
+                    </div>
+                    <div class="mb-3">
+                        {{form_label(form.quantite, 'Quantité')}}
+                        {{form_widget(form.quantite, {'attr': {'class': 'form-control'}})}}
+                    </div>          
+                    <div class="d-flex justify-content-center" >  
+                        <button type="submit" class="btn btn-primary">Valider</button>   
+                    </div>    
+                    {{form_end(form)}}
+                </div>           
+            </div>    
+            
+            {# Contact container #}
+            <div class="custom-container mt-5 d-none" id="contactContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <p> Demandes de contact </p>
+                    </div>
+                </div>
+                <div class="toolbar d-flex justify-content-around">
+                    <div class="col">
+                        <label for="réponseSelect">Filtrer par statut</label>
+                        <select id="demandeStatusSelect" class="form-select">
+                            <option value="*">Toutes les demandes</option>
+                            <option value="1">Non Traitées</option>
+                            <option value="0">Traitées</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="dateInput">Filtrer par date:</label>
+                        <input type="date" id="demande-date-select" class="form-control" placeholder="Date">
+                    </div>              
+                </div>
+                <div class="container-body mt-3 scrollable-container">
+                    <div class="row" id="demandesList">
+                    </div>
+                </div>
+            
+            {# modal repondre #}
+            <div class="modal fade" tabindex="-1" id="repondreModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Répondre</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="repondreForm">
+                                <label for="reponse">Réponse</label>
+                                <textarea id="reponse" name="reponse" class="form-control"></textarea>
+                                <input type="hidden" id="demandeId" name="demandeId">
+                                
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary mt-2 mb-2" data-bs-dismiss="modal" id="btnConfirmRepondre">Envoyer</button>
+                            <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {# modal supprimer #}
+            <div class="modal fade" tabindex="-1" id="deleteDemandeModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Supprimer</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h1>Êtes-vous sûr de vouloir supprimer cette demande?</h1>
+                            <input type="hidden" id="demandeId" name="demandeId">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="btnConfirmDeleteDemande">Supprimer</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            
+        </div>
         </div>
     </div>
 </div>
@@ -60,6 +306,8 @@
 
 
 
+
 <script src="{{ asset('js/employe.js') }}"></script>
+<script src="{{ asset('js/filtre_DDC.js') }}"></script>
 
 {% endblock %}

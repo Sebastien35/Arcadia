@@ -5,17 +5,22 @@ namespace App\Entity;
 use App\Repository\ServiceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 class Service
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['service_info'])]
     private ?int $id = null;
 
-   
     #[ORM\Column(length: 128)]
+    #[Groups(['service_info'])]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -29,6 +34,37 @@ class Service
 
     #[ORM\ManyToOne(inversedBy: 'services')]
     private ?Zoo $Zoo = null;
+
+    #[Vich\UploadableField(mapping: "service", fileNameProperty: "imageName")]
+    private $imageFile;
+
+    #[ORM\Column(type: "string",length:255, nullable: true)]
+    private ?string $imageName = null;
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageName(?string $imageName): static
+    {
+        $this->imageName = $imageName;
+
+        return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+        if (null !== $imageFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
 
     public function getId(): ?int
     {
@@ -61,7 +97,6 @@ class Service
         return $this;
     }
 
-  
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -86,32 +121,15 @@ class Service
 
         return $this;
     }
-
     public function getZoo(): ?Zoo
     {
         return $this->Zoo;
     }
-
     public function setZoo(?Zoo $Zoo): static
     {
         $this->Zoo = $Zoo;
-
         return $this;
     }
 
-    public function __construct(
-        string $nom,
-        string $description,
-        \DateTimeImmutable $createdAt = null,
-        ?\DateTimeImmutable $updatedAt =null
-        )
-    {
-        
-        $this->nom = $nom;
-        $this->description = $description;
-        
-        $this->createdAt=$createdAt?: new \DateTimeImmutable();
-        $this->updatedAt=$updatedAt?: new \DateTimeImmutable();
-        
-    }
+    
 }

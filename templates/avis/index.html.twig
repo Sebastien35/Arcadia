@@ -1,18 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AvisController!{% endblock %}
+{% block title %}Avis sur le Zoo{% endblock %}
 
 {% block body %}
 <link rel="stylesheet" href="{{ asset('css/avis.css') }}">
-
-<div class="container avis-list-container">
-    <div class="row">
-        <h1 class="text-center">Avis</h1>
-        <div class="col-12 avis-scroll-container" style="max-height: 400px; overflow-y: auto;">
-            <div id="avisList">
-                {% for singleAvis in avisList %}
-                    {% if singleAvis.isValidation == true %}
-                    <div class="card">
+<div class="page-container">
+<div class="see-post-container d-flex justify-content-around mt-5">
+    <H1 role="button" class="see-avis-btn mt-1"> Consulter les avis</H1>
+    <H1 role="button" class="create-avis-btn mt-1"> Donner son avis</H1>
+</div>
+<div class="container custom-container mt-2 scrollable-container d-none" id="avis-list-container">
+    <div class="avis-scroll-container">
+        <div id="avisList">
+            {% for singleAvis in avisList %}
+                {% if singleAvis.isValidation == true %}
+                <div class="card my-2">
+                    <div class="card-header d-flex">
                         <div class="stars card-title">
                             {% for star in range(1, 5) %}
                                 {% if star <= singleAvis.note %}
@@ -23,41 +26,67 @@
                             
                             {% endfor %}
                         </div>
-                        <div class="card-body">
-                            <p class="card-text">{{ singleAvis.getAvisContent }}</p>
-                            <p class="card-text"><small class="text-muted">Posté par {{ singleAvis.pseudo }} le {{ singleAvis.getCreatedAt|date('d/m/Y') }}</small></p>
-                        </div>
+                        {% if is_granted ('ROLE_ADMIN')  or is_granted ('ROLE_EMPLOYE') %}
+                        <btn class="btn btn-danger delete-avis" data-id = "{{ singleAvis.id }}" data-bs-toggle="modal" data-bs-target="#deleteAvisModal"><i class="fa-solid fa-trash"></i></btn>
+                        {% endif %}
                     </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ singleAvis.getAvisContent }}</p>
+                        <p class="card-text"><small class="text-muted">Posté par {{ singleAvis.pseudo }} le {{ singleAvis.getCreatedAt|date('d/m/Y') }}</small></p>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
         </div>
+    </div>
 </div>
-    </br></br>
-    <div class="col-12 avis-form-container mt-5 mb-5">
-        <form action="/avis/create" id="createAvisForm">
-            <div class="mb-3">
-                <label for="pseudo" class="form-label">Entrez un nom:</label>
-                <input type="text" name="pseudo" id="pseudoInput" class="form-control" placeholder="Pseudo" required>
-            </div>
-    
-            <div class="mb-3">
-                <label for="note" class="form-label">Notez le parc:</label>
-                <input type="number" name="note" id="noteInput" class="form-control" min="0" max="5" required>
-            </div>
-    
-            <div class="mb-3">
-                <label for="Avis_content" class="form-label">Entrez votre avis:</label>
-                <textarea name="Avis_content" id="avisContentInput" class="form-control" placeholder="Avis" rows="5" required></textarea>
-            </div>
+    <div class="custom-container container mt-2 mb-5 d-none" id="create-avis-container">
+        {{ form_start(avisForm,{'action': path('app_avis_create'), 'method':'POST'}) }}
+        <H1 class="text-center">Donner son avis</H1>
+        <p> Mon avis concerne le zoo 
             
-            <div class="mb-5">
-            <button type="button" id="btnCreate" class="btn btn-primary ">Submit</button>
-            </div>
-        </form>
+            {{ form_widget(avisForm.zoo, {'attr': {'class': 'form-control', 'required': true}}) }}
+
+        </p>
+        <div class="mb-3">
+            {{ form_label(avisForm.pseudo, 'Entrez un nom:', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(avisForm.pseudo, {'attr': {'class': 'form-control', 'placeholder': 'Pseudo', 'required': true}}) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(avisForm.note, 'Notez le parc:', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(avisForm.note, {'attr': {'class': 'form-control', 'min': 0, 'max': 5, 'required': true}}) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(avisForm.Avis_content, 'Entrez votre avis:', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(avisForm.Avis_content, {'attr': {'class': 'form-control', 'placeholder': 'Avis', 'rows': 5, 'required': true}}) }}
+        </div>
+        
+        
+        <div class="mb-5 d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        {{ form_end(avisForm) }}
     </div>
 </div>
 
+<div class="modal modal-fade" tabindex="-1" id="deleteAvisModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Suppression d'un avis</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cet avis ?</p>
+                <input type="hidden" id="avisIdContainer" value="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" id="btn-confirm-delete" data-bs-dismiss="modal" >Supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="{{ asset('js/avis.js') }}"></script>
 <script src="{{ asset('js/sanitizer.js') }}"> </script>

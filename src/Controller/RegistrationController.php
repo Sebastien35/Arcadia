@@ -15,26 +15,33 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Entity\Zoo;
 use App\Repository\ZooRepository;
 use App\Repository\UserRepository;
+use App\Service\MailerService;
 
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register', methods: ['POST'])]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppCustomAuthAuthenticator $authenticator, EntityManagerInterface $entityManager,UserRepository $userRepo, ZooRepository $ZooRepo): Response
-    {   
-        $users=$userRepo->findAll();
-        $zoos=$ZooRepo->findAll();
-
-        $worksAtId = $request->request->get('worksAt');
-        $worksAt = $entityManager->getRepository(Zoo::class)->find($worksAtId);
-        $user = new User(
-            $request->request->get('email'),
-            $request->request->get('plainPassword'),
-            [$request->request->get('Roles')],
-            new \DateTimeImmutable(),
-            null,
-           $worksAt,
-        ); 
-    
+    public function register(
+        Request $request, 
+        UserPasswordHasherInterface $userPasswordHasher, 
+        UserAuthenticatorInterface $userAuthenticator, 
+        AppCustomAuthAuthenticator $authenticator, 
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepo,
+        MailerService $mailerService,
+    ): Response
+    {
+    try{
+        
+    $user = new User(
+        $request->request->get('email'),
+        $request->request->get('plainPassword'),
+        [$request->request->get('Roles')],
+        new \DateTimeImmutable(),
+        null,
+        1
+    );
+    $email = $request->request->get('email');
+    $context = ['user'=>$user];
     $plainPassword = $request->request->get('plainPassword');
     $hashedPassword = $userPasswordHasher->hashPassword($user, $plainPassword);
     $user->setPassword($hashedPassword);
@@ -43,22 +50,13 @@ class RegistrationController extends AbstractController
     
     // Envoyer Email de confirmation
     
-    // return $userAuthenticator->authenticateUser(
-    //            $user,
-    //            $authenticator,
-    //            $request
-    //        );
-    //    }
-    return $this->render('admin/users.html.twig', [
-        'controller_name' => 'RegistrationController',
-        'zoos'=>$zoos,
-        'users'=>$users
-    ]);
+    $mailerService->sendWelcomeEmail($email, $context);
+    return $this->redirectToRoute('app_admin_index');
+    }catch(\Exception $e){
+    return $this->json(['error' => $e->getMessage()], 500);
     }
+}
 
-        
-    
 
 
 }
-

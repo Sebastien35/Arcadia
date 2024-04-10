@@ -7,5 +7,21 @@ controllers:
 
 app_admin_editHoraire:
     path: '/admin/horaires/edit/{id}'
-    controller: 'App\Controller\YourController::editHoraire'
+    controller: 'App\Controller\AdminController::editHoraire'
     methods: ['PUT']
+
+
+
+
+
+app_veterinaire_updateNourriture:
+    path: '/veterinaire/nourriture/edit/{id}'
+    controller: 'App\Controller\VeterinaireController::updateNourriture'
+    methods: ['PUT']
+app_veterinaire_deleteNourriture:
+    path: '/veterinaire/nourriture/delete/{id}'
+    controller: 'App\Controller\VeterinaireController::deleteNourriture'
+    methods: ['DELETE']
+
+
+

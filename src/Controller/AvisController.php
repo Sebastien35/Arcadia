@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use App\Service\Sanitizer;
 
 
 use DateTime;
@@ -20,6 +20,9 @@ use App\Repository\AvisRepository;
 use App\Entity\Zoo;
 use App\Repository\ZooRepository;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use App\Form\AvisType;
+
 
 #[Route('/avis', name: 'app_avis_')]
 class AvisController extends AbstractController
@@ -35,83 +38,66 @@ class AvisController extends AbstractController
     }
 
     #[Route('/', name: 'index')]
-    public function index(): Response
+    public function index(EntityManagerInterface $entityManager): Response
     {
         $avisList = $this->entityManager->getRepository(Avis::class)->findAll();
+        $avisForm = $this->createForm(AvisType::class);
         return $this->render('avis/index.html.twig', [
             'controller_name' => 'AvisController',
-            'avisList'=>$avisList // Passer la variables avisList qui contient tous les avisList
+            'avisList'=>$avisList,
+            'avisForm'=>$avisForm->createView()
         ]);
     }
+    
+    #[Route('/create', name: 'create', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $entityManager, Sanitizer $sanitizer): Response
+    {
+        $form = $this->createForm(AvisType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $avis = new Avis();
+                $avis->setPseudo($sanitizer->sanitizeHtml($form->get('pseudo')->getData()));
+                $avis->setAvisContent($sanitizer->sanitizeHtml($form->get('Avis_content')->getData()));
+                $avis->setNote($form->get('note')->getData());
+                $avis->setZoo($form->get('zoo')->getData());
+                $avis->setCreatedAt(new DateTimeImmutable());
+                $avis->setValidation(false);              
+                $entityManager->persist($avis);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_avis_index');
+            } catch (\Exception $e) {
+                return $this->redirectToRoute('app_avis_index', ['error' => $e->getMessage()]);
+            }
+        }
+        return $this->redirectToRoute('app_avis_index');
+    }
+    
 
-    #[Route('/create', name: 'create', methods: 'POST')]
-    public function create(Request $request): JsonResponse
+
+  
+
+    #[Route('/delete/{id}', name: 'delete', methods: ['DELETE'])]
+    public function deleteAvis(int $id, Avis $avis, EntityManagerInterface $entityManager, AvisRepository $avisrepo): Response
     {
         try{
-        $avis = $this->serializer->deserialize($request->getContent(), Avis::class, 'json');
-        $avis->setCreatedAt(new DateTimeImmutable());
-        $avis->setValidation(false);
-
-        $this->entityManager->persist($avis);
-        $this->entityManager->flush();
-        return new JsonResponse($this->serializer->serialize($avis, 'json'), JsonResponse::HTTP_CREATED, [], true);
+            if($this->getUser() == null){
+                throw new \Exception('403 Forbidden');
+            }
+            $avis = $avisrepo->findBy(['id' => $id]);
+            if (!$avis){
+                throw new \Exception('404 Not Found');
+            } else {
+                $entityManager->remove($avis[0]);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_avis_index');
+            }
+        } catch (\Exception $e) {
+            return new Response ('Une erreur est survenue');
         }
-        catch(\Exception $e){
-            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    #[Route('/show/{id}',name: 'show', methods: 'GET')]
-    public function show(int $id):Response
-    {
-        $avis = $this->entityManager->getRepository(Avis::class)->find($id);
-        if (!$avis){
-            throw $this->createNotFoundException(
-                'No avis found for id '.$id
-            );
-        }
-        return $this->render('avis/show.html.twig', [
-            'controller_name' => 'AvisController',
-            'avis'=>$avis //
-        ]);
-    }
-
-    #[Route('/valider/{id}',name: 'update', methods: 'POST')]
-    public function update(int $id, Request $request): JsonResponse
-    {
-        $avis=$this->repository->findOneBy(['id'=>$id]);
-        if (!$avis){
-            throw $this->createNotFoundException(
-                'No avis found for id '.$id
-            );
-        }else{
-        $avis->setValidation(true);
-        $this->entityManager->flush();
-        return new JsonResponse(null, Response::HTTP_OK);
-
-        }
-        
 
         
     }
-        
-
-
-
-    #[Route('/delete/{id}',name: 'delete', methods: 'DELETE')]
-    public function delete(int $id):Response
-    {
-        $avis = $this->entityManager->getRepository(Avis::class)->find($id);
-        if (!$avis){
-            throw $this->createNotFoundException(
-                'No avis found for id '.$id
-            );
-        }
-        $this->entityManager->remove($avis);
-        $this->entityManager->flush();
-        return new JsonResponse(null, Response::HTTP_OK);
-    }
-
-    
+  
 
 }

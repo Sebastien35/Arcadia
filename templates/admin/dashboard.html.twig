@@ -1,0 +1,748 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace Admin{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+
+
+<div class="container-fluid page-container">
+    <div class="row flex-nowrap" id="agencement">
+        
+        
+        <div class="collapse d-lg-none  px-sm-2 px-0 bg-dark" id="sidebarCollapse" aria-hidden="true">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="mt-5">
+                    <li class="mt-2 mb-3" >
+                        <H5 class="nav-item" role="button"  data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse"><i class="fa-solid fa-user-tie"></i>Espace administrateur</H5>
+                    </li>
+                    <li class="mt-3 mb-3">
+                        <p class="nav-item userBtn" id="userBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-user"></i> Utilisateurs</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item habitatBtn" id="habitatBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-igloo"></i> Habitats</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item animalBtn" id="animalBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-dog"></i> Animaux</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item infoAnimalBtn" id="infoAnimalBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-clipboard"></i> Comptes-rendus vétérinaires</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item servicesBtn" id="servicesBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ><i class="fa-solid fa-shop"></i> Services</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item horairesBtn" id="horairesBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ><i class="fa-regular fa-clock"></i> Horaires</p>
+                    </li>
+                    <li class="my-2">
+                        <p class="nav-item contactBtn" id="contactBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-envelope"></i> Contact</p>
+                    </li>
+                    <li class="my-2">
+                        <p class="nav-item consultationContainerBtn" role="button" id="consultationContainerBtn" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-solid fa-chart-simple"></i> Consultations</p>
+                    </li> 
+                    <li class="my-2">
+                        <p class="nav-item avisBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-comment"></i>Avis clients</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" ></i>Se déconnecter</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Sidebar Toggle Button (visible on small screens) -->
+        <div class="d-lg-none  px-sm-2 px-0 mt-5">
+            <button class="btn btn-primary w-100 toggle-btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse">
+                Menu
+            </button>
+        </div>
+
+        <!-- Sidebar Column (visible on large screens) -->
+        <div class="d-none d-lg-block col-lg-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <!-- Sidebar Content -->
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="mt-5">
+                    <li class="mt-2 mb-3" >
+                        <H5 class="nav-item" role="button" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse"><i class="fa-solid fa-user-tie"></i>Espace administrateur</H5>
+                    </li>
+                    <li class="mt-5 mb-3">
+                        <p class="nav-item userBtn" role="button"><i class="fa-regular fa-user"></i> Utilisateurs</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item habitatBtn"  role="button"><i class="fa-solid fa-igloo"></i>Habitats</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item animalBtn"  role="button"><i class="fa-solid fa-dog"></i> Animaux</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item infoAnimalBtn"  role="button"><i class="fa-regular fa-clipboard"></i> Comptes-rendus vétérinaires</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item servicesBtn"  role="button"><i class="fa-solid fa-shop"></i> Services</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <p class="nav-item horairesBtn"  role="button"><i class="fa-regular fa-clock"></i> Horaires</p>
+                    </li>
+                    <li class="my-2">
+                        <p class="nav-item contactBtn"  role="button"><i class="fa-solid fa-envelope"></i> Contact</p>
+                    </li>
+                    <li class="my-2">
+                        <p class="nav-item consultationContainerBtn" role="button" ><i class="fa-solid fa-chart-simple"></i> Consultations</p>
+                    </li> 
+                    <li class="my-2">
+                        <p class="nav-item avisBtn" role="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse"><i class="fa-regular fa-comment"></i>Avis clients</p>
+                    </li>
+                    <li class="mt-2 mb-3">
+                        <a class="nav-item btn btn-danger" href="/logout"><i class="fa-solid fa-right-from-bracket"></i>Se déconnecter</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col py-3" id="content" >
+            {# Error and success messages #}
+            <div>
+                {% for flashMessage in app.flashes('error') %}
+                <div class="alert alert-danger mt-5" role="alert" style="height:10vh">
+                    {{ flashMessage }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% for flashMessage in app.flashes('success') %}
+                    <div class="alert alert-success mt-5" role="alert" style="height:10vh">
+                        {{ flashMessage }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+            {# User Container #}
+            <div class="custom-container mt-5 d-none" id="user-container">
+                <div class="container-header d-flex">
+                    <div class="container-header-title">
+                        <p> Comptes utilisateurs</p>
+                    </div>
+                    <div class="container-header-button">
+                        <button class="header-btn" id="add-user" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="container-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" aria-label="user accounts table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Mail</th>
+                                    <th scope="col">Role</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+            
+                
+                {# Modal for creating user #}
+                <div class="modal modal-fade" id="addUserModal" tabindex="-1"  aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addUserModalLabel">Ajouter un utilisateur</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Créer un nouvel utilisateur:</h1>
+                                <form action="/register" method="POST">
+                                    <label for="email">Adresse mail:</label><br>
+                                        <input type="email" name="email" id="email" required><br>
+                                    <label for="Roles">Rôle:</label><br>
+                                        <select name="Roles" id="Roles" required>
+                                            <option value="" disabled selected  hidden>Choisir un rôle</option>
+                                            <option value="ROLE_EMPLOYE">Employé</option>
+                                            <option value="ROLE_VET">Vétérinaire</option>
+                                        </select><br><br>
+                                    <label for="plainPassword">Mot de passe:</label><br>
+                                    <input type="password" Placeholder="Password" name="plainPassword" id="password" required><br>
+                                    <label for="plainPassword">Confirmation mot de passe:</label><br>
+                                    <input type="password" placeholder="Confirm password" name="plainPassword" required><br><br>
+                                    
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" value="Créer" class="btn btn-primary">Enregistrer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Modal for deleting user #}
+                <div class="modal modal-fade" id="deleteUserModal" tabindex="-1"  aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteUserModalLabel">Supprimer un utilisateur</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Êtes-vous sûr de vouloir supprimer cet utilisateur?</h1>
+                                <input type="hidden" id="user-id" value="">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="confirm-delete-user-btn">Supprimer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Modal for editing user #}
+                <div class="modal modal-fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editUserModalLabel">Modifier un utilisateur</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Modifier les informations de l'utilisateur:</h1>
+                                <form autocomplete="off" onsubmit="editUser(); return false;"> <!-- Add onsubmit attribute -->
+                                    <input type="hidden" id="edit-user-id" value="">
+                                    <label for="edit-email">Adresse mail:</label><br /> <!-- Add prefix "edit-" to IDs -->
+                                    <input type="email" name="edit-email" id="edit-email" autocomplete="off"><br>
+                                    <label for="edit-role">Rôle:</label><br>
+                                    <select name="edit-role" id="edit-role">
+                                        <option value="ROLE_EMPLOYE">Employé</option>
+                                        <option value="ROLE_VET">Vétérinaire</option>
+                                    </select><br><br>
+                                    <label for="edit-plainPassword">Mot de passe:</label><br> <!-- Add prefix "edit-" to IDs -->
+                                    <input type="password" placeholder="Password" name="edit-plainPassword" id="edit-plainPassword"><br>
+                                    <label for="edit-confirmPassword">Confirmation mot de passe:</label><br> <!-- Add prefix "edit-" to IDs -->
+                                    <input type="password" placeholder="Confirm password" name="edit-confirmPassword" id="edit-confirmPassword"><br><br>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" id="confirm-edit-user-btn">Enregistrer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {# Habitat Container #}
+            <div class="custom-container mt-5  mb-3 d-none" id="habitat-container">
+                <div class="container-header d-flex">
+                    <div class="container-header-title">
+                        <p>Les habitats</p>
+                    </div>
+                    <div class="container-header-button">
+                        <button class="header-btn" id="add-habitat" data-bs-toggle="modal" data-bs-target="#addHabitatModal"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>    
+                <div class="container-body mt-2 scrollable-container">
+                    <div class="row">
+                        {% for singlehabitat in habitats %}
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="card mb-2 habitatCard">
+                                <div class="card-header d-flex justify-content-between">
+                                    <div class="card-header-title">
+                                        <h5 class="card-title">{{ singlehabitat.getNom }}</h5>
+                                    </div>
+                                    <div class="card-header-buttons">
+                                        <button type="button " data-bs-target="#deleteHabitatModal" data-bs-toggle="modal" data-habitat-id="{{ singlehabitat.id }}" class="btn btn-danger" ><i class="fa-solid fa-trash"></i></button>
+                                        <button type="button " class="btn btn-primary"  onclick="window.location=('/admin/habitats/update/'+ {{ singlehabitat.id }} )"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <img src="{{ asset('images/habitat/' ~ singlehabitat.imageName) }}" class="card-img-top habitat-img" alt="image_{{ singlehabitat.getNom }}"  
+                                    role="button" onClick="window.location=('/habitats/show/'+ {{ singlehabitat.id }} )" >
+                                </div>
+                                <div class="card-footer scrollable-container">
+                                    <p class="card-text commentsBt" role="button" data-habitat-id="{{singlehabitat.id}}"><i class="fa-regular fa-comment"></i> Commentaires</p>
+                                    <div class="d-none">
+                                        {% for commentaire in commentaires %}
+                                            {% if commentaire.getHabitat.id == singlehabitat.id %}
+                                                <div class="card">
+                                                    {% if commentaire.auteur is not null %}
+                                                        <p class="text-muted">{{ commentaire.getcreatedAt | date ('d m Y') }}, {{ commentaire.auteur.email }}</p>
+                                                        <p class="card-text">{{ commentaire.commentaire }}</p>
+                                                    {% else %}
+                                                        <p class="text-muted">{{ commentaire.getcreatedAt | date ('d m Y') }}, Compte supprimé</p>
+                                                        <p class="card-text">{{ commentaire.commentaire }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}       
+                    </div>
+                </div>  
+                {# Modal for creating habitat #}
+                <div class="modal modal-fade" tabindex="-1" id="addHabitatModal"  aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addHabitatModalLabel">Ajouter un habitat</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                {{ form_start(createHabitatForm, {'action':('/admin/habitats/create')}) }}
+                                {{ form_errors(createHabitatForm)}}
+                                <div class="mb-3">
+                                    {{ form_label(createHabitatForm.nom) }}<br>
+                                    {{ form_widget(createHabitatForm.nom) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(createHabitatForm.description) }}<br>
+                                    {{ form_widget(createHabitatForm.description) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_row(createHabitatForm.imageFile, {'label': 'Image'}) }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary mb-2">Ajouter</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                {{ form_end(createHabitatForm) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# Modal for deleting habitat #}
+                <div class="modal modal-fade" tabindex="-1" id="deleteHabitatModal"  aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteHabitatModalLabel">Supprimer un habitat</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Êtes-vous sûr de vouloir supprimer cet habitat?</h1>
+                                <input type="hidden" id="habitat-id" value="">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="confirm-delete-habitat-btn">Supprimer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {# Animal Container #}
+            <div class="custom-container mt-5 mb-3 d-none" id="animal-container">
+                <div class="container-header d-flex">
+                    <div class="container-header-title">
+                        <p>Les animaux</p>
+                    </div>
+                    <div class="container-header-button">
+                        <button class="header-btn" id="add-animal-btn"><i class="fa-solid fa-plus" data-bs-toggle="modal" data-bs-target="#add-animal-modal"></i></button>
+                    </div>
+                </div>    
+                <div class="container-body mt-2 scrollable-container">
+                    <div class="row" id="animalsList">      
+                    </div>
+                </div>
+                {# Modal for creating animal #}
+                <div class="modal modal-fade" id="add-animal-modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="add-animal-modal-label">Nouvel arrivant!</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                    {{ form_start(createAnimalForm, {'action':('/admin/animal/create')}) }}
+                                    {{ form_errors(createAnimalForm)}}
+                                <div class="mb-3">
+                                    {{ form_label(createAnimalForm.prenom) }}<br>
+                                    {{ form_widget(createAnimalForm.prenom) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(createAnimalForm.race) }}<br>
+                                    {{ form_widget(createAnimalForm.race) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(createAnimalForm.habitat) }}<br>
+                                    {{ form_widget(createAnimalForm.habitat) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(createAnimalForm.imageFile) }}<br>
+                                    {{ form_widget(createAnimalForm.imageFile) }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary mb-2">Ajouter</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                {{ form_end(createAnimalForm) }}
+                            </div>   
+                        </div>
+                    </div>
+                </div> 
+                {# Modal for deleting animal #}
+                <div class="modal modal-fade" id="delete-animal-Modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="delete-animal-Modal-label">Supprimer l'animal</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="delete-animal-id">
+                                <p>Voulez-vous vraiment supprimer cet animal?</p>   
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="confirm-delete-animal-btn">Supprimer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            {# InfoAnimal Container #}
+            <div class="custom-container mt-5 mb-3 d-none" id="info-animal-container">
+                <div class="container-header d-flex">
+                    <div class="container-header-title">
+                        <p>Comptes-rendus vétérinaires</p>
+                    </div>
+                </div>
+                <div class="toolbar d-flex justify-content-around">
+                    <div class="col">
+                        <label for="animalSelect">Filtrer par animal:</label>
+                        <select id="animal-select" class="form-select">
+                            
+                            <option value="0">Tous les animaux</option>
+                            {% for animal in animaux %}
+                                <option value="{{ animal.id }}">{{ animal.prenom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="dateInput">Filtrer par date:</label>
+                        <input type="date" id="date-select" class="form-control" placeholder="Date">
+                    </div>              
+                </div>
+                <div class="container-body mt-2 scrollable-container">
+                    <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Animal</th>
+                                <th scope="col">Vétérinaire</th>
+                                <th scope="col">Action</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="infoAnimalTableBody">
+                            
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                {# Modal for deleting infoAnimal #}
+                <div class="modal modal-fade" tabindex="-1" id="deleteInfoAnimalModal"  aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteInfoAnimalModalLabel">Supprimer un compte-rendu vétérinaire</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body  d-flex justify-content-center">
+                                <h1>Êtes-vous sûr de vouloir supprimer ce compte-rendu vétérinaire?</h1>
+                                <input type="hidden" id="infoAnimal-id" value="">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"  id="confirm-delete-infoAnimal-btn">Supprimer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {# Services Container #}
+            <div class="custom-container mt-5 mb-3 d-none" id="services-container">
+                <div class="container-header d-flex">
+                    <div class="container-header-title">
+                        <p>Les services</p>
+                    </div>
+                    <div class="container-header-button">
+                        <button class="header-btn" id="add-service" data-bs-toggle="modal" data-bs-target="#createServiceModal"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="container-body mt-2 scrollable-container">
+                    <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="servicesList">
+                            
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+
+                {# Modal for deleting service #}
+                <div class="modal modal-fade" tabindex="-1" id="deleteServiceModal"  aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteServiceModalLabel">Supprimer un service</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Êtes-vous sûr de vouloir supprimer ce service?</h1>
+                                <input type="hidden" id="service-id" value="">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="confirm-delete-service-btn">Supprimer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# Modal for creating Service #}
+                <div class="modal modal-fade" tabindex="-1" id="createServiceModal" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="createServiceModalLabel">Créer un service</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Créer un nouveau service:</h1>
+                                {{ form_start(serviceForm, {'action':('/admin/services/create')}) }}
+                                {{ form_errors(serviceForm)}}
+                                <div class="mb-3">
+                                    {{ form_label(serviceForm.nom) }}<br>
+                                    {{ form_widget(serviceForm.nom) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(serviceForm.description) }}<br>
+                                    {{ form_widget(serviceForm.description) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_row(serviceForm.imageFile, {'label': 'Image'}) }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary mb-2">Ajouter</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                {{ form_end(serviceForm) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            {# Horaires Container #}
+            <div class="custom-container mt-5 mb-3 d-none" id="horaires-container">
+                <div class="container-header d-flex">
+                    <div class="container-header-title">
+                        <p>Les horaires</p>
+                    </div>
+                </div>
+                <div class="container-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Jour</th>
+                                    <th scope="col">Ouverture</th>
+                                    <th scope="col">Fermeture</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for horaire in horaires %}
+                                <tr>
+                                    <td>{{ horaire.jour }}</td>
+                                    {% if horaire.isOuvert %}
+                                    <td>{{ horaire.HOuverture|date ('H:i')  }}</td>
+                                    <td>{{ horaire.HFermeture|date ('H:i') }}</td>
+                                    {% else %}
+                                    <td>Fermé</td>
+                                    <td>Fermé</td>
+                                    {% endif %}
+                                    <td>
+                                        <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#editHoraireModal" data-horaire-id="{{ horaire.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {# Modal for editing horaire #}
+                <div class="modal modal-fade" tabindex="-1" id="editHoraireModal"  aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editHoraireModalLabel">Modifier un horaire</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="edit-horaire-form">
+                                    <input type="hidden" id="edit-horaire-id" value="">
+                                    <div class="mb-3">
+                                        <label for="isOuvert" class="col-form-label">Ouvert:</label>
+                                        <input type="checkbox" class="form-check-input" id="isOuvert">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="HOuverture" class="col-form-label">Heure d'ouverture:</label>
+                                        <input type="time" class="form-control" id="HOuverture">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="HFermeture" class="col-form-label">Heure de fermeture:</label>
+                                        <input type="time" class="form-control" id="HFermeture">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="confirm-edit-horaire-btn">Enregistrer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {# Contact container #}
+                <div class="custom-container mt-5 d-none" id="contactContainer">
+                    <div class="container-header">
+                        <div class="container-title">
+                            <p> Demandes de contact </p>
+                        </div>
+                    </div>
+                    <div class="toolbar d-flex justify-content-around">
+                        <div class="col">
+                            <label for="réponseSelect">Filtrer par statut</label>
+                            <select id="demandeStatusSelect" class="form-select">
+                                <option value="*">Toutes les demandes</option>
+                                <option value="1">Non Traitées</option>
+                                <option value="0">Traitées</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="dateInput">Filtrer par date:</label>
+                            <input type="date" id="demande-date-select" class="form-control" placeholder="Date">
+                        </div>              
+                    </div>
+                    <div class="container-body mt-3 scrollable-container">
+                        <div class="row" id="demandesList">
+                        </div>
+                    </div>
+                
+                {# modal repondre #}
+                <div class="modal fade" tabindex="-1" id="repondreModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Répondre</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="repondreForm">
+                                    <label for="reponse">Réponse</label>
+                                    <textarea id="reponse" name="reponse" class="form-control"></textarea>
+                                    <input type="hidden" id="demandeId" name="demandeId">
+                                    
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary mt-2 mb-2" data-bs-dismiss="modal" id="btnConfirmRepondre">Envoyer</button>
+                                <button type="button" class="btn btn-secondary mt-2 mb-2" data-bs-dismiss="modal">Annuler</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# modal supprimer #}
+                <div class="modal fade" tabindex="-1" id="deleteDemandeModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Supprimer</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Êtes-vous sûr de vouloir supprimer cette demande?</h1>
+                                <input type="hidden" id="demandeId" name="demandeId">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="btnConfirmDeleteDemande">Supprimer</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                
+            </div>
+            
+            {# Consultations Container #}
+            <div class="mt-5 d-none custom-container" id="consultationContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <p> Popularité des animaux </p>
+                    </div>
+                </div>
+                <div class="toolbar px-1 mt-1">
+                    <input type="text" id="searchAnimal" class="form-control" placeholder="Rechercher un animal">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <td scope="col">Animal</td>
+                                <td scope="col">Clics</td>
+                            </tr>
+                        </thead>
+                        <tbody id="visitTable">
+                        </tbody>
+                    </table>  
+                </div> 
+            </div>
+            
+            {# Avis Container #}
+            <div class="mt-5 d-none custom-container" id="avisContainer">
+                <div class="container-header">
+                    <div class="container-title">
+                        <p> Avis </p>
+                    </div>
+                </div>
+                <div class="container-body mt-3 scrollable-container">
+                    <div class="row" id="avisList">
+                        
+                    </div>
+                </div>
+            </div>
+
+    </div>
+</div>
+
+<script src="{{ asset('js//admin/admin-dashboard.js') }}"></script>
+<script src="{{ asset('js/admin/admin_dashboard_allVisits.js') }}"></script>
+<script src="{{ asset('js/filtre_DDC.js') }}"></script>
+<script src="{{ asset('js/allAnimals.js') }}"></script>
+<script src="{{ asset('js/sanitizer.js') }}"></script>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

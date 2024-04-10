@@ -7,20 +7,29 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: HabitatRepository::class)]
 class Habitat
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("animal:read")]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups("animal:read")]
     private ?string $nom = null;
 
-    #[ORM\Column(type: Types::BLOB, nullable: true)]
-    private $image = null;
+    #[ORM\Column(type: "string",length:255, nullable: true)]
+    private ?string $imageName = null;
+
+    #[Vich\UploadableField(mapping: "habitat", fileNameProperty: "imageName")]
+    private $imageFile;
 
     #[ORM\Column(length: 4096)]
     private ?string $description = null;
@@ -28,9 +37,20 @@ class Habitat
     #[ORM\OneToMany(mappedBy: 'Habitat', targetEntity: Animal::class)]
     private Collection $animals;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\OneToMany(mappedBy: 'Habitat', targetEntity: CommentaireHabitat::class, cascade: ['remove'])]
+    private Collection $commentaireHabitats;
+
+    #[ORM\OneToMany(mappedBy: 'habitat', targetEntity: AdditionalImages::class)]
+    private Collection $additionalImages;
+
     public function __construct()
     {
         $this->animals = new ArrayCollection();
+        $this->commentaireHabitats = new ArrayCollection();
+        $this->additionalImages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -50,17 +70,31 @@ class Habitat
         return $this;
     }
 
-    public function getImage()
+    public function getImageName(): ?string
     {
-        return $this->image;
+        return $this->imageName;
     }
 
-    public function setImage($image): static
+    public function setImageName(?string $imageName): static
     {
-        $this->image = $image;
+        $this->imageName = $imageName;
 
         return $this;
     }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+        if (null !== $imageFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
 
     public function getDescription(): ?string
     {
@@ -98,6 +132,78 @@ class Habitat
             // set the owning side to null (unless already changed)
             if ($animal->getHabitat() === $this) {
                 $animal->setHabitat(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommentaireHabitat>
+     */
+    public function getCommentaireHabitats(): Collection
+    {
+        return $this->commentaireHabitats;
+    }
+
+    public function addCommentaireHabitat(CommentaireHabitat $commentaireHabitat): static
+    {
+        if (!$this->commentaireHabitats->contains($commentaireHabitat)) {
+            $this->commentaireHabitats->add($commentaireHabitat);
+            $commentaireHabitat->setHabitat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaireHabitat(CommentaireHabitat $commentaireHabitat): static
+    {
+        if ($this->commentaireHabitats->removeElement($commentaireHabitat)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaireHabitat->getHabitat() === $this) {
+                $commentaireHabitat->setHabitat(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AdditionalImages>
+     */
+    public function getAdditionalImages(): Collection
+    {
+        return $this->additionalImages;
+    }
+
+    public function addAdditionalImage(AdditionalImages $additionalImage): static
+    {
+        if (!$this->additionalImages->contains($additionalImage)) {
+            $this->additionalImages->add($additionalImage);
+            $additionalImage->setHabitat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdditionalImage(AdditionalImages $additionalImage): static
+    {
+        if ($this->additionalImages->removeElement($additionalImage)) {
+            // set the owning side to null (unless already changed)
+            if ($additionalImage->getHabitat() === $this) {
+                $additionalImage->setHabitat(null);
             }
         }
 

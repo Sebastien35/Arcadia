@@ -1,17 +1,22 @@
 .navbar-custom{
     background-color: #495635;
-    height:52px
+    height:52px;
+    max-width:100vw;
+    overflow: hidden;
 }
 
 
-@media (max-width:767px){
+@media (max-width:980px){
 
     .nav-item{ font-size:3vh;}
-        
-    
+    .social{
+        position: relative;
+        top: -1.8vh;
+
+    }
 }
 
-.navbar-custom a:hover, a:active, a:visited,a {
+.navbar-custom , a:active, a:visited,a {
     text-decoration: none;
     color:#ffffffff;
     font-size: 32 ;
@@ -23,6 +28,10 @@
     font-size: 32;
 }
 
+.nav-link:hover , .navbar-brand:hover{
+    color: #ffcb00;
+    transition: color 0.15s,  ease-in-out, background-color 0.15s ease-in-out;
+}
 
 .navbar-custom-footer {
     color: white;
@@ -40,3 +49,33 @@
 .footer-text-wrapper {
     margin-top: 15px; /* Adjust this value to move the text further down */
 }
+
+.navbar-toggle{
+    position:relative;
+    right: 0 !important;
+}
+
+
+
+.navbar{
+    --bs-navbar-color: var(--primary) !important;
+    
+}
+
+footer{
+    margin-top: 2vh;
+    position: absolute;
+    left: -5%;
+    z-index: 1000;
+    --bs-gutter-x: 0 !important;
+}
+
+
+footer .navbar {
+    margin-top: 2vh;
+    width: 110vw;
+}
+.social{
+    font-size: 1.2em;
+}
+

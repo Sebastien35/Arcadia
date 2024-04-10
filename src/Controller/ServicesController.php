@@ -12,15 +12,21 @@ use App\Repository\ServiceRepository;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 #[Route('/services', name: 'app_services_')]
 class ServicesController extends AbstractController
 {   
     private EntityManagerInterface $entityManager;
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(
+        EntityManagerInterface $entityManager,  
+        private SerializerInterface $serializer,
+        )
     {
         $this->entityManager=$entityManager;
+        $this->serializer = $serializer;
     }
 
     #[Route('/', name: 'index_')]
@@ -37,6 +43,7 @@ class ServicesController extends AbstractController
     #[Route('/show/{id}',name: 'showService', methods: 'GET')]
     public function show(int $id):Response
     {
+        try{
         $service = $this->entityManager->getRepository(Service::class)->find($id);
         if (!$service){
             throw $this->createNotFoundException("No service found for {$id} id");
@@ -45,15 +52,29 @@ class ServicesController extends AbstractController
             'controller_name' => 'ServicesController',
             'service'=>$service // Passer la variable qui contient le service correspondant à l'ID recherché
         ]);
+    }   catch(\Exception $e){
+        throw new \Exception($e->getMessage());
+    }
+    
     }
 
-
-
-   
-    
-    
-
-
+    #[Route('/all',name: 'getAllServices', methods: 'GET')]
+    public function getAllServices():JsonResponse
+    {   
+        if($this->getUser() == null){
+            throw $this->createAccessDeniedException('You are not allowed to access this page');
+        }
+        try{
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $services = $this->entityManager->getRepository(Service::class)->findAll();
+        $context = ['groups' => 'service_info'];    
+        return JsonResponse::fromJsonString($this->serializer->serialize
+        ($services, 'json', $context), 
+        Response::HTTP_OK);
+    }   catch(\Exception $e){
+        throw new \Exception($e->getMessage());
+    }
+    }
 
 }   
 

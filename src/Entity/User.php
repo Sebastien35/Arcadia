@@ -3,31 +3,35 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use PHPUnit\Util\Json as UtilJson;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Json;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: "users")]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['info_animal', 'user_info'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['info_animal', 'user_info'])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['user_info'])]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
@@ -37,10 +41,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?Zoo $worksAt = null;
+    #[ORM\OneToMany(mappedBy: 'auteur', targetEntity: CommentaireHabitat::class)]
+    private Collection $commentaireHabitats;
 
-   
+    #[ORM\OneToMany(mappedBy: 'auteur', targetEntity: InfoAnimal::class)]
+    private Collection $infoAnimals;
+
+    #[ORM\Column]
+    private int $zoo_id;
+
+    public function getZooId(): ?int
+    {
+        return $this->zoo_id;
+    }
+    public function setZooId(int $zoo_id): static
+    {
+        $this->zoo_id = $zoo_id;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -60,7 +79,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * A visual identifier that represents this user.
+     * A visual identifier that represents this User.
      *
      * @see UserInterface
      */
@@ -75,9 +94,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_EMPLOYE';
-
         return array_unique($roles);
     }
 
@@ -108,7 +124,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
+        // If you store any temporary, sensitive data on the User, clear it here
         // $this->plainPassword = null;
     }
 
@@ -136,29 +152,83 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getWorksAt(): ?Zoo
-    {
-        return $this->worksAt;
-    }
 
-    public function setWorksAt(?Zoo $worksAt): static
-    {
-        $this->worksAt = $worksAt;
-
-        return $this;
-    }
-
-
-
-    public function __construct(string $email, string $password, array $roles, \DateTimeImmutable $createdAt, ?\DateTimeImmutable $updatedAt, ?Zoo $worksAt,)
+    public function __construct(
+        string $email, 
+        string $password, 
+        array $roles, 
+        \DateTimeImmutable $createdAt, 
+        ?\DateTimeImmutable $updatedAt,
+        int $zoo_id
+        )
     {
         $this->email = $email;
         $this->password = $password;
         $this->roles = $roles;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
-        $this->worksAt = $worksAt;
+        $this->zoo_id = $zoo_id;
+        
         
     }
-     
+
+    /**
+     * @return Collection<int, CommentaireHabitat>
+     */
+    public function getCommentaireHabitats(): Collection
+    {
+        return $this->commentaireHabitats;
+    }
+
+    public function addCommentaireHabitat(CommentaireHabitat $commentaireHabitat): static
+    {
+        if (!$this->commentaireHabitats->contains($commentaireHabitat)) {
+            $this->commentaireHabitats->add($commentaireHabitat);
+            $commentaireHabitat->setAuteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaireHabitat(CommentaireHabitat $commentaireHabitat): static
+    {
+        if ($this->commentaireHabitats->removeElement($commentaireHabitat)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaireHabitat->getAuteur() === $this) {
+                $commentaireHabitat->setAuteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, InfoAnimal>
+     */
+    public function getInfoAnimals(): Collection
+    {
+        return $this->infoAnimals;
+    }
+
+    public function addInfoAnimal(InfoAnimal $infoAnimal): static
+    {
+        if (!$this->infoAnimals->contains($infoAnimal)) {
+            $this->infoAnimals->add($infoAnimal);
+            $infoAnimal->setAuteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInfoAnimal(InfoAnimal $infoAnimal): static
+    {
+        if ($this->infoAnimals->removeElement($infoAnimal)) {
+            // set the owning side to null (unless already changed)
+            if ($infoAnimal->getAuteur() === $this) {
+                $infoAnimal->setAuteur(null);
+            }
+        }
+
+        return $this;
+    }
 }

@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification des informations :{{animal.prenom}}{% endblock %}
+
+{% block body %}
+
+<nav class="nav navbar bg-dark mt-5">
+    <a class="nav-item" href="/admin">Retour </a>
+</nav>
+
+<div class="container mt-5 ">
+    <div class="card">
+        <div class="card-header">
+            <h1>Modification des informations : {{animal.prenom}}</h1>
+        </div>
+        <div class="card-body">
+            {{ form_start(form, {'action': path('app_admin_updateAnimal', {'id':animal.id}), 'method':'POST', 'enctype': 'multipart/form-data'}) }}
+            {{ form_errors(form) }}
+            <div class="mb-3">
+                {{form_label(form.prenom, "Prénom")}}
+                {{form_widget(form.prenom, {'attr': {'class': 'form-control'}})}}
+            </div>
+            <div class="mb-3">
+                {{form_label(form.race, "Race")}}
+                {{form_widget(form.race, {'attr': {'class': 'form-control'}})}}
+            </div>
+            <div class="mb-3">
+                {{form_label(form.habitat, "Habitat")}}
+                {{form_widget(form.habitat, {'attr': {'class': 'form-control'}})}}
+            </div>
+            <div class="mb-3">
+                {{form_label(form.imageFile, "Image")}}
+                {{form_widget(form.imageFile, {'attr': {'class': 'form-control'}})}}
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-secondary" onclick="window.location.href='{{ path('app_admin_index') }}'">Retour</button>
+            <button type="submit" class="btn btn-primary">Modifier</button>
+            {{ form_end(form) }}
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

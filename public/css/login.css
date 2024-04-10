@@ -1,0 +1,14 @@
+body{
+    background-color:var(--bg-dark);
+}
+
+.form-container{
+    background-color:var(--white);
+    position: absolute;
+    top: 10vh;
+    height: auto;
+    left:10vw;
+    width: 80vw;
+
+}
+

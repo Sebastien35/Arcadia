@@ -4,22 +4,46 @@
 
 {% block body %}
 <link rel="stylesheet" href="{{asset('css/services.css')}}">
-
-<div class="container service-list">
-    <h1 class=""> Les services proposés au zoo:</h1>
-    <div class="row">
-        {% for service in services %}
-        <div class="col-md-4 col-sm-6 mb-4 service" data-service="{{service.nom}}">
-            <div class="card card-service" style="text-align: center;">
-                <H5 class="card-title">{{service.nom}}</H5>
-                <a href="/services/show/{{service.id}}" class="btn btn-primary">Voir</a>
+<style>
+    body{
+        background-image: url( {{ asset('images/parc/birds.webp') }} )
+    }
+</style>
+<div class="page-container">
+    <div class="container service-list mt-5 px-0">
+        <h1 class="mb-3 text-dark w-100 px-0 mx-0 primary text-white px-0 text-center "> Les services proposés au zoo:</h1>
+        <div class="container scrollable-container mb-5">
+            <div class="row">
+                {% for service in services %}
+                <div class="col-12">
+                    {% if loop.last %}
+                    <div class="card  mt-2 mb-5">
+                    {% else %}
+                    <div class="card  mt-2">
+                    {% endif %}
+                        <div class="row">
+                            <div class="col-md-4">
+                                {% if service.imageName == null %}
+                                <image src="{{asset('images/service/default.jpg')}}" alt="{{service.nom}}" class="img-fluid service-image">
+                                {% else %}
+                                <image src="{{asset('images/service/' ~ service.imageName)}}" alt="{{service.nom}}" class="img-fluid service-image">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{ service.nom }}</h5>
+                                    <button type="button"  onclick="seeService({{service.id}})" class="btn btn-primary">Voir plus</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-        </div>
-        {% endfor %}
+        </div>  
     </div>
-
 </div>
-
+<script src="{{asset('js/services.js')}}"></script>
 
 
 
