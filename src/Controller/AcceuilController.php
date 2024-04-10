@@ -41,7 +41,7 @@ class AcceuilController extends AbstractController
 
     ): Response
 {
-    $avis = $avisRepository->findBy(['validation' => 0]);
+    $avis = $avisRepository->findBy(['validation' => 1]);
     $horaires = $horaireRepository->findAll();
     $habitats = $habitatRepository->findAll();
     $services = $serviceRepository->findAll();
