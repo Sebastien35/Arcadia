@@ -114,11 +114,13 @@ noteInput.addEventListener('input', function() {
 });
 document.addEventListener('DOMContentLoaded', function() {
     validationNote();
-    validateForm();
+
 });
 function validationNote(){
     let note = noteInput.value;
     if(note == null || note == 0 || note == undefined || note == ''){
+        console.log('note invalide');
+        console.log(noteInput.value);
         return false;
     } else {
         return true;
