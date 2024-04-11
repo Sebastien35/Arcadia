@@ -102,7 +102,6 @@ html{
 @media(max-width: 1280px){
   .animal-image{
     height: 30vh;
-    max-width: 100px;
   }
 }
 
@@ -116,3 +115,34 @@ html{
   --bs-table-color: var(--white);
   --bs-table-striped-color: var(--primary);
 }
+
+.slider .form-control{
+  background-color: transparent !important; 
+  border: 0;
+  position: relative;
+  top: -3vh;
+  z-index: 100;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  opacity: 0;
+}
+.active{
+  color: var(--active) !important;
+}
+
+.stars-container {
+  position: relative;
+  top : 0vh;
+  z-index: 1;
+}
+
+.stars {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+
+

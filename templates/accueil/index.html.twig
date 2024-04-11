@@ -174,9 +174,16 @@
             {{ form_label(avisForm.pseudo, 'Entrez un nom:', {'label_attr': {'class': 'form-label'}}) }}
             {{ form_widget(avisForm.pseudo, {'attr': {'class': 'form-control', 'placeholder': 'Pseudo', 'required': true}}) }}
         </div>
-        <div class="mb-3">
-            {{ form_label(avisForm.note, 'Notez le parc:', {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(avisForm.note, {'attr': {'class': 'form-control', 'min': 0, 'max': 5, 'required': true}}) }}
+        <div class="mb-3 slider">
+          {{ form_label(avisForm.note, 'Note:', {'label_attr': {'class': 'form-label'}}) }}
+          <div class="stars-container">
+            <div class="stars d-flex justify-content-around"> 
+                {% for i in 1..5 %}  
+                    <i class="fa fa-star star" data-value={{i}}></i>
+                {% endfor %} 
+            </div>
+            {{ form_widget(avisForm.note, {'attr': {'class': 'form-control starRating', 'placeholder': 'Note', 'required': true}}) }}
+          </div>       
         </div>
         <div class="mb-3">
             {{ form_label(avisForm.Avis_content, 'Entrez votre avis:', {'label_attr': {'class': 'form-label'}}) }}
@@ -218,5 +225,5 @@
   </div>
 </div>
 
-
+<script src="{{ asset('js/acceuil.js') }}"></script>
 {% endblock %}
