@@ -107,6 +107,7 @@ function validationLenAvis_Content(){
         return true;
     }
 }
+/* Validation note */
 
 const noteInput = document.getElementById('avis_note')
 noteInput.addEventListener('input', function() {
