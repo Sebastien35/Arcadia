@@ -30,6 +30,7 @@ use App\Repository\CommentaireHabitatRepository;
 
 
 use Doctrine\ORM\Mapping\OrderBy;
+use Symfony\Component\Form\Test\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 #[Route('/veterinaire', name: 'app_veterinaire_')]
@@ -44,7 +45,7 @@ class VeterinaireController extends AbstractController
         $this->entityManager = $entityManager;
     }
     #[Route('/', name: 'index')]
-    public function index(AnimalRepository $animalRepo, NourritureRepository $nourritureRepo): Response
+    public function index(AnimalRepository $animalRepo, NourritureRepository $nourritureRepo, ): Response
     {
         $nourritures = $nourritureRepo->findAll();
         $animaux = $animalRepo->findAll();

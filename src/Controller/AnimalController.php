@@ -71,11 +71,11 @@ class AnimalController extends AbstractController
 
     #[Route('/getImages/{id}', name: 'getImages', methods: ['GET'])]
     public function getImages(int $id, AnimalRepository $animalRepo, AdditionalImagesRepository $imageRepo, SerializerInterface $serializer): JsonResponse
-    {   
+    {
     try{
         $images = $imageRepo->findBy(['animal' => $id], ['createdAt' => 'DESC']);
         if(!$images){
-            $animalImages = null; 
+            $images = null;
         }
         return new JsonResponse($serializer->serialize($images, 'json', ['groups' => 'image:read']));
     }
