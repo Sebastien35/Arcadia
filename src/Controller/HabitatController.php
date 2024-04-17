@@ -32,7 +32,7 @@ class HabitatController extends AbstractController
     public function index(): Response
     {
         $habitats = $this->entityManager->getRepository(Habitat::class)->findAll();
-        
+        dd($habitats);
         return $this->render('habitat/index.html.twig', [
             'controller_name' => 'HabitatController',
             'habitats' => $habitats,

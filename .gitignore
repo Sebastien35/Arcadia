@@ -5,6 +5,9 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
+/public/images/animal
+/public/images/habitat
+/public/images/service
 /var/
 /vendor/
 .env

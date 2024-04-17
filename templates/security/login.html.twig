@@ -23,6 +23,11 @@
                     <div class="mb-3 d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary">Se connecter</button>
                     </div>
+                    {% if error_message %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error_message }}
+                        </div>
+                    {% endif %}
                     <input type="hidden" name="_csrf_token"
                         value="{{ csrf_token('authenticate') }}"
                     >

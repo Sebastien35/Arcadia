@@ -251,7 +251,7 @@ public function dashboard(
         $em->remove($user);
         $em->flush();
         return new JsonResponse(['message' => 'User deleted successfully'], Response::HTTP_OK);
-        }catch (\Exception $e) {
+        }catch (\Exception) {
             return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -286,8 +286,8 @@ public function dashboard(
     }
 
     #[Route('/user/nonAdmins', name: 'getNonAdmins', methods: ['GET'])]
-    public function getNonAdmins( EntityManagerInterface $em, UserRepository $userRepo, SerializerInterface $serializer): JsonResponse
-    {   
+    public function getNonAdmins( UserRepository $userRepo, SerializerInterface $serializer): JsonResponse
+    {
         try{
         $users = $userRepo->findNonAdmins();
         $context = ['groups' => 'user_info'];
@@ -312,7 +312,6 @@ public function dashboard(
         ]);
     }
 
-
     #[Route('/horaires/edit/{id}', name: 'editHoraire', methods: ['PUT'])]
     public function editHoraire(int $id, Request $request, EntityManagerInterface $em): JsonResponse
     {
@@ -321,8 +320,7 @@ public function dashboard(
     
         if (!$horaire) {
             return new JsonResponse(['error' => 'Horaire not found'], Response::HTTP_NOT_FOUND);
-        }
-    
+        } 
         // Deserialize JSON data into Horaire object
         $horaire = $this->serializer->deserialize(
             $request->getContent(),

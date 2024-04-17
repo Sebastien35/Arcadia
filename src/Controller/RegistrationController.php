@@ -30,8 +30,11 @@ class RegistrationController extends AbstractController
         MailerService $mailerService,
     ): Response
     {
+    if ($this->getUser() === null) {
+        return new Response('Unauthorized', Response::HTTP_UNAUTHORIZED);
+    }
     try{
-        
+    
     $user = new User(
         $request->request->get('email'),
         $request->request->get('plainPassword'),
