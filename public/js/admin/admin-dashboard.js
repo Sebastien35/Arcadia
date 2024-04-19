@@ -726,7 +726,7 @@ async function deleteDemande() {
             throw new Error('Erreur');
         }
     } catch (error) {
-        console.log(error);
+        alert('Une erreur est survenue. Veuillez réessayer plus tard.');
     }
 }
 

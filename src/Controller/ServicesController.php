@@ -31,11 +31,11 @@ class ServicesController extends AbstractController
 
     #[Route('/', name: 'index_')]
     public function index(ServiceRepository $servRepo): Response
-    {   
+    {
         $services = $servRepo->findAll();
         return $this->render('services/index.html.twig', [
             'controller_name' => 'ServicesController',
-            'services'=>$services // Passer la variables services qui contient tous les services
+            'services'=>$services
         ]);
     
     }
