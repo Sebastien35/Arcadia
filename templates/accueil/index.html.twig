@@ -165,33 +165,40 @@
 <div class="dark d-flex justify-content-center">
   <div>
     <div class="container">
-      <h2>Déposer un avis:</h2>
       {{ form_start(avisForm,{'action': path('app_avis_create'), 'method':'POST'}) }}
+        <H1 class="text-center">Donner son avis</H1>
         <p> Mon avis concerne le zoo 
+            
             {{ form_widget(avisForm.zoo, {'attr': {'class': 'form-control', 'required': true}}) }}
+
         </p>
         <div class="mb-3">
-            {{ form_label(avisForm.pseudo, 'Entrez un nom:', {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(avisForm.pseudo, {'attr': {'class': 'form-control', 'placeholder': 'Pseudo', 'required': true}}) }}
+            {{ form_label(avisForm.pseudo, 'Entrez un nom ou un pseudo:', {'label_attr': {'class': 'form-label pseudoInput'}}) }}
+            {{ form_widget(avisForm.pseudo, {'attr': {'class': 'pseudoInput form-control', 'placeholder': 'Pseudo', 'required': true}}) }}
+            <div class="pseudo-error-msg text-danger"></div>
         </div>
+        
         <div class="mb-3 slider">
-          {{ form_label(avisForm.note, 'Note:', {'label_attr': {'class': 'form-label'}}) }}
-          <div class="stars-container">
-            <div class="stars d-flex justify-content-around"> 
-                {% for i in 1..5 %}  
-                    <i class="fa fa-star star" data-value={{i}}></i>
-                {% endfor %} 
+            {{ form_label(avisForm.note, 'Notez le parc:', {'label_attr': {'class': 'form-label'}}) }}
+            <div class="stars-container">
+                <div class="stars d-flex justify-content-around"> 
+                    {% for i in 1..5 %}  
+                        <i class="fa fa-star star" data-value={{i}}></i>
+                    {% endfor %} 
+                </div>
+                {{ form_widget(avisForm.note, {'attr': {'class': 'form-control starRating', 'placeholder': 'Note', 'required': true}}) }}
             </div>
-            {{ form_widget(avisForm.note, {'attr': {'class': 'form-control starRating', 'placeholder': 'Note', 'required': true}}) }}
-          </div>       
         </div>
         <div class="mb-3">
             <div class="d-flex justify-content-between">
-              <label for="Avis_content" class="form-label required"> Votre commentaire: </label>
-              <span id="avisLen" class="text-white">0/255</span>
+            <label for="Avis_content" class="form-label required"> Votre commentaire: </label>
+            <span id="avisLen" class="text-muted">0/255</span>
             </div>
-            {{ form_widget(avisForm.Avis_content, {'attr': {'class': 'form-control avisInput', 'placeholder': 'Avis', 'rows': 5, 'required': true}}) }}
+            {{ form_widget(avisForm.Avis_content, {'attr': {'class': 'form-control  avisInput', 'placeholder': 'Avis', 'rows': 5}}) }}
+            <div class="commentaire-error-msg text-danger"></div>
         </div>
+        
+        
         <div class="mb-5 d-flex justify-content-center">
             <button type="submit" class="btn btn-primary btnSendReview disabled">Submit</button>
         </div>
