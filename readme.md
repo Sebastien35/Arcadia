@@ -75,7 +75,7 @@ Dans ce fichier .env.local , ajouter les variables d'environnement:
 ```
 DATABASE_URL="mysql://root@127.0.0.1:3306/arcadia_db?serverVersion=10.11.2-MariaDB&charset=utf8mb4" 
 
-MAILER_DSN=mailjet+smtp://104ac58d97c7d19f3df5a298c7359548:998fa0a0d4cdf5f2c4d42d859b8e6fef@in-v3.mailjet.com
+MAILER_DSN= CLEF API DISPO DANS COPIE ECF
 
 MONGODB_URL=mongodb://localhost:27017 
 ```
