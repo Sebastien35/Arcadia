@@ -549,7 +549,7 @@ function editHoraire(){
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     let targetId = document.getElementById('edit-horaire-id').value;
-    //console.log(targetId); DEBUG
+
     let isOuvert=$('#isOuvert').is(':checked')  ? true:false;
     let raw=JSON.stringify({
         "ouverture": document.getElementById('HOuverture').value,
@@ -557,8 +557,6 @@ function editHoraire(){
         "ouvert": isOuvert
     
     })
-    // Construct the JSON object
-    // console.log(raw);
     fetch(`/admin/horaires/edit/${targetId}`, {
         method: 'PUT',
         headers: myHeaders,
@@ -682,11 +680,9 @@ async function sendResponse() {
     myHeaders.append('Content-Type', 'application/json');
     let dataForm = new FormData(repondreForm);
     let targetId = document.getElementById('demandeId').value;
-    console.log('targetId', targetId)
     let raw = JSON.stringify({
         "response": dataForm.get('reponse')
     });
-    console.log('raw', raw);
     let requestOptions = {
         method: 'POST',
         headers: myHeaders,
@@ -699,7 +695,6 @@ async function sendResponse() {
             throw new Error('Network response was not ok');
         }
         // Handle success
-        console.log('Response sent successfully');
         getAllDemandes();
     } catch (error) {
         // Handle error
@@ -715,7 +710,6 @@ async function deleteDemande() {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         let targetId = document.getElementById('demandeId').value;
-        console.log('targetId', targetId);
         const response = await fetch(`/admin/demande/delete/${targetId}`, {
             method: 'DELETE',
             headers: myHeaders,
@@ -850,13 +844,11 @@ async function validerAvis($id) {
         };
         const response = await fetch('/admin/avis/valider/' + $id, requestOptions);
         if (response.status === 200) {
-            console.log('Avis validé');
             getNonValidatedReviews();
         } else {
             console.log('Avis non validé');
         }
         const result = await response.json();
-        console.log('result', result);
     } catch(error) {
         console.log('error', error);
     }
