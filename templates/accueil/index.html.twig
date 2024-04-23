@@ -164,7 +164,7 @@
 </div>
 <div class="dark d-flex justify-content-center">
   <div>
-    <div class="container">
+    
       {{ form_start(avisForm,{'action': path('app_avis_create'), 'method':'POST'}) }}
         <H1 class="text-center">Donner son avis</H1>
         <p> Mon avis concerne le zoo 
@@ -203,7 +203,6 @@
             <button type="submit" class="btn btn-primary btnSendReview disabled">Submit</button>
         </div>
         {{ form_end(avisForm) }}
-    </div>
     
   </div>
 </div>

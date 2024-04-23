@@ -1,4 +1,4 @@
-const pseudoInput = document.getElementById('avis_pseudo');
+
 let starRating = document.querySelector('.starRating');
 let stars = document.querySelectorAll('.star');
 
