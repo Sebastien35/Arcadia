@@ -449,10 +449,12 @@ async function getAllServices() {
                     <td>${service.nom}</td>
                     <td>
                         <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" 
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             </button>
                             <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
-                                <li class="btn btn-danger mb-1" id="delete-service" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" data-delete-service-id="${service.id}"><i class="fa-solid fa-trash"></i></li>
+                                <li class="btn btn-danger mb-1" id="delete-service" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" 
+                                    data-delete-service-id="${service.id}"><i class="fa-solid fa-trash"></i></li>
                                 <li class="btn btn-primary  mb-1" onClick="goEditService(${service.id})"><i class="fa-solid fa-pencil"></i></li>
                                 <li class="btn btn-info  mb-1" onClick="goSeeService(${service.id})"><i class="fa-regular fa-eye"></i></li>
                             </div> 
@@ -461,7 +463,6 @@ async function getAllServices() {
                 `;
                 serviceTableBody.appendChild(row);
             });
-            // Now, attach event listeners to delete buttons after they have been created
             const deleteServiceBtns = document.querySelectorAll('[data-delete-service-id]');
             deleteServiceBtns.forEach(button => {
                 button.addEventListener('click', function () {

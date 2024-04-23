@@ -145,7 +145,9 @@ public function dashboard(
     /*-------------------------Services ------------------------*/
 
     #[Route('/services/create', name: 'createService', methods: 'POST')]
-    public function createService(Request $request, EntityManagerInterface $em): Response
+    public function createService(Request $request,
+    EntityManagerInterface $em, 
+    Sanitizer  $sanitizer): JsonResponse
     {
         try{
             $service = new Service();
@@ -153,9 +155,9 @@ public function dashboard(
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $service->setNom
-                ($this->sanitizer->sanitizeHtml($form->get('nom')->getData()));
+                    ($sanitizer->sanitizeHtml($form->get('nom')->getData()));
                 $service->setDescription
-                ($this->sanitizer->sanitizeHtml($form->get('description')->getData()));
+                    ($sanitizer->sanitizeHtml($form->get('description')->getData()));
                 $service->setCreatedAt(new DateTimeImmutable());
                 $service->setImageFile($form->get('imageFile')->getData());
                 $service->setZoo($em->getRepository(Zoo::class)->find(1));
