@@ -68,6 +68,7 @@ function validationNote(){
         return true;
     }
 }
+pseudoInput=document.getElementById('avis_pseudo');
 
 pseudoInput.addEventListener('input', function() {
     validationPseudo();
