@@ -419,8 +419,6 @@
                     <div class="col">
                         <label for="animalSelect">Filtrer par animal:</label>
                         <select id="animal-select" class="form-select">
-                            
-                            <option value="0">Tous les animaux</option>
                             {% for animal in animaux %}
                                 <option value="{{ animal.id }}">{{ animal.prenom }}</option>
                             {% endfor %}
@@ -431,7 +429,9 @@
                         <input type="date" id="date-select" class="form-control" placeholder="Date">
                     </div>              
                 </div>
-                <image src="{{ asset('images/logos/logo-noir.svg') }}" alt="logo" class="loaderGif d-none"  />
+                <div class="d-flex justify-content-center mt-3">
+                    <image src="{{ asset('images/logos/logo-noir.svg') }}" alt="logo" class="loaderGif d-none"  />
+                </div>
                 <div class="container-body mt-2 scrollable-container">
                     <div class="table-responsive">
                     <table class="table table-striped">
