@@ -41,4 +41,18 @@ class InfoAnimalController extends AbstractController
         }
     }
 
+    #[Route('/animal/{id}', name: 'getInfoAnimalperAnimal', methods: ['GET'])]
+    public function getInfoAnimalForOneAnimal(InfoAnimalRepository $infoAnimalRepository, int $id, SerializerInterface $serializer): JsonResponse
+    {
+        try{
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $infoAnimal = $infoAnimalRepository->findBy(['animal' => $id]);
+        return JsonResponse::fromJsonString($this->serializer->serialize($infoAnimal, 'json',
+            ['groups'=>['info_animal','animal:read']]), Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return JsonResponse::fromJsonString($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }

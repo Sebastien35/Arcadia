@@ -434,7 +434,7 @@ public function dashboard(
             throw new \Exception('An error occured: ' . $e->getMessage());
         }
     }
-    #[ROute('/infoAnimal/delete/{id}', name: 'deleteInfoAnimal', methods: ['DELETE'])]
+    #[Route('/infoAnimal/delete/{id}', name: 'deleteInfoAnimal', methods: ['DELETE'])]
     public function deleteInfoAnimal(int $id,InfoAnimalRepository $infoAnimalRepository, EntityManagerInterface $em): JsonResponse
     {   
         try{
@@ -449,6 +449,22 @@ public function dashboard(
             return new JsonResponse(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    #[Route('/infoAnimal/animal/{id}', name: 'getInfoAnimalByAnimal', methods: ['GET'])]
+    public function getInfoAnimalByAnimal(
+        int $id,
+        InfoAnimalRepository $infoAnimalRepository, 
+        SerializerInterface $serializer): JsonResponse
+    {
+        try{
+        $infoAnimal = $infoAnimalRepository->findBy(['animal' => $id]);
+        $context = ['groups' => 'infoAnimal:read'];
+        return JsonResponse::fromJsonString($serializer->serialize($infoAnimal, 'json', $context), Response::HTTP_OK);
+        }catch (\Exception $e) {
+            return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 
     
     /* ------------------------Animal------------------------ */
