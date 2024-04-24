@@ -1,8 +1,8 @@
 /* Styles dashboard */
 @media(max-width: 990px){
     .page-container{
-        overflow-x: hidden;
-        max-width:100vw;
+        overflow-x: hidden !important;
+        max-width:100vw !important;
     }
     #agencement{
         flex-wrap: wrap !important;

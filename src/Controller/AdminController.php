@@ -659,7 +659,7 @@ public function dashboard(
 
     #[Route('/avis/getNonValidated', name: 'getAllAvis', methods: ['GET'])]
     public function getNonValidated(AvisRepository $avisRepo): JsonResponse
-    {   
+    {
         try{
         if (!$this->isGranted('ROLE_ADMIN')) {
             return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
