@@ -401,7 +401,13 @@ function applyinfoAnimalFilters() {
     });
 }
 
+const loaderGif=document.querySelector('.loaderGif');
+const tableHead=document.querySelector('.tableHead');
+
+
 async function getInfoAnimal($id){
+    loaderGif.classList.remove('d-none');
+    tableHead.classList.add('d-none')
     let myHeaders=new Headers();
     myHeaders.append('Content-Type', 'application/json');
     await fetch('/infoanimal/animal/'+$id)
@@ -458,7 +464,10 @@ async function getInfoAnimal($id){
             infoAnimalIdContainer.value = infoAnimalId;
             });
         });
+        
     });
+    loaderGif.classList.add('d-none');
+    tableHead.classList.remove('d-none');
 }
 
 
