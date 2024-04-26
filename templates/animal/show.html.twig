@@ -20,7 +20,7 @@
     </div>
     {# navigation mobile #}
     <div class="navbar animal-navbar mt-5 mb-2 d-flex justify-content-around d-lg-none">
-        <H2><a class="nav-item d-lg-none" href="{{ path('app_admin_index') }}"><i class="fa-solid fa-arrow-left"></i></a></H2>
+        <H2><a class="nav-item d-lg-none" href="{{ path('app_habitat_index') }}"><i class="fa-solid fa-arrow-left"></i></a></H2>
         <H2><a class="nav-item d-lg-none infoBtn" role="button" aria-label="Informations animal"><i class="fa-regular fa-clipboard"></i></a></H2>
         <H2><a class="nav-item d-lg-none imageBtn" role="button" aria-label="Gallerie photos"><i class="fa-regular fa-image"></i></a></H2>
     </div>
@@ -40,22 +40,22 @@
                 <p>Race : {{animal.race}}</p>
                 <p>Date d'arrivée : {{animal.createdAt | date('d/m/Y')}}</p>
                 {% if animal.habitat is not null %}
-                <p>Habitat: {{animal.habitat.nom}}</p>
+                <p>Habitat : {{animal.habitat.nom}}</p>
                 {% endif %}
                 </div>
                 <div class="card-footer text-center">
-                    <h2>Notes vétérinaires:</h2>
+                    <h2>Notes vétérinaires :</h2>
                     {% if infoAnimal == null %}
                     <p>Pas de note pour le moment</p>
                     {% else %}
                         {% for infoAnimal in infoAnimal %}
                                 <h3>{{ infoAnimal.createdAt | date('d-m-Y') }}</h3>
-                                <p class="card-text">Etat de l'animal: {{ infoAnimal.etat }}</p>
+                                <p class="card-text">Etat de l'animal : {{ infoAnimal.etat }}</p>
                                 {% if infoAnimal.details != null %}
-                                    <p class="card-text">Détails: {{ infoAnimal.details }}</p>
+                                    <p class="card-text">Détails : {{ infoAnimal.details }}</p>
                                 {% endif %}
-                                <p class="card-text">Nourriture: {{ infoAnimal.nourriture.nom }}</p>
-                                <p class="card-text">Quantité recommandé: {{ infoAnimal.grammage }}g</p>
+                                <p class="card-text">Nourriture : {{ infoAnimal.nourriture.nom }}</p>
+                                <p class="card-text">Quantité recommandé : {{ infoAnimal.grammage }}g</p>
                             
                         {% endfor %}
                     {% endif %}
