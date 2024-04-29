@@ -132,10 +132,10 @@ public function dashboard(
 
 
     #[Route('/visites/all', name: 'getVisites', methods: ['GET'])]
-    public function getVisites(): JsonResponse
+    public function getVisites(DocumentManager $dm): JsonResponse
     {
         try{
-        $visites = $this->dm->getRepository(AnimalVisit::class)->findAll();
+        $visites = $dm->getRepository(AnimalVisit::class)->findAll();
         return JsonResponse::fromJsonString($this->serializer->serialize($visites, 'json'), Response::HTTP_OK);
         }catch (\Exception $e) {
             return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
