@@ -1,39 +1,39 @@
 /* Styles dashboard */
 @media(max-width: 990px){
     .page-container{
-        overflow-x: hidden !important;
-        max-width:100vw !important;
+        overflow-x: hidden;
+        max-width:100vw;
     }
     #agencement{
-        flex-wrap: wrap !important;
+        flex-wrap: wrap;
     }
     .custom-container{
-        margin-top: 0vh !important;
+        margin-top: 0vh;
         overflow-x: scroll;
-        height: 80vh !important;
+        height: 80vh;
     }
     .container-header{
-        height: 2em !important;
+        height: 2em;
     }
     #content{
-        padding-left: 1vw !important;
-        padding-right: 1vw !important;
-        padding-top: 1vh !important;
-        padding-bottom: 5vh !important;
+        padding-left: 1vw;
+        padding-right: 1vw;
+        padding-top: 1vh;
+        padding-bottom: 5vh;
     }
     .demande-card{
-        margin-bottom: 2vh !important;
+        margin-bottom: 2vh;
     }
     .header-btn{
-        width: 1.5em !important;
-        height: 1.5em !important;
+        width: 1.5em;
+        height: 1.5em;
     }
     .animal-img{
-        max-height:25vh !important;
+        max-height:25vh;
     }
     .row{
-        padding-left: 0 !important;
-        padding-right: 0 !important;
+        padding-left: 0;
+        padding-right: 0;
     }
 }
 

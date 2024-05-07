@@ -37,7 +37,7 @@
     color: white;
     font-size: 20;
     font-family: "Inter-Regular", Helvetica;
-    background-color: #495635;
+    background-color: var(--dark);
     height: 26px;
     text-align: center;
     position: fixed;
@@ -75,7 +75,13 @@ footer .navbar {
     margin-top: 2vh;
     width: 110vw;
 }
-.social{
+.footer .social{
     font-size: 1.2em;
+    
+}
+
+.footer .social a:hover{
+    color: var(--active);
+    
 }
 
