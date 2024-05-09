@@ -138,7 +138,7 @@ Un fichier 'inser_data.sql' permettant d'ajouter des données à notre nouvelle 
 ```
 source insert_data.sql
 ```
-** Nous avons désormais une base de données avec différentes tables, sur laquelle nous avons envoyé des données. ** </br>
+Nous avons désormais une base de données avec différentes tables, sur laquelle nous avons envoyé des données. ** </br>
 Nous avons également inséré en base de données les comptes utilisateurs qui nous servirons à nous connecter au site web avec différents roles.</br>
 Un autre compte existe, mais représentant une personne extérieure au zoo, il n'a pas été inséré en base de données.
 Il servira à tester la fonctionnalité de mailing plus tard.
@@ -147,4 +147,3 @@ Il servira à tester la fonctionnalité de mailing plus tard.
 
 
 
-aaaaa
