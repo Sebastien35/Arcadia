@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const deleteAnimalBtns = document.querySelectorAll('[data-animal-id]');
     deleteAnimalBtns.forEach(button=>{
         button.addEventListener('click', function(){
-            console.log('Delete button clicked, target ID:', button.getAttribute('data-animal-id'));
+            // console.log('Delete button clicked, target ID:', button.getAttribute('data-animal-id'));
             const animalId = button.getAttribute('data-animal-id');
             const animalIdContainer = document.getElementById('delete-animal-id');
             animalIdContainer.value = animalId;
@@ -245,7 +245,7 @@ async function deleteAnimal() {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         let targetId = document.getElementById('delete-animal-id').value;
-        console.log('Target ID:', targetId); // Debug log
+        // console.log('Target ID:', targetId); // Debug log
         const response = await fetch(`/admin/animal/delete/${targetId}`, {
             method: 'DELETE',
             headers: myHeaders,
@@ -420,7 +420,7 @@ async function getInfoAnimal($id){
     
     })
     .then(result => {
-        console.log('Result:', result);
+        // console.log('Result:', result);
         let infoAnimalTableBody = document.getElementById('infoAnimalTableBody');
         infoAnimalTableBody.innerHTML = '';
         let infoAnimals = result;
