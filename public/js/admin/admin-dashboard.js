@@ -478,7 +478,7 @@ const dateSelect = document.getElementById('date-select');
 animalSelect.addEventListener('change', function() {
     applyinfoAnimalFilters();
     getInfoAnimal(animalSelect.value);
-    console.log('Getting infoAnimals for animal ID:', animalSelect.value);
+    // console.log('Getting infoAnimals for animal ID:', animalSelect.value);
 });
 
 dateSelect.addEventListener('change', applyinfoAnimalFilters);
@@ -555,7 +555,7 @@ async function getAllServices() {
 
 const deleteServiceBtns=document.querySelectorAll('[data-delete-service-id]');
 deleteServiceBtns.forEach(button=>{
-    console.log('deleteServiceBtns', button);
+    // console.log('deleteServiceBtns', button);
     button.addEventListener('click', function(){
         const serviceId = button.getAttribute('data-service-id');
         const serviceIdContainer = document.getElementById('service-id');
@@ -921,7 +921,7 @@ async function validerAvis($id) {
         if (response.status === 200) {
             getNonValidatedReviews();
         } else {
-            console.log('Avis non validé');
+            // console.log('Avis non validé');
         }
         const result = await response.json();
     } catch(error) {
