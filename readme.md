@@ -1,4 +1,4 @@
-c# Projet Arcadia 
+# Projet Arcadia 
 [arcadia-zoo.online](http://arcadia-zoo.online) Le site d'un zoo fictif en bretagne.
 
 ## __Getting Started__
