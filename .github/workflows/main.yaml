@@ -39,4 +39,5 @@ jobs:
           symfony console --env=test doctrine:database:create 
           symfony console --env=test doctrine:schema:create
           php bin/phpunit
+          "
 #deploy test
