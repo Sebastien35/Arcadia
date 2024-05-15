@@ -27,5 +27,6 @@ jobs:
           cd arcadia-zoo.online/ &&
           cd Arcadia &&
           git pull 
+          composer install
           "
 #deploy test
