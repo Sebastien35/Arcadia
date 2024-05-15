@@ -5,12 +5,12 @@
         max-width:100vw;
     }
     #agencement{
-        flex-wrap: wrap;
+        flex-wrap: wrap !important;
     }
     .custom-container{
-        margin-top: 0vh;
+        margin-top: 0vh !important;
         overflow-x: scroll;
-        height: 80vh;
+        height: 80vh !important;
     }
     .container-header{
         height: 2em;
