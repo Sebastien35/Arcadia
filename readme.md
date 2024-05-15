@@ -1,4 +1,4 @@
-# Projet Arcadia 
+c# Projet Arcadia 
 [arcadia-zoo.online](http://arcadia-zoo.online) Le site d'un zoo fictif en bretagne.
 
 ## __Getting Started__
@@ -72,7 +72,7 @@ Linux:
 ```
 touch .env.local
 ```
-Dans ce fichier .env.local , ajouter les variables d'environnement:
+Dans ce fichier .env.local , ajouter les variables d'environnement: (valables uniquement pour le déploiement en local, configurer les valeurs si vous avez modifié les ports par défaut).
 
 ```
 DATABASE_URL="mysql://root@127.0.0.1:3306/arcadia_db?serverVersion=10.11.2-MariaDB&charset=utf8mb4" 
