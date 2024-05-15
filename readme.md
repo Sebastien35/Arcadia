@@ -12,7 +12,7 @@ Symfony CLI 5.7 or above </br>
 Symfony 7.0.5 or above <br />
 mySQL </br>
 MongoDB: 7.0.6 </br>
-Un IDE 
+Un IDE <br>
 GIT </br>
 L'extension mongodb pour php (https://github.com/mongodb/mongo-php-driver/releases ou pecl install mongodb-1.19.0)
 
