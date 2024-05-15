@@ -17,7 +17,6 @@ jobs:
 
       - name: Running Tests
         run: |
-          composer install
           symfony console --env=test doctrine:database:create 
           symfony console --env=test doctrine:schema:create
           php bin/phpunit
@@ -28,7 +27,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install sshpass
-
+        
       - name: Deploy application
         run: |
           sshpass -e ssh -o strictHostKeyChecking=no  ${{ secrets.SSH_USER}}@${{ secrets.SSH_IP}} "
