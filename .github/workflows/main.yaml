@@ -14,6 +14,15 @@ jobs:
     steps: 
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Running Tests
+        run: |
+          composer install
+          symfony console --env=test doctrine:database:create 
+          symfony console --env=test doctrine:schema:create
+          php bin/phpunit
+
+          
       
       - name: Install sshpass & update apt 
         run: |
