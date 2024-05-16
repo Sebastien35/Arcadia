@@ -20,5 +20,10 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction
 
+      - name: Create database
+        run: |
+         symfony console doctrine:database:create --env=test 
+         symfony console doctrine:schema:create --env=test
+
       - name: Run Tests
         run: php bin/phpunit
