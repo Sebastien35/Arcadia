@@ -20,15 +20,12 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction
 
-      - name: Install Symfony CLI
-        run: |
-          curl -sS https://get.symfony.com/cli/installer | bash
-          echo "$HOME/.symfony/bin" >> $GITHUB_PATH
+      
 
       - name: Create database
         run: |
-          symfony console doctrine:database:create --env=test
-          symfony console doctrine:schema:create --env=test
+          php bin/console doctrine:database:create --env=test
+          php bin/console doctrine:schema:create --env=test
 
       - name: Run Tests
         run: php bin/phpunit
