@@ -24,6 +24,13 @@ class AnimalVisit
         return $this->id;
     }
 
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getAnimalId(): ?int
     {
         return $this->animalId;
@@ -66,5 +73,8 @@ class AnimalVisit
 
         return $this;
     }
+
+
+     
 
 }
