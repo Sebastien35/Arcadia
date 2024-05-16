@@ -10,7 +10,7 @@
 /public/images/service
 /var/
 /vendor/
-.env
+
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
