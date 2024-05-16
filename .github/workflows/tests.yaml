@@ -1,0 +1,24 @@
+name: Tests
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2' # Specify the PHP version you need
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction
+
+      - name: Run Tests
+        run: php bin/phpunit
