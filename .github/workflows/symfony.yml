@@ -39,7 +39,13 @@ jobs:
       run: |
         composer update --no-interaction --no-progress
         composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-    
+
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.10.0
+      with:
+        mongodb-version: '4.4' 
+        mongodb-port: 27017 
+
     - name: Create Database
       run: |
         mkdir -p data
