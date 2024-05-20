@@ -9,7 +9,7 @@
         <a href="{{path('app_services_index_')}}" class="px-3">Retour</a>
     </nav>
     <div class="row d-flex justify-content-center">
-        <div class="show-service-container col-lg-8 col-12">
+        <div class="show-service-container col-lg-8 col-12"> // <!-- Modified this line -->
             <img src="{{asset('images/service/' ~ service.imageName)}}" alt="{{service.nom}}" class="img-fluid show-service-image">
             <div class="service-description centered show-service-card card">
                 <h1 class="text-center">{{service.nom}}</h1>
