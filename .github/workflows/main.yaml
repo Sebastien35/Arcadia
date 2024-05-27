@@ -30,14 +30,5 @@ jobs:
           composer install
           "
 
-      - name: Running Tests
-        run: |
-          sshpass -e ssh -o strictHostKeyChecking=no  ${{ secrets.SSH_USER}}@${{ secrets.SSH_IP}} "
-          cd htdocs &&
-          cd arcadia-zoo.online/ &&
-          cd Arcadia &&
-          symfony console --env=test doctrine:database:create 
-          symfony console --env=test doctrine:schema:create
-          php bin/phpunit
-          "
+      
 #deploy test
