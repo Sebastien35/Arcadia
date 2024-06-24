@@ -1,0 +1,53 @@
+<div class="primary d-flex justify-content-center">
+  <H2>Ils en parlent ! </H2>
+</div>
+<div class="darker" id="avis-container">
+  <div id="carouselAvis" class="carousel slide carousel-fade">
+    <div class="container">
+      <div class="carousel-inner">
+        {% if avis is empty %}
+          <p>Il n'y a pas encore d'avis</p>
+        {% endif %}
+        {% for singleAvis in avis %}
+          {% if loop.first  %}
+            <div class="carousel-item active">
+          {% else %}
+            <div class="carousel-item">
+          {% endif %}
+              <div class="card avis-card  mt-3 mb-5">
+                <div class="card-header d-flex justify-content-between text-white">
+                  <h5 class="card-title">{{singleAvis.pseudo}}</h5>
+                  <div class="notation">
+                  {% for star in range(1, 5) %}  
+                    {% if star <= singleAvis.note %} 
+                        <i class="fa-solid fa-star"></i>
+                    {% else %}
+                        {% if star - 0.5 <= singleAvis.note %} 
+                            <i class="fa-solid fa-star-half"></i>
+                        {% else %}
+                            <i class="fa-regular fa-star"></i>
+                        {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                  </div>
+                  
+                </div>
+                <div class="card-body text-dark">
+                  <p class="card-text text-muted text-center">{{singleAvis.getCreatedAt|date('d/m/Y')}}</p>
+                  <p class="card-text text-center">{{ singleAvis.getAvisContent }}</p>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselAvis" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselAvis" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>

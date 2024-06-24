@@ -1,0 +1,42 @@
+<div class="primary d-flex justify-content-around text-center">
+  <div>
+    <h2> Découvrez nos habitats</h2>
+    <p class="d-none d-lg-block">Conçus pour reproduire les conditions de vie des animaux dans leur milieu naturel</p>
+  </div>
+</div>
+<div class="darker d-flex justify-content-around">
+  <div id="carouselExampleCaptions" class="carousel slide carousel-fade">
+    <div class="carousel-indicators">
+      {% for habitat in habitats %}
+        {% if loop.first %}
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ loop.index0 }}" class="active" aria-current="true" aria-label="Slide {{ loop.index }}"></button>
+        {% else %}
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ loop.index0 }}" aria-label="Slide {{ loop.index }}"></button>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="carousel-inner">
+    {% for habitat in habitats %}
+      {% if loop.first %}
+        <div class="carousel-item active">
+      {% else %}
+        <div class="carousel-item">
+      {% endif %}
+          <a href="/habitats/show/{{habitat.id}}"><img src="{{ asset('images/habitat/' ~ habitat.imageName)}}" class="d-block image-habitat" alt="..."></a>
+          <div class="carousel-caption d-none d-md-block">
+            <h5>{{ habitat.nom }}</h5>
+          </div>
+      </div>
+    {% endfor %}
+      
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>

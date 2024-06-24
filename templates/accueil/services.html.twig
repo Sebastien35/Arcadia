@@ -1,0 +1,24 @@
+<div class="darker d-flex justify-content-around text-center">
+  <div>
+    <h2> Découvrez nos services</h2>
+    <p class="d-none d-lg-block">Pour rendre votre visite inoubliable</p>
+  </div>
+</div>
+<div class="white" id="services-container" style="background-image:url({{asset('images/parc/birds.webp')}})">
+  <div class="container">
+    <div class="row">
+      {% for service in services %}
+        <div class="col-sm-12 col-md-6 col-lg-4 d-flex mt-3 mb-3">
+          <div class="card">
+            <div class="card-header text-white">
+              <h5>{{ service.nom }}</h5>
+            </div>
+            <div class="card-body text-dark">
+              <p class="card-text">{{ service.description }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
