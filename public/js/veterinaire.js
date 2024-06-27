@@ -55,18 +55,15 @@ async function addInfoAnimal() {
             body: raw,
             redirect: 'follow'
         };
-
         const response = await fetch('/veterinaire/animal/info/create', requestOptions);
-        
         if (response.ok) {
-            const result = await response.json();
-            getAllAnimals();
+            return    
         } else {
             console.log('Erreur : ' + requestOptions.body);
             throw new Error('Erreur');
         }
     } catch (error) {
-        console.log('error', error);
+        alert('Erreur lors de l\'ajout de l\'information, veuillez réessayer plus tard. Si le problème persiste, contactez l\'administrateur');
     }
 }
 

@@ -4,7 +4,7 @@ USE arcadia_db;
 
 CREATE TABLE Zoo (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(255)
+    nom VARCHAR(50)
 );
 
 CREATE TABLE Animal (
@@ -15,6 +15,14 @@ CREATE TABLE Animal (
     created_at DATETIME,
     updated_at DATETIME NULL,
     image_name VARCHAR(255) NULL
+);
+
+CREATE TABLE Habitat (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(255),
+    image_name VARCHAR(255) NULL,
+    description VARCHAR(512),
+    updated_at DATETIME NULL
 );
 
 CREATE TABLE Avis (
@@ -47,13 +55,7 @@ CREATE TABLE demande_contact (
     zoo_id INT 
 );
 
-CREATE TABLE Habitat (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(255),
-    image_name VARCHAR(255) NULL,
-    description VARCHAR(512),
-    updated_at DATETIME NULL
-);
+
 
 CREATE TABLE Horaire (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -93,7 +95,7 @@ CREATE TABLE repas(
 CREATE TABLE Service (
     id INT AUTO_INCREMENT PRIMARY KEY,
     zoo_id INT,
-    nom VARCHAR(128),
+    nom VARCHAR(50),
     description LONGTEXT,
     created_at DATETIME,
     updated_at DATETIME NULL,
@@ -117,6 +119,10 @@ CREATE TABLE additional_images (
     habitat_id INT,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NULL
+    CHECK (
+        (animal_id IS NOT NULL AND habitat_id IS NULL) OR 
+        (animal_id IS NULL AND habitat_id IS NOT NULL)
+    )
 );
 
 
@@ -148,8 +154,5 @@ ALTER TABLE additional_images ADD CONSTRAINT FK_animal_id_for_additional_images 
 ALTER TABLE additional_images ADD CONSTRAINT FK_habitat_id_for_additional_images FOREIGN KEY (habitat_id) REFERENCES Habitat(id);
 
 
+INSERT INTO Zoo Values (1, 'Arcadia Zoo');
 
-
-
-INSERT INTO Zoo VALUES 
-(1, 'Arcadia');

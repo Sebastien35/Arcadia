@@ -18,7 +18,7 @@ class AdditionalImageType extends AbstractType
         $builder
             ->setMethod('POST')
             ->add('imageFile', VichFileType::class, [
-                'required' => false,
+                'required' => true,
                 'allow_delete' => true,
                 'download_uri' => true,
                 'constraints' => [

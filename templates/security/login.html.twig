@@ -12,7 +12,7 @@
             </div>
             <div class="form-body">
                 <form method="post">
-                    <div class="mb-5 mt-5 mb-5">
+                    <div class="mt-5 mb-5">
                         <label for="inputEmail" class="form-label">Email</label><br>
                         <input type="email" id="inputEmail" name="email" class="form-control" required placeholder="email@exemple.com">
                     </div>
@@ -28,9 +28,7 @@
                             {{ error_message }}
                         </div>
                     {% endif %}
-                    <input type="hidden" name="_csrf_token"
-                        value="{{ csrf_token('authenticate') }}"
-                    >
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 </form>
             </div>
         </div>

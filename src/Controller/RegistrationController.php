@@ -16,37 +16,36 @@ use App\Entity\Zoo;
 use App\Repository\ZooRepository;
 use App\Repository\UserRepository;
 use App\Service\MailerService;
-
+#[Route('/admin', name: 'app_admin_')]
 class RegistrationController extends AbstractController
 {
-    #[Route('/register', name: 'app_register', methods: ['POST'])]
+    #[Route('/register', name: 'register', methods: ['POST'])]
     public function register(
         Request $request, 
         UserPasswordHasherInterface $userPasswordHasher, 
-        UserAuthenticatorInterface $userAuthenticator, 
-        AppCustomAuthAuthenticator $authenticator, 
         EntityManagerInterface $entityManager,
-        UserRepository $userRepo,
         MailerService $mailerService,
     ): Response
     {
-    if ($this->getUser() === null) {
+    if (!$this->isGranted('ROLE_ADMIN')) {
         return new Response('Unauthorized', Response::HTTP_UNAUTHORIZED);
     }
     try{
-    
+    $sentEmail = $request->request->get('email');
+    $sentPassword = $request->request->get('plainPassword');
+
+    $email = htmlspecialchars(trim($sentEmail));
+    $password = htmlspecialchars(trim($sentPassword));
     $user = new User(
-        $request->request->get('email'),
-        $request->request->get('plainPassword'),
+        $email,
+        $password,
         [$request->request->get('Roles')],
         new \DateTimeImmutable(),
         null,
         1
     );
-    $email = $request->request->get('email');
     $context = ['user'=>$user];
-    $plainPassword = $request->request->get('plainPassword');
-    $hashedPassword = $userPasswordHasher->hashPassword($user, $plainPassword);
+    $hashedPassword = $userPasswordHasher->hashPassword($user, $password);
     $user->setPassword($hashedPassword);
     $entityManager->persist($user);
     $entityManager->flush();

@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
-
+use Psr\Log\LoggerInterface;
 
 use App\Entity\Animal;
 use App\Entity\CommentaireHabitat;
@@ -30,8 +30,10 @@ use App\Repository\CommentaireHabitatRepository;
 
 
 use Doctrine\ORM\Mapping\OrderBy;
+use phpDocumentor\Reflection\DocBlock\Serializer;
 use Symfony\Component\Form\Test\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Validator\Constraints\Date;
 
 #[Route('/veterinaire', name: 'app_veterinaire_')]
 class VeterinaireController extends AbstractController
@@ -170,42 +172,75 @@ class VeterinaireController extends AbstractController
 
 
     #[Route('/animal/info/create', name: 'createInfoAnimal', methods: ['POST'])]
-public function addAnimalInfo(Request $request): JsonResponse
-{
-    $data = json_decode($request->getContent(), true);
-    $animalId = $data['animal'];
-    $nourritureId = $data['nourriture'];
+    public function addAnimalInfo(Request $request): Response
+    {   
+    try{
+        $data = json_decode($request->getContent(), true);
+        $animalId = $data['animal'];
+        $nourritureId = $data['nourriture'];
+        $nourriture = $this->entityManager->getRepository(Nourriture::class)->find($nourritureId);
+        if (!$nourriture) {
+            return new JsonResponse(['status' => 'Nourriture not found'], Response::HTTP_NOT_FOUND);
+        }
+        $animal = $this->entityManager->getRepository(Animal::class)->find($animalId);
+        // Trouver l'animal correspondant à l'id passé en paramètre
+        if (!$animal) {
+            return new Response(  Response::HTTP_NOT_FOUND);
+        }
+        if (isset($data['details']) && $data['details'] !== null) {
+            $details = htmlspecialchars($data['details']);
+         }
+        $infoAnimal = new InfoAnimal();
+        $infoAnimal->setAnimal($animal)
+                ->setEtat(htmlspecialchars($data['etat']))
+                ->setDetails($details)
+                ->setNourriture($nourriture)
+                ->setGrammage(htmlspecialchars($data['grammage']))
+                ->setCreatedAt(new \DateTimeImmutable())
+                ->setAuteur($this->getUser());
+
+        $this->entityManager->persist($infoAnimal);
+        $this->entityManager->flush();
     
-    // Trouver l'animal correspondant à l'id passé en paramètre
-    $animal = $this->entityManager->getRepository(Animal::class)->find($animalId);
-    if (!$animal) {
-        return new JsonResponse(['status' => 'Animal not found'], Response::HTTP_NOT_FOUND);
+        return new Response (Response::HTTP_CREATED);
+    }catch(\Exception $e){
+        return new Response(Response::HTTP_BAD_REQUEST, $e->getMessage());
     }
-    $infoAnimal = new InfoAnimal();
-    $infoAnimal->setAnimal($animal);
-    $nourriture = $this->entityManager->getRepository(Nourriture::class)->find($nourritureId);
-    if (!$nourriture) {
-        return new JsonResponse(['status' => 'Nourriture not found'], Response::HTTP_NOT_FOUND);
     }
-    $infoAnimal->setEtat($data['etat']);
-    if (isset($data['details']) && $data['details'] !== null) {
-        $infoAnimal->setDetails($data['details']);
-    }
-    $infoAnimal->setNourriture($nourriture);
-    $infoAnimal->setGrammage($data['grammage']);
-    $infoAnimal->setCreatedAt(new \DateTimeImmutable());
-    $infoAnimal->setAuteur($this->getUser());
+
+    #[Route('/animal/info/filter', name: 'filterInfoAnimal', methods: ['GET'])]
+    public function search(
+        Request $request,
+        InfoAnimalRepository $infoAnimalRepository,
+        SerializerInterface $serializer
+    ):
+    Response {
+        try{
+            $animalId = $request->query->get('animalId');
+            $dateEntree = $request->query->get('date');
+            $createdAt = null;
+            if($dateEntree !== null && !empty($dateEntree)){
+                $createdAt = new \DateTimeImmutable($dateEntree);
+            }
+
+            // dd($animalId, $dateEntree);
+        } catch(\Exception $e) {
+            return new JsonResponse([$e->getMessage()],  Response::HTTP_BAD_REQUEST);
+        }
+        try{
+        $CompteRendus= $infoAnimalRepository->filtrerParAnimalEtOuParJour($animalId, $createdAt);
+        $serializedCRV= $serializer->serialize($CompteRendus, 'json', ['attributes' => 
+        ['id', 'etat', 'details', 'grammage', 'createdAt', 
+        'animal'=>['id', 'prenom'], 
+        'nourriture'=>['id', 'nom'],
+        'auteur'=>['id', 'email']
+        ]]);
+        return new JsonResponse($serializedCRV, Response::HTTP_OK, [], true);
+        }catch(\Exception $e){
+            return new JsonResponse([$e->getMessage()]);
+        }
     
-    // Enregistrer les modifications dans la base de données
-    $this->entityManager->persist($infoAnimal);
-    $this->entityManager->flush();
-    
-    return new JsonResponse(['status' => 'Animal info ' . ($infoAnimal->getId() ? 'updated' : 'created')], Response::HTTP_CREATED);
-}
-
-
-
-
+    }
 
 
     #[Route('/nourriture/new', name: 'createNourriture', methods: ['POST'])]

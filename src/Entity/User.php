@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: "users")]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Un compte existe déja avec cette adresse mail.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -24,7 +24,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['info_animal', 'user_info'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 320, unique: true)]
     #[Groups(['info_animal', 'user_info'])]
     private ?string $email = null;
 
@@ -41,14 +41,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column]
+    private int $zoo_id;
+
+
+
     #[ORM\OneToMany(mappedBy: 'auteur', targetEntity: CommentaireHabitat::class)]
     private Collection $commentaireHabitats;
 
     #[ORM\OneToMany(mappedBy: 'auteur', targetEntity: InfoAnimal::class)]
     private Collection $infoAnimals;
-
-    #[ORM\Column]
-    private int $zoo_id;
 
     public function getZooId(): ?int
     {

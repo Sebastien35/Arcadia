@@ -384,105 +384,158 @@ async function deleteInfoAnimal() {
 
 /*----------------- Filtrer infoAnimals ----------------- */
 
-function applyinfoAnimalFilters() {
-    const animalId = animalSelect.value;
-    const date = dateSelect.value;
-    const infoAnimalRow = document.querySelectorAll('.infoAnimalRow');
+// function applyinfoAnimalFilters() {
+//     const animalId = animalSelect.value;
+//     const date = dateSelect.value;
+//     const infoAnimalRow = document.querySelectorAll('.infoAnimalRow');
 
-    infoAnimalRow.forEach(row => {
-        const animalMatch = (animalId == 0) || (row.getAttribute('data-animal-id') == animalId);
-        const dateMatch = (date == '') || (row.getAttribute('data-infoAnimal-date') == date);
+//     infoAnimalRow.forEach(row => {
+//         const animalMatch = (animalId == 0) || (row.getAttribute('data-animal-id') == animalId);
+//         const dateMatch = (date == '') || (row.getAttribute('data-infoAnimal-date') == date);
 
-        if (animalMatch && dateMatch) {
-            row.classList.remove('d-none');
-        } else {
-            row.classList.add('d-none');
-        }
-    });
-}
-
+//         if (animalMatch && dateMatch) {
+//             row.classList.remove('d-none');
+//         } else {
+//             row.classList.add('d-none');
+//         }
+//     });
+// }
+const searchBtn = document.getElementById('searchInfoAnimalBtn');
+const dateSelect = document.getElementById('date-select');
+const animalSelect = document.getElementById('animal-select');
+searchBtn.addEventListener('click', getCRVParAnimalEtOuDate);
 const loaderGif=document.querySelector('.loaderGif');
 const tableHead=document.querySelector('.tableHead');
 
-
-async function getInfoAnimal($id){
-    loaderGif.classList.remove('d-none');
-    tableHead.classList.add('d-none')
-    let myHeaders=new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    await fetch('/infoanimal/animal/'+$id)
-    .then(response => {
+async function getCRVParAnimalEtOuDate(){
+    try{
+        let $id = parseInt(document.getElementById('animal-select').value);
+        let date = dateSelect.value;
+        let url=`/veterinaire/animal/info/filter?animalId=${$id}&date=${date}`
+        let myHeaders =new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        loaderGif.classList.remove('d-none');
+        tableHead.classList.add('d-none');
+        let response = await fetch(url, {
+            method: 'GET',
+            headers: myHeaders,
+        });
         if(response.ok){
-            return response.json();
+            loaderGif.classList.add('d-none');
+            tableHead.classList.remove('d-none');
+           let data= await response.json();
+           afficherCRV(data);
         } else {
-            throw new Error('Erreur');
+            console.log('Erreur', response.status);
         }
-    
-    })
-    .then(result => {
-        // console.log('Result:', result);
-        let infoAnimalTableBody = document.getElementById('infoAnimalTableBody');
-        infoAnimalTableBody.innerHTML = '';
-        let infoAnimals = result;
-        if(infoAnimals.length === 0){
-            infoAnimalTableBody.innerHTML = '<p class="text-center">Aucun compte-rendu pour le moment. <i class="fa-solid fa-umbrella-beach"></i> </p>';
-        }
-        let row = document.createElement('tr');
-        row.classList.add('infoAnimalRow');
+    } catch (error) {
+        console.log(error);
         
-        infoAnimals.forEach(infoAnimal=>{
-            if(infoAnimal.auteur === null){
-                infoAnimal.auteur = {email: 'Utilisateur supprimé'};
-            }
-            row.setAttribute('data-animal-id', $id);
-            row.setAttribute('data-infoAnimal-date', toYMD(infoAnimal.createdAt));
-            row.innerHTML = `
-            <td>${infoAnimal.id}</td>
-            <td>${toYMD(infoAnimal.createdAt)}</td>
-            <td>${infoAnimal.animal.prenom}</td>
-            <td>${infoAnimal.auteur.email}</td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    </button>
-                    <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
-                        <li class="btn btn-danger mb-1" id="delete-infoAnimal" data-bs-toggle="modal" data-bs-target="#deleteInfoAnimalModal" data-infoAnimal-id="${infoAnimal.id}"><i class="fa-solid fa-trash"></i></li>
-                        <li class="btn btn-info  mb-1" onClick="goSeeInfoAnimal(${infoAnimal.id})"><i class="fa-regular fa-eye"></i></li>
-                    </div> 
+    }
+}   
+
+function afficherCRV(data){
+    let TableauARemplir = document.getElementById('infoAnimalTableBody');
+    TableauARemplir.innerHTML = '';
+    data.forEach(crv=>{
+        let row=document.createElement('tr');
+        let date = new Date(crv.createdAt);
+        row.innerHTML=`
+        <td>${crv.id}</td>
+        <td>${date.toLocaleDateString()}</td>
+        <td>${crv.animal.prenom}</td>
+        <td>${crv.auteur.email}</td>
+        <td>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                </button>
+                <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
+                    <li class="btn btn-danger mb-1" id="delete-infoAnimal" data-bs-toggle="modal" data-bs-target="#deleteInfoAnimalModal" data-infoAnimal-id="${crv.id}"><i class="fa-solid fa-trash"></i></li>
+                    <li class="btn btn-info  mb-1" onClick="goSeeInfoAnimal(${crv.id})"><i class="fa-regular fa-eye"></i></li>
                 </div>
-            </td>
-            `;
-            infoAnimalTableBody.appendChild(row);
-            row = document.createElement('tr');
-            row.classList.add('infoAnimalRow');
-        });
-        const btndelteinfoAnimals = document.querySelectorAll('[data-infoAnimal-id]');
-        btndelteinfoAnimals.forEach(button=>{
-            button.addEventListener('click', function(){
-            const infoAnimalId = button.getAttribute('data-infoAnimal-id');
-            const infoAnimalIdContainer = document.getElementById('infoAnimal-id');
-            infoAnimalIdContainer.value = infoAnimalId;
-            });
-        });
+            </div>
+        </td>
         
-    });
-    loaderGif.classList.add('d-none');
-    tableHead.classList.remove('d-none');
-}
+        `;
+        TableauARemplir.appendChild(row);
+    })
+    }
 
 
 
 
-const animalSelect = document.getElementById('animal-select');
-const dateSelect = document.getElementById('date-select');
-animalSelect.addEventListener('change', function() {
-    applyinfoAnimalFilters();
-    getInfoAnimal(animalSelect.value);
-    // console.log('Getting infoAnimals for animal ID:', animalSelect.value);
-});
 
-dateSelect.addEventListener('change', applyinfoAnimalFilters);
-applyinfoAnimalFilters();
+// async function getInfoAnimal($id){
+//     loaderGif.classList.remove('d-none');
+//     tableHead.classList.add('d-none')
+//     let myHeaders=new Headers();
+//     myHeaders.append('Content-Type', 'application/json');
+//     await fetch('/infoanimal/animal/'+$id)
+//     .then(response => {
+//         if(response.ok){
+//             return response.json();
+//         } else {
+//             throw new Error('Erreur');
+//         }
+    
+//     })
+//     .then(result => {
+//         // console.log('Result:', result);
+//         let infoAnimalTableBody = document.getElementById('infoAnimalTableBody');
+//         infoAnimalTableBody.innerHTML = '';
+//         let infoAnimals = result;
+//         if(infoAnimals.length === 0){
+//             infoAnimalTableBody.innerHTML = '<p class="text-center">Aucun compte-rendu pour le moment. <i class="fa-solid fa-umbrella-beach"></i> </p>';
+//         }
+//         let row = document.createElement('tr');
+//         row.classList.add('infoAnimalRow');
+        
+//         infoAnimals.forEach(infoAnimal=>{
+//             if(infoAnimal.auteur === null){
+//                 infoAnimal.auteur = {email: 'Utilisateur supprimé'};
+//             }
+//             row.setAttribute('data-animal-id', $id);
+//             row.setAttribute('data-infoAnimal-date', toYMD(infoAnimal.createdAt));
+//             row.innerHTML = `
+//             <td>${infoAnimal.id}</td>
+//             <td>${toYMD(infoAnimal.createdAt)}</td>
+//             <td>${infoAnimal.animal.prenom}</td>
+//             <td>${infoAnimal.auteur.email}</td>
+//             <td>
+//                 <div class="dropdown">
+//                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+//                     </button>
+//                     <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
+//                         <li class="btn btn-danger mb-1" id="delete-infoAnimal" data-bs-toggle="modal" data-bs-target="#deleteInfoAnimalModal" data-infoAnimal-id="${infoAnimal.id}"><i class="fa-solid fa-trash"></i></li>
+//                         <li class="btn btn-info  mb-1" onClick="goSeeInfoAnimal(${infoAnimal.id})"><i class="fa-regular fa-eye"></i></li>
+//                     </div> 
+//                 </div>
+//             </td>
+//             `;
+//             infoAnimalTableBody.appendChild(row);
+//             row = document.createElement('tr');
+//             row.classList.add('infoAnimalRow');
+//         });
+//         const btndelteinfoAnimals = document.querySelectorAll('[data-infoAnimal-id]');
+//         btndelteinfoAnimals.forEach(button=>{
+//             button.addEventListener('click', function(){
+//             const infoAnimalId = button.getAttribute('data-infoAnimal-id');
+//             const infoAnimalIdContainer = document.getElementById('infoAnimal-id');
+//             infoAnimalIdContainer.value = infoAnimalId;
+//             });
+//         });
+        
+//     });
+//     loaderGif.classList.add('d-none');
+//     tableHead.classList.remove('d-none');
+// }
+
+
+
+
+
+// dateSelect.addEventListener('change', applyinfoAnimalFilters);
+// applyinfoAnimalFilters();
 
 
 /*--------------------------Services--------------------------*/

@@ -19,7 +19,7 @@ class Service
     #[Groups(['service_info'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 128)]
+    #[ORM\Column(length: 50)]
     #[Groups(['service_info'])]
     private ?string $nom = null;
 

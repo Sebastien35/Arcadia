@@ -154,7 +154,7 @@
                             </div>
                             <div class="modal-body">
                                 <h1>Créer un nouvel utilisateur:</h1>
-                                <form action="/register" method="POST">
+                                <form action="/admin/register" method="POST">
                                     <label for="email">Adresse mail:</label><br>
                                         <input type="email" name="email" id="email" required><br>
                                     <label for="Roles">Rôle:</label><br>
@@ -417,8 +417,9 @@
                 </div>
                 <div class="toolbar d-flex justify-content-around">
                     <div class="col">
-                        <label for="animalSelect">Filtrer par animal:</label>
+                        <label for="animalSelect">Par animal:</label>
                         <select id="animal-select" class="form-select">
+                            <option value="0">Tous les animaux</option>
                             {% for animal in animaux %}
                                 <option value="{{ animal.id }}">{{ animal.prenom }}</option>
                             {% endfor %}
@@ -427,7 +428,10 @@
                     <div class="col">
                         <label for="dateInput">Filtrer par date:</label>
                         <input type="date" id="date-select" class="form-control" placeholder="Date">
-                    </div>              
+                    </div>
+                    <div class="mt-4">
+                        <button type="button" class="btn btn-info" id="searchInfoAnimalBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>             
                 </div>
                 <div class="d-flex justify-content-center mt-3">
                     <image src="{{ asset('images/logos/logo-noir.svg') }}" alt="logo" class="loaderGif d-none"  />
