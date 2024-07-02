@@ -7,14 +7,12 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 
 class IncrementVisitCountTest extends WebTestCase
 {
-    private $dm;
+    private $documentManager;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Assuming you have a way to inject or access the DocumentManager
-        $this->dm = static::getContainer()->get(DocumentManager::class);
+        $this->documentManager = static::getContainer()->get(DocumentManager::class);
     }
 
     public function testIncrementVisits()
@@ -26,28 +24,18 @@ class IncrementVisitCountTest extends WebTestCase
                 ->setAnimalName('test animal')
                 ->setVisits(0);
                 
-            $this->dm->persist($animalVisit);
-            echo("Persisted");
-            $this->dm->flush(); // Save the document to the database
-            echo("Flushed");
+            $this->documentManager->persist($animalVisit);
+            $this->documentManager->flush(); 
 
-            // Verify initial visits
             $initialVisits = $animalVisit->getVisits();
-            echo("Initial visits: ".$initialVisits);
             $this->assertSame(0, $initialVisits);
-
-            // Increment visits
             $animalVisit->incrementVisits();
 
-            // Persist the updated document to ensure changes are saved
-            $this->dm->persist($animalVisit);
-            $this->dm->flush(); // Commit the changes to the database
-            echo("Updated and flushed");
+    
+            $this->documentManager->persist($animalVisit);
+            $this->documentManager->flush(); 
+            $this->documentManager->refresh($animalVisit);
 
-            // Refresh the document from the database to get the updated state
-            $this->dm->refresh($animalVisit);
-
-            // Now, visits should be incremented by 1
             $this->assertSame(1, $animalVisit->getVisits());
         } catch (\Exception $e) {
             echo($e->getMessage());
