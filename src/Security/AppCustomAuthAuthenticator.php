@@ -48,10 +48,9 @@ class AppCustomAuthAuthenticator extends AbstractLoginFormAuthenticator implemen
         $password = $request->request->get('password','');
         $this->logger->info('Login attempt with email: ' . $email . ', password: ' . $password);
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
-
         return new Passport(
             new UserBadge($email),
-            new PasswordCredentials($request->request->get('password', '')),
+            new PasswordCredentials($password),
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
             ]

@@ -46,25 +46,35 @@ class AnimalRepository extends ServiceEntityRepository
     }
 
     public function findIDs($ids):array
-    {
-        return $this->createQueryBuilder('a')
+    {   
+       
+       $result= $this->createQueryBuilder('a')
         ->select('a')
         ->where('a.id IN (:ids)')
         ->setParameter('ids', $ids)
         ->orderBy('a.id', 'ASC')
         ->getQuery()
         ->getResult();
-
+        return $result;
     }
 
-    public function findMoreAnimals($limit):array
-    {
-        return $this->createQueryBuilder('a')
+   
+
+    public function getDifferentIds($ids):array
+    {   
+        // Retourne assez d'identifiants d'animaux pour atteindre un total de 4 
+        // EN COMTANT CEUX DEJA DANS LA LISTE
+        $additionalAnimalIds = $this->createQueryBuilder('a')
         ->select('a.id')
+        ->where('a.id NOT IN (:ids)')
+        ->setParameter('ids', $ids)
         ->orderBy('a.id', 'ASC')
-        ->setMaxResults($limit)
+        ->setMaxResults(4-count($ids))
         ->getQuery()
         ->getResult();
+       
+        
+        return $additionalAnimalIds;
     }
 
     

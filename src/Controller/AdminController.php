@@ -618,17 +618,29 @@ public function dashboard(
     }
 
     #[Route('/animal/delete/{id}', name: 'deleteAnimal', methods: ['DELETE'])]
-    public function deleteAnimal(int $id, EntityManagerInterface $em): JsonResponse
-    {
-        $animal = $em->getRepository(Animal::class)->find($id);
-        if (!$animal) {
-            $this->addFlash('error', 'Animal not found');
-            throw new AnimalNotFoundException("Aucun animal n'a été trouvé avec cet identifiant");
-        }else{
-            $em->remove($animal);
-            $em->flush();
+    public function deleteAnimal(int $id, 
+    EntityManagerInterface $entityManager,
+    DocumentManager $docuManager): JsonResponse
+    {   
+        try{
+            $animal = $entityManager->getRepository(Animal::class)->find($id);
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Aucun animal n\'a été trouvé avec cet identifiant');
+            throw $this->createNotFoundException("No animal found for {$id} id");
+        }
+        try{
+            $document=$docuManager->getRepository(AnimalVisit::class)->findOneBy(['animalId' => $id]);
+            if($document){
+            $docuManager->remove($document);
+            $docuManager->flush();
+            }         
+            $entityManager->remove($animal);
+            $entityManager->flush();
             $this->addFlash('success', 'Animal deleted successfully');
             return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+        }catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue pendant la suppression de l\'animal. Si le problème perisiste, veuillez contacter l\'administrateur du site.');
+            return new JsonResponse('Une erreur est survenue : ' . $e->getMessage(), 500);
         }
         
     }

@@ -28,10 +28,10 @@ class Habitat
     #[ORM\Column(type: "string",length:255, nullable: true)]
     private ?string $imageName = null;
 
-    #[Vich\UploadableField(mapping: "habitat", fileNameProperty: "imageName")]
+    #[Vich\UploadableField( mapping: "habitat", fileNameProperty: "imageName")]
     private $imageFile;
 
-    #[ORM\Column(length: 4096)]
+    #[ORM\Column(type: "text", length: 4096)]
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'Habitat', targetEntity: Animal::class)]

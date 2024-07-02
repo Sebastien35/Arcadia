@@ -14,33 +14,30 @@ class AnimalVisitRepository{
 
     
     public function top4(DocumentManager $documentManager, AnimalRepository $animalRepository){
+        $animalIds = [];
+        try{
         $selection = $documentManager->createQueryBuilder("App\Document\AnimalVisit")
             ->select('animalId') 
             ->sort('visits', 'desc')
             ->limit(4)
             ->getQuery()
             ->execute();
-    
-        $animalIds = [];
+        } catch (\Exception $e) {
+            $selection = [];
+        }
         foreach ($selection as $visit) {
             $animalId = $visit->getAnimalId(); 
             $animalIds[] = $animalId;
-            
         }
         if(empty($animalIds)){
+            try{
             $additionalIds = $animalRepository->findfirstfourids(); 
             $animalIds = array_merge($animalIds, $additionalIds);
-            
+            } catch (\Exception $e) {
+                $animalIds = [];
+            }
         }
-        if(4 > count($animalIds)){
-            
-            $additionalAnimalIds = $animalRepository->findMoreAnimals(4 - count($animalIds));
-            $animalIds = array_merge($animalIds, $additionalAnimalIds);
-        }
-        
         return $animalIds;
-        
-        
     }
 
    
@@ -48,4 +45,3 @@ class AnimalVisitRepository{
 
     
 }
-

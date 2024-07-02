@@ -10,10 +10,10 @@ class AnimalVisit
     #[MongoDB\Id]
     protected ?string $id;
 
-    #[MongoDB\Field(type: "integer")]
+    #[MongoDB\Field(type: "int")]
     protected ?int $animalId;
 
-    #[MongoDB\Field(type: "integer")]
+    #[MongoDB\Field(type: "int")]
     protected ?int $visits = 0;
 
     #[MongoDB\Field(type: "string")]

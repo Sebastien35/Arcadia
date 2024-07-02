@@ -46,8 +46,12 @@ class AcceuilController extends AbstractController
     $horaires = $horaireRepository->findAll();
     $habitats = $habitatRepository->findAll();
     $services = $serviceRepository->findAll();
-    $top4AnimalId = $visitRepository->top4($documentManager, $animalRepository);
-    $top4Animals = $animalRepository->findIDs($top4AnimalId);
+    $MostPopularAnimals = $visitRepository->top4($documentManager, $animalRepository);
+    if(!empty($MostPopularAnimals) && count($MostPopularAnimals) < 4){
+        $additionalIds = $animalRepository->getDifferentIds($MostPopularAnimals);
+        $MostPopularAnimals = array_merge($MostPopularAnimals, $additionalIds);
+    }
+    $AnimauxElus = $animalRepository->findIDs($MostPopularAnimals);
     $avisForm = $this->createForm(AvisType::class);
     
     return $this->render('accueil/index.html.twig', [
@@ -56,7 +60,7 @@ class AcceuilController extends AbstractController
         'horaires' => $horaires,
         'habitats' => $habitats,
         'services' => $services,
-        'animaux' => $top4Animals,
+        'animaux' => $AnimauxElus,
         'avisForm' => $avisForm->createView()
     ]);
 }
