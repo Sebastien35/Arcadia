@@ -17,28 +17,19 @@ class IncrementVisitCountTest extends WebTestCase
 
     public function testIncrementVisits()
     {
-        try {
-            $animalVisit = new AnimalVisit();
-            $animalVisit
-                ->setAnimalId(1)
-                ->setAnimalName('test animal')
-                ->setVisits(0);
-                
-            $this->documentManager->persist($animalVisit);
-            $this->documentManager->flush(); 
-
-            $initialVisits = $animalVisit->getVisits();
-            $this->assertSame(0, $initialVisits);
-            $animalVisit->incrementVisits();
-
-    
-            $this->documentManager->persist($animalVisit);
-            $this->documentManager->flush(); 
-            $this->documentManager->refresh($animalVisit);
-
-            $this->assertSame(1, $animalVisit->getVisits());
-        } catch (\Exception $e) {
-            echo($e->getMessage());
-        }
+        $animalVisit = new AnimalVisit();
+        $animalVisit
+            ->setAnimalId(1)
+            ->setAnimalName('test animal')
+            ->setVisits(0);
+        $this->documentManager->persist($animalVisit);
+        $this->documentManager->flush(); 
+        $initialVisits = $animalVisit->getVisits();
+        $this->assertSame(0, $initialVisits);
+        $animalVisit->incrementVisits();
+        $this->documentManager->persist($animalVisit);
+        $this->documentManager->flush(); 
+        $this->documentManager->refresh($animalVisit);
+        $this->assertSame(1, $animalVisit->getVisits());
     }
 }
