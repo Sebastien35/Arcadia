@@ -154,7 +154,7 @@
                             </div>
                             <div class="modal-body">
                                 <h1>Créer un nouvel utilisateur:</h1>
-                                <form action="/register" method="POST">
+                                <form action="/register" method="POST" id="registrationForm">
                                     <label for="email">Adresse mail:</label><br>
                                         <input type="email" name="email" id="email" required><br>
                                     <label for="Roles">Rôle:</label><br>
@@ -166,12 +166,14 @@
                                     <label for="plainPassword">Mot de passe:</label><br>
                                     <input type="password" Placeholder="Password" name="plainPassword" id="password" required><br>
                                     <label for="plainPassword">Confirmation mot de passe:</label><br>
-                                    <input type="password" placeholder="Confirm password" name="plainPassword" required><br><br>
-                                    
+                                    <input type="password" placeholder="Confirm password" name="plainPassword" id="confirmPassword" required><br><br>
+                                    <div class="error-message">
+                                        <span id="errorSpan"></span>
+                                    </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" value="Créer" class="btn btn-primary">Enregistrer</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                <button type="submit" value="Créer" class="btn btn-primary disabled">Enregistrer</button>
+                                <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Fermer</button>
                                 </form>
                             </div>
                         </div>
@@ -275,10 +277,9 @@
                                                     {% endif %}
                                                 </div>
                                             {% endif %}
-                                        {% endfor %}
-                                        
+                                        {% endfor %} 
                                     </div>
-                                </div>
+                                </div>   
                             </div>
                         </div>
                         {% endfor %}       
@@ -742,6 +743,7 @@
 <script src="{{ asset('js/filtre_DDC.js') }}"></script>
 <script src="{{ asset('js/allAnimals.js') }}"></script>
 <script src="{{ asset('js/sanitizer.js') }}"></script>
+<script src="{{ asset('js/admin/Registration_password_validation.js') }}"></script>
 {% endblock %}
 
 {% block javascripts %}

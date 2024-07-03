@@ -19,7 +19,7 @@ class IncrementVisitCountTest extends WebTestCase
     {
         $animalVisit = new AnimalVisit();
         $animalVisit
-            ->setAnimalId(1)
+            ->setAnimalId(0)
             ->setAnimalName('test animal')
             ->setVisits(0);
         $this->documentManager->persist($animalVisit);
@@ -32,4 +32,15 @@ class IncrementVisitCountTest extends WebTestCase
         $this->documentManager->refresh($animalVisit);
         $this->assertSame(1, $animalVisit->getVisits());
     }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->documentManager->createQueryBuilder(AnimalVisit::class)
+            ->remove()
+            ->field('animalId')->equals(0)
+            ->getQuery()
+            ->execute();
+    }
+
 }

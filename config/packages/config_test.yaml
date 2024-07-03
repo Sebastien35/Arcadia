@@ -1,0 +1,10 @@
+
+doctrine_mongodb:
+    connections:
+        default:
+            server: '%env(MONGODB_SERVER)%'
+            options: {}
+    default_database: '%env(TEST_MONGODB_DATABASE)%'
+    document_managers:
+        default:
+            auto_mapping: true

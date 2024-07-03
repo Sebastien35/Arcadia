@@ -23,15 +23,22 @@ class RegistrationController extends AbstractController
     public function register(
         Request $request, 
         UserPasswordHasherInterface $userPasswordHasher, 
-        UserAuthenticatorInterface $userAuthenticator, 
-        AppCustomAuthAuthenticator $authenticator, 
         EntityManagerInterface $entityManager,
-        UserRepository $userRepo,
         MailerService $mailerService,
     ): Response
     {
     if ($this->getUser() === null) {
         return new Response('Unauthorized', Response::HTTP_UNAUTHORIZED);
+    }
+
+    $plainPassword = $request->request->get('plainPassword');
+    if (empty($plainPassword ||
+        strlen($plainPassword) < 8 ||
+        strlen($plainPassword) > 20 ||
+        !preg_match('/\d/', $plainPassword) || 
+        !preg_match('/[^a-zA-Z0-9]/', $plainPassword) ||
+        !preg_match('/([^a-zA-Z0-9].*[^a-zA-Z0-9])|([^a-zA-Z0-9]{2,})/', $plainPassword))) {
+        throw new \Exception('Password must be between 8 and 20 characters long and contain at least one digit and one special character.');
     }
     try{
     
