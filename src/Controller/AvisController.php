@@ -56,13 +56,15 @@ class AvisController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                $data = $form->getData();
                 $avis = new Avis();
-                $avis->setPseudo($sanitizer->sanitizeHtml($form->get('pseudo')->getData()));
-                $avis->setAvisContent($sanitizer->sanitizeHtml($form->get('Avis_content')->getData()));
-                $avis->setNote($form->get('note')->getData());
-                $avis->setZoo($form->get('zoo')->getData());
-                $avis->setCreatedAt(new DateTimeImmutable());
-                $avis->setValidation(false);              
+                $avis
+                    ->setValidation(false)
+                    ->setCreatedAt(new DateTimeImmutable())
+                    ->setPseudo($sanitizer->sanitizeHtml($data->getPseudo()))
+                    ->setAvisContent($sanitizer->sanitizeHtml($data->getAvisContent()))
+                    ->setNote($data->getNote())
+                    ->setZoo($data->getZoo());
                 $entityManager->persist($avis);
                 $entityManager->flush();
                 return $this->redirectToRoute('app_avis_index');

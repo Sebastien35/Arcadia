@@ -155,24 +155,27 @@
                             <div class="modal-body">
                                 <h1>Créer un nouvel utilisateur:</h1>
                                 <form action="/register" method="POST" id="registrationForm">
-                                    <label for="email">Adresse mail:</label><br>
-                                        <input type="email" name="email" id="email" required><br>
+                                    <label for="email" >Adresse mail:</label><br>
+                                        <input type="email" name="email" id="email" class="form-control" required><br>
                                     <label for="Roles">Rôle:</label><br>
-                                        <select name="Roles" id="Roles" required>
+                                        <select name="Roles" id="Roles" required class="form-control">
                                             <option value="" disabled selected  hidden>Choisir un rôle</option>
                                             <option value="ROLE_EMPLOYE">Employé</option>
                                             <option value="ROLE_VET">Vétérinaire</option>
                                         </select><br><br>
                                     <label for="plainPassword">Mot de passe:</label><br>
-                                    <input type="password" Placeholder="Password" name="plainPassword" id="password" required><br>
+                                    <input type="password" Placeholder="Password" name="plainPassword" id="password" class="form-control" required><br>
                                     <label for="plainPassword">Confirmation mot de passe:</label><br>
-                                    <input type="password" placeholder="Confirm password" name="plainPassword" id="confirmPassword" required><br><br>
+                                    <input type="password" placeholder="Confirm password" name="plainPassword" id="confirmPassword" class="form-control" required><br><br>
                                     <div class="error-message">
-                                        <span id="errorSpan"></span>
+                                        <span id="emailSpan"></span><br>
+                                        <span id="roleSpan"></span><br>
+                                        <span id="validationSpan"></span><br>
+                                        <span id="passwordMatchSpan"></span>
                                     </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" value="Créer" class="btn btn-primary disabled">Enregistrer</button>
+                                <button type="submit" value="Créer" class="btn btn-primary " id="registerNewUserBtn">Enregistrer</button>
                                 <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Fermer</button>
                                 </form>
                             </div>
