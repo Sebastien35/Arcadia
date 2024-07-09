@@ -348,19 +348,24 @@ public function dashboard(
 
 
     #[Route('/habitats/create', name: 'createHabitat', methods: 'POST')]
-    public function createHabitat(Request $request, EntityManagerInterface $em): Response
+    public function createHabitat(Request $request, EntityManagerInterface $entityManager): Response
     {
         try{
+        
         $habitat = new habitat();
         $form = $this->createForm(habitatFormType::class, $habitat);
         $form->handleRequest($request);
+        
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($habitat);
-            $em->flush();
-            $this->addFlash('success', 'Habitat created successfully');
+            $entityManager->persist($habitat);
+            $entityManager->flush();
             return $this->redirectToRoute('app_admin_index');
-            
+        } else {
+            $this->addFlash('error', 'Une erreur est survenue lors de la création de l`habitat. Veuillez remplir corretement tous les champs du formulaire et vous assurer que l`image téléchargée est au format webp.');
+            return new RedirectResponse($this->generateUrl('app_admin_index'));
         }
+
+
     }catch (\Exception $e) {
         $this->addFlash('error', 'An error occured');
         return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
@@ -512,6 +517,10 @@ public function dashboard(
                 $this->addFlash('success', 'Animal created successfully');
                 return $this->redirectToRoute('app_admin_index');
             }
+         else {
+            $this->addFlash('error', 'Une erreur est survenue lors de la création de l`habitat. Veuillez remplir corretement tous les champs du formulaire et vous assurer que l`image téléchargée est au format webp.');
+            return new RedirectResponse($this->generateUrl('app_admin_index'));
+        }
         }catch (\Exception $e) {
             $this->addFlash('error', 'An error occured');
             return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
@@ -561,6 +570,7 @@ public function dashboard(
                 throw new \Exception('Une erreur est survenue. Merci de réessayer plus tard.');
             }
         }
+        
 
         return $this->render('admin/showAnimal.html.twig', [
             'controller_name' => 'AdminController',
@@ -646,7 +656,10 @@ public function dashboard(
     }
 
     #[Route('/demande/repondre/{id}', name: 'repondre_demande', methods:['POST'])]
-    public function repondreDemande(Request $request, MailerService $mailerService, DemandeContactRepository $demandeRepo, EntityManagerInterface $em): Response
+    public function repondreDemande(Request $request, 
+    MailerService $mailerService, 
+    DemandeContactRepository $demandeRepo, 
+    EntityManagerInterface $em): Response
     {
     try {
     

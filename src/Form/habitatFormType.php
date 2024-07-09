@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\File;
 
 
 class habitatFormType extends AbstractType
@@ -52,9 +53,21 @@ class habitatFormType extends AbstractType
             
             
             ->add('imageFile', VichFileType::class, [
-                'required' => false,
+                'required' => true,
                 'allow_delete' => true,
                 'download_uri' => true,
+                'constraints'=>[
+                    new File([
+                        'maxSize' => '10000k',
+                        'maxSizeMessage' => 'Le fichier est trop volumineux ({{ size }} {{ suffix }}). 
+                            La taille maximale autorisée est {{ limit }} {{ suffix }}.',
+                        'mimeTypes' => [
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez télécharger un fichier webp.',
+                    ]),
+                ]
+
             ]) ;
     }
 

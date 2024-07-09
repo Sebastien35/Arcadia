@@ -6,12 +6,12 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ConnectTest extends WebTestCase
 {
-    public function testSomething(): void
+    public function testAdmin(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/admin');
 
-        $this->assertResponseRedirects('/login', 302);
+        $this->assertResponseRedirects('/login', 401);
         
     }
 }
