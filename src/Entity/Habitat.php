@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: HabitatRepository::class)]
@@ -28,6 +29,7 @@ class Habitat
     #[ORM\Column(type: "string",length:255, nullable: true)]
     private ?string $imageName = null;
 
+    #[Assert\File(maxSize: "10024k", mimeTypes: ["image/webp"], mimeTypesMessage: "Please upload a valid image file")]
     #[Vich\UploadableField( mapping: "habitat", fileNameProperty: "imageName")]
     private $imageFile;
 

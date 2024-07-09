@@ -29,18 +29,18 @@ class AnimalController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private SerializerInterface $serializer,
-        private DocumentManager $dm,
+        private DocumentManager $documentManager,
         )
     {
         $this->entityManager=$entityManager;
         $this->serializer=$serializer;
-        $this->dm = $dm;
+        $this->documentManager = $documentManager;
     }
 
     #[Route('/show/{id}', name: 'show', methods: ['GET'])]
     public function showAnimal(int $id, 
     AnimalRepository $animalRepo, 
-    DocumentManager $dm, 
+    DocumentManager $documentManager, 
     InfoAnimalRepository $infoAnimalRepo, 
     ): Response
     {   
@@ -54,15 +54,15 @@ class AnimalController extends AbstractController
             1
         );
 
-        $visit = $dm->getRepository(AnimalVisit::class)->findOneBy(['animalId' => $id]);
+        $visit = $documentManager->getRepository(AnimalVisit::class)->findOneBy(['animalId' => $id]);
         if(!$visit){
             $visit = new AnimalVisit();
             $visit->setAnimalId($id);
             $visit->setAnimalName($animalRepo->find($id)->getPrenom());
         }
         $visit->incrementVisits();
-        $dm->persist($visit);
-        $dm->flush();
+        $documentManager->persist($visit);
+        $documentManager->flush();
         return $this->render('animal/show.html.twig', [
             'animal' => $animal,
             'infoAnimal' => $infoAnimal,

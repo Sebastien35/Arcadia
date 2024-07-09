@@ -173,6 +173,7 @@
                                         <span id="validationSpan"></span><br>
                                         <span id="passwordMatchSpan"></span>
                                     </div>
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('register') }}">
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" value="Créer" class="btn btn-primary " id="registerNewUserBtn">Enregistrer</button>
@@ -310,6 +311,7 @@
                                 <div class="mb-3">
                                     {{ form_row(createHabitatForm.imageFile, {'label': 'Image'}) }}
                                 </div>
+                                
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary mb-2">Ajouter</button>

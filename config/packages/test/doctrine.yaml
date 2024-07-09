@@ -1,0 +1,5 @@
+doctrine:
+  dbal:
+    url: '%env(resolve:DATABASE_TEST_URL)%'
+    server_version: '15'
+    profiling_collect_backtrace: '%kernel.debug%'

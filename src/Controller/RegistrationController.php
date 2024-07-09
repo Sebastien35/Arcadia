@@ -30,7 +30,12 @@ class RegistrationController extends AbstractController
     if ($this->getUser() === null) {
         return new Response('Unauthorized', Response::HTTP_UNAUTHORIZED);
     }
-
+    
+    $csrfToken = $request->request->get('_csrf_token');
+    if (!$this->isCsrfTokenValid('register', $csrfToken)) {
+        throw new \Exception('Invalid CSRF token.');
+    }
+    
     $plainPassword = $request->request->get('plainPassword');
     if (empty($plainPassword ||
         strlen($plainPassword) < 8 ||
