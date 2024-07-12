@@ -208,6 +208,37 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+//Suprresion des commentaires
+
+async function deleteComment($id){  
+    let confirmation = window.confirm('Voulez-vous vraiment supprimer ce commentaire ?');
+    if(!confirmation){
+        return;
+    }
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+
+    
+    await fetch(`/admin/comment/delete/${$id}`, {
+        method: 'DELETE',
+        headers: myHeaders,
+    })
+    .then(response => {
+        if(response.ok){
+            return response.json();
+        } else {
+            throw new Error('Erreur');
+        }
+    })
+    .then(result => {
+        window.location.reload();
+    })
+    .catch(error => console.log(error));
+}
+            
+
+
+
 
 
 

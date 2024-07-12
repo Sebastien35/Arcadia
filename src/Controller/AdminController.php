@@ -744,20 +744,22 @@ public function dashboard(
         return new JsonResponse(['message' => 'Avis deleted successfully'], Response::HTTP_OK);
     }
 
-    #[Route('/commentaires/delete/{id}', name: 'deleteCommentaire', methods: ['DELETE'])] 
+    #[Route('/comment/delete/{id}', name: 'deleteCommentaire', methods: ['DELETE'])] 
     public function deleteCommentaireHabitat(int $id, CommentaireHabitatRepository $commRepo, EntityManagerInterface $em): JsonResponse
     {   try{
-        if (!$this->isGranted('ROLE_AUTHENTICATED_FULLY')) {
+        if(!$this->isGranted('ROLE_ADMIN')){
             return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
-        }   
+        }
         $commentaire = $commRepo->find($id);
         if (!$commentaire) {
             return new JsonResponse(['error' => 'Commentaire not found'], Response::HTTP_NOT_FOUND);
         }
         $em->remove($commentaire);
         $em->flush();
+        $this->addFlash('success', 'Commentaire deleted successfully');
         return new JsonResponse(['message' => 'Commentaire deleted successfully'], Response::HTTP_OK);
     }catch(\Exception $e){
+        $this->addFlash('error', 'An error occured');
         return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
     }
