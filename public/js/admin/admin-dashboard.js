@@ -186,21 +186,14 @@ async function deleteHabitat() {
 //Afficher commentaires
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Récupérer tous les boutons "Commentaires"
     let commentButtons = document.querySelectorAll('.commentsBt');
-    // Ajouter un gestionnaire d'événements à chaque bouton "Commentaires"
     commentButtons.forEach(function(button) {
         button.addEventListener('click', function() {
-            // Récupérer la section des commentaires correspondante
             let commentsDiv = button.nextElementSibling;
-            // Vérifier si la section des commentaires est actuellement visible ou non
             let isVisible = commentsDiv.classList.contains('d-none');
-            // Afficher ou masquer la section des commentaires en fonction de son état actuel
             if (isVisible) {
-                // Si la section des commentaires est masquée, la rendre visible
                 commentsDiv.classList.remove('d-none');
             } else {
-                // Sinon, la masquer
                 commentsDiv.classList.add('d-none');
             }
         });
@@ -433,8 +426,6 @@ function applyinfoAnimalFilters() {
 
 const loaderGif=document.querySelector('.loaderGif');
 const tableHead=document.querySelector('.tableHead');
-
-
 async function getInfoAnimal($id){
     loaderGif.classList.remove('d-none');
     tableHead.classList.add('d-none')
@@ -450,7 +441,6 @@ async function getInfoAnimal($id){
     
     })
     .then(result => {
-        // console.log('Result:', result);
         let infoAnimalTableBody = document.getElementById('infoAnimalTableBody');
         infoAnimalTableBody.innerHTML = '';
         let infoAnimals = result;
@@ -459,7 +449,6 @@ async function getInfoAnimal($id){
         }
         let row = document.createElement('tr');
         row.classList.add('infoAnimalRow');
-        
         infoAnimals.forEach(infoAnimal=>{
             if(infoAnimal.auteur === null){
                 infoAnimal.auteur = {email: 'Utilisateur supprimé'};
@@ -494,23 +483,16 @@ async function getInfoAnimal($id){
             infoAnimalIdContainer.value = infoAnimalId;
             });
         });
-        
     });
     loaderGif.classList.add('d-none');
     tableHead.classList.remove('d-none');
 }
-
-
-
-
 const animalSelect = document.getElementById('animal-select');
 const dateSelect = document.getElementById('date-select');
 animalSelect.addEventListener('change', function() {
     applyinfoAnimalFilters();
     getInfoAnimal(animalSelect.value);
-    // console.log('Getting infoAnimals for animal ID:', animalSelect.value);
 });
-
 dateSelect.addEventListener('change', applyinfoAnimalFilters);
 applyinfoAnimalFilters();
 
@@ -1002,8 +984,6 @@ function FlushFeatures(){
     contactContainer.classList.add('d-none');
     consultationContainer.classList.add('d-none');
     avisContainer.classList.add('d-none');
-
-    
 }
 
 
