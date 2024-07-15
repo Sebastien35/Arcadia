@@ -4,11 +4,12 @@ Namespace App\DataFixtures;
 
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
-class UserFixtures extends Fixture
+class UserFixtures extends Fixture 
 {
     private UserPasswordHasherInterface $passwordHasher;
 
@@ -41,4 +42,6 @@ class UserFixtures extends Fixture
     }
     $manager->flush();
     }
+
+    
 }

@@ -278,10 +278,8 @@
                                                         {% else %}
                                                             <h5 class="card-title">Compte supprimé</h5>
                                                         {% endif %}
-                                                        <form>
-                                                        <input type="hidden" id="_token" value="{{ csrf_token('delete_comment') }}">
-                                                        <button id="delete-comment" onClick="deleteComment({{ commentaire.id }})" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
-                                                        </form>
+                                                        <button id="delete-comment" onClick="deleteComment({{ commentaire.id }})" 
+                                                        class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
                                                     </div>
                                                     <div class="card-body">
                                                         <p class="text-muted">{{ commentaire.createdAt|date('d/m/Y H:i') }}</p>

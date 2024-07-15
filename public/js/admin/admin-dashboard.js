@@ -211,14 +211,13 @@ document.addEventListener('DOMContentLoaded', function() {
 //Suprresion des commentaires
 
 async function deleteComment($id){  
-    let confirmation = window.confirm('Voulez-vous vraiment supprimer ce commentaire ?');
+    let confirmation = window.confirm('Voulez-vous \
+        vraiment supprimer ce commentaire ?');
     if(!confirmation){
         return;
     }
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
-
-    
     await fetch(`/admin/comment/delete/${$id}`, {
         method: 'DELETE',
         headers: myHeaders,
@@ -1008,8 +1007,7 @@ function FlushFeatures(){
 }
 
 
-
-/* Remove .active class from the sidebar */
+// Enlever .active quand on clique sur un btn
 
 function FlushActive(){
     userBtns.forEach(button => button.classList.remove('active'));
@@ -1024,7 +1022,6 @@ function FlushActive(){
 }
 
 
-/* Hide Phone Menu */
 const sidebarCollapse = document.getElementById('sidebarCollapse');
 
 sidebarCollapse.addEventListener('hidden.bs.collapse', function () {

@@ -28,6 +28,8 @@ use App\Entity\Repas;
 use App\Repository\RepasRepository;
 use App\Repository\CommentaireHabitatRepository;
 
+use App\Service\Sanitizer;
+
 
 use Doctrine\ORM\Mapping\OrderBy;
 use Symfony\Component\Form\Test\FormBuilderInterface;
@@ -40,9 +42,13 @@ class VeterinaireController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private SerializerInterface $serializer,
+        private Sanitizer $sanitizer
+        
     )
     {
         $this->entityManager = $entityManager;
+        $this->serializer = $serializer;
+        $this->sanitizer = $sanitizer;
     }
     #[Route('/', name: 'index')]
     public function index(AnimalRepository $animalRepo, NourritureRepository $nourritureRepo, ): Response
@@ -274,20 +280,19 @@ public function addAnimalInfo(Request $request): JsonResponse
             $this->addFlash('error', 'Habitat not found');
             return new JsonResponse(['status' => 'Habitat not found'], Response::HTTP_NOT_FOUND);
         }
-        $habitatCommentaire->setHabitat($habitat);
-        $habitatCommentaire->setCommentaire($data['commentaire']);
-        $habitatCommentaire->setCreatedAt(new \DateTimeImmutable());
-        $habitatCommentaire->setAuteur($this->getUser());
-
-        
-        
+        $text = $this->sanitizer->sanitizeHtml($data['commentaire']);
+        $habitatCommentaire
+                ->setHabitat($habitat)
+                ->setCommentaire($text)
+                ->setCreatedAt(new \DateTimeImmutable())
+                ->setAuteur($this->getUser());
         $this->entityManager->persist($habitatCommentaire);
         $this->entityManager->flush();
         $this->addFlash('success', 'Commentaire ajouté avec succès');
-        return new RedirectResponse($this->generateUrl('app_veterinaire_index'));
+        return new RedirectResponse($this->generateUrl('app_veterinaire_index'), Response::HTTP_CREATED);
         }catch(\Exception $e){
             $this->addFlash('error', 'Erreur lors de l\'ajout du commentaire', $e->getMessage());
-            return new Response($e->getMessage());
+            return new Response($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
