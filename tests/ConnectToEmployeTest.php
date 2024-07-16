@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 
 
-class ConnectToVetTest extends WebTestCase
+class ConnectToEmployeTest extends WebTestCase
 {   
     private $client;
     private $entityManager;
@@ -27,13 +27,13 @@ class ConnectToVetTest extends WebTestCase
         $schemaTool->createSchema($metadata);
     }
 
-    public function testVet(): void
+    public function testEmploye(): void
     {   
         
         $user = new User(
-            'veterinaire.ecfarcadia@gmail.com',
+            'employe.ecfarcadia@gmail.com',
             'Studi123ECF',
-            ['ROLE_VET'],
+            ['ROLE_EMPLOYE'],
             new \DateTimeImmutable(),
             null,
             1
@@ -43,7 +43,7 @@ class ConnectToVetTest extends WebTestCase
         $this->entityManager->flush();
 
         $this->client->loginUser($user);
-        $this->client->request('GET', '/veterinaire');
+        $this->client->request('GET', '/employe');
         $response = $this->client->getResponse();
         if($response->isRedirect()) {
             $this->client->followRedirect();
@@ -51,7 +51,7 @@ class ConnectToVetTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         $this->client->request('GET', '/logout');
-        $this->client->request('GET', '/veterinaire');
+        $this->client->request('GET', '/employe');
         $this->assertResponseRedirects('/login');
         
     }

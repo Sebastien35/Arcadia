@@ -16,11 +16,13 @@
     }
 }
 
-.navbar-custom , a:active, a:visited,a {
+.navbar-custom  a:active, a:visited,a {
     text-decoration: none;
     color:#ffffffff;
     font-size: 32 ;
 }
+
+
 .navbar-brand{
     font-size:36;
 }

@@ -348,19 +348,24 @@ public function dashboard(
 
 
     #[Route('/habitats/create', name: 'createHabitat', methods: 'POST')]
-    public function createHabitat(Request $request, EntityManagerInterface $em): Response
+    public function createHabitat(Request $request, EntityManagerInterface $entityManager): Response
     {
         try{
+        
         $habitat = new habitat();
         $form = $this->createForm(habitatFormType::class, $habitat);
         $form->handleRequest($request);
+        
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($habitat);
-            $em->flush();
-            $this->addFlash('success', 'Habitat created successfully');
+            $entityManager->persist($habitat);
+            $entityManager->flush();
             return $this->redirectToRoute('app_admin_index');
-            
+        } else {
+            $this->addFlash('error', 'Une erreur est survenue lors de la création de l`habitat. Veuillez remplir corretement tous les champs du formulaire et vous assurer que l`image téléchargée est au format webp.');
+            return new RedirectResponse($this->generateUrl('app_admin_index'));
         }
+
+
     }catch (\Exception $e) {
         $this->addFlash('error', 'An error occured');
         return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
@@ -512,6 +517,10 @@ public function dashboard(
                 $this->addFlash('success', 'Animal created successfully');
                 return $this->redirectToRoute('app_admin_index');
             }
+         else {
+            $this->addFlash('error', 'Une erreur est survenue lors de la création de l`habitat. Veuillez remplir corretement tous les champs du formulaire et vous assurer que l`image téléchargée est au format webp.');
+            return new RedirectResponse($this->generateUrl('app_admin_index'));
+        }
         }catch (\Exception $e) {
             $this->addFlash('error', 'An error occured');
             return new Response('Une erreur est survenue : ' . $e->getMessage(), 500);
@@ -561,6 +570,7 @@ public function dashboard(
                 throw new \Exception('Une erreur est survenue. Merci de réessayer plus tard.');
             }
         }
+        
 
         return $this->render('admin/showAnimal.html.twig', [
             'controller_name' => 'AdminController',
@@ -646,7 +656,10 @@ public function dashboard(
     }
 
     #[Route('/demande/repondre/{id}', name: 'repondre_demande', methods:['POST'])]
-    public function repondreDemande(Request $request, MailerService $mailerService, DemandeContactRepository $demandeRepo, EntityManagerInterface $em): Response
+    public function repondreDemande(Request $request, 
+    MailerService $mailerService, 
+    DemandeContactRepository $demandeRepo, 
+    EntityManagerInterface $em): Response
     {
     try {
     
@@ -731,20 +744,22 @@ public function dashboard(
         return new JsonResponse(['message' => 'Avis deleted successfully'], Response::HTTP_OK);
     }
 
-    #[Route('/commentaires/delete/{id}', name: 'deleteCommentaire', methods: ['DELETE'])] 
+    #[Route('/comment/delete/{id}', name: 'deleteCommentaire', methods: ['DELETE'])] 
     public function deleteCommentaireHabitat(int $id, CommentaireHabitatRepository $commRepo, EntityManagerInterface $em): JsonResponse
     {   try{
-        if (!$this->isGranted('ROLE_AUTHENTICATED_FULLY')) {
+        if(!$this->isGranted('ROLE_ADMIN')){
             return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
-        }   
+        }
         $commentaire = $commRepo->find($id);
         if (!$commentaire) {
             return new JsonResponse(['error' => 'Commentaire not found'], Response::HTTP_NOT_FOUND);
         }
         $em->remove($commentaire);
         $em->flush();
+        $this->addFlash('success', 'Commentaire deleted successfully');
         return new JsonResponse(['message' => 'Commentaire deleted successfully'], Response::HTTP_OK);
     }catch(\Exception $e){
+        $this->addFlash('error', 'An error occured');
         return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
     }

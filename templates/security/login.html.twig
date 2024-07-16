@@ -23,14 +23,15 @@
                     <div class="mb-3 d-flex justify-content-center">
                         <button type="submit" class="btn btn-primary">Se connecter</button>
                     </div>
+                    <div class="mb-3 d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary"><a href="{{path('app_forgot_password_request')}}">Mot de passe oublié ?</a></button>
+                    </div>
                     {% if error_message %}
                         <div class="alert alert-danger" role="alert">
                             {{ error_message }}
                         </div>
                     {% endif %}
-                    <input type="hidden" name="_csrf_token"
-                        value="{{ csrf_token('authenticate') }}"
-                    >
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 </form>
             </div>
         </div>

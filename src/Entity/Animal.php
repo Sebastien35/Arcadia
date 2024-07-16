@@ -12,6 +12,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\HttpFoundation\File\File;
 use App\Entity\InfoAnimal;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
@@ -41,6 +43,7 @@ class Animal
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[Assert\File(maxSize: "10024k", mimeTypes: ["image/webp"], mimeTypesMessage: "Please upload a valid image file")]
     #[Vich\UploadableField(mapping: "animal", fileNameProperty: "imageName")]
     private $imageFile;
 

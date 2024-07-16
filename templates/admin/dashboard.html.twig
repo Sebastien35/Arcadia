@@ -173,6 +173,7 @@
                                         <span id="validationSpan"></span><br>
                                         <span id="passwordMatchSpan"></span>
                                     </div>
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('register') }}">
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" value="Créer" class="btn btn-primary " id="registerNewUserBtn">Enregistrer</button>
@@ -271,13 +272,19 @@
                                         {% for commentaire in commentaires %}
                                             {% if commentaire.getHabitat.id == singlehabitat.id %}
                                                 <div class="card">
-                                                    {% if commentaire.auteur is not null %}
-                                                        <p class="text-muted">{{ commentaire.getcreatedAt | date ('d m Y') }}, {{ commentaire.auteur.email }}</p>
+                                                    <div class="card-header">
+                                                        {% if commentaire.auteur is not null %}
+                                                            <h5 class="card-title">{{ commentaire.auteur.email }}</h5>
+                                                        {% else %}
+                                                            <h5 class="card-title">Compte supprimé</h5>
+                                                        {% endif %}
+                                                        <button id="delete-comment" onClick="deleteComment({{ commentaire.id }})" 
+                                                        class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p class="text-muted">{{ commentaire.createdAt|date('d/m/Y H:i') }}</p>
                                                         <p class="card-text">{{ commentaire.commentaire }}</p>
-                                                    {% else %}
-                                                        <p class="text-muted">{{ commentaire.getcreatedAt | date ('d m Y') }}, Compte supprimé</p>
-                                                        <p class="card-text">{{ commentaire.commentaire }}</p>
-                                                    {% endif %}
+                                                    </div>
                                                 </div>
                                             {% endif %}
                                         {% endfor %} 
@@ -310,6 +317,7 @@
                                 <div class="mb-3">
                                     {{ form_row(createHabitatForm.imageFile, {'label': 'Image'}) }}
                                 </div>
+                                
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary mb-2">Ajouter</button>
