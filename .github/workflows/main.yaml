@@ -26,7 +26,7 @@ jobs:
           cd htdocs &&
           cd arcadia-zoo.online/ &&
           cd Arcadia &&
-          git pull 
+          git pull origin main &&
           composer install
           "
 
