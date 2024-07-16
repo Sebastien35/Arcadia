@@ -1,0 +1,10 @@
+<h1>Arcadia</h1>
+
+<p>Pour créer un nouveau mot de passe, cliquez sur le lien suivant.</p>
+<p>Attention, ce lien n'est valable qu'une seule fois.</p>
+
+<a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+
+<p>Le lien expirera dans  {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+
+<p>Cheers!</p>

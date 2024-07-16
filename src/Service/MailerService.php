@@ -38,6 +38,7 @@ class MailerService
             ->to($to)
             ->subject('Réponse à votre demande')
             ->text($text);
+            
         $this->mailer->send($email);
     }
 
