@@ -71,7 +71,7 @@ use App\Document\AnimalVisit;
 use App\Exception\AnimalNotFoundException;
 use App\Exception\ServiceNotFound;
 use App\Exception\UserNotFound;
-
+use Symfony\Component\Validator\Constraints\Date;
 
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
@@ -469,6 +469,33 @@ public function dashboard(
             return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    #[Route('/infoAnimal/search', name: 'searchInfoAnimal', methods: ['GET'])]
+    public function SearchUsingDateAndOrAnimal(
+        Request $request,
+        InfoAnimalRepository $infoAnimalRepository,
+        SerializerInterface $serializer): Response
+    {
+        try {
+            $animal_id = $request->query->get('animal_id');
+            $date = $request->query->get('date');
+            $CRVS = $infoAnimalRepository->FilterByAnimalAndOrByDate($animal_id, $date);
+            
+            
+
+            $SerializedCRVS = $serializer->serialize($CRVS, 'json', ['attributes' => [
+                'id',
+                'animal' => ['id', 'prenom'],
+                'createdAt',
+                'auteur' => ['id','email'],
+            ]]);
+
+            return new JsonResponse($SerializedCRVS, Response::HTTP_OK, [], true);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'An error occurred: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     
 
     

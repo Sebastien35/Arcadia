@@ -428,8 +428,8 @@
                     </div>
                 </div>
                 <div class="toolbar d-flex justify-content-around">
-                    <div class="col">
-                        <label for="animalSelect">Filtrer par animal:</label>
+                    <div class="col ">
+                        <label for="animalSelect">Animal:</label>
                         <select id="animal-select" class="form-select">
                             {% for animal in animaux %}
                                 <option value="{{ animal.id }}">{{ animal.prenom }}</option>
@@ -437,9 +437,10 @@
                         </select>
                     </div>
                     <div class="col">
-                        <label for="dateInput">Filtrer par date:</label>
+                        <label for="dateInput">Date:</label>
                         <input type="date" id="date-select" class="form-control" placeholder="Date">
-                    </div>              
+                    </div><br>
+                    <button class="btn btn-primary" id="filter-infoAnimal-btn">Rechercher</button>
                 </div>
                 <div class="d-flex justify-content-center mt-3">
                     <image src="{{ asset('images/logos/logo-noir.svg') }}" alt="logo" class="loaderGif d-none"  />

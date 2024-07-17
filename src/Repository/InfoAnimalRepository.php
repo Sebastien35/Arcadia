@@ -6,6 +6,8 @@ use App\Entity\InfoAnimal;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+use function PHPUnit\Framework\isNull;
+
 /**
  * @extends ServiceEntityRepository<InfoAnimal>
  *
@@ -45,4 +47,23 @@ class InfoAnimalRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+public function FilterByAnimalAndOrByDate($animal_id, $date) {
+    $query = $this->createQueryBuilder('request');
+
+    if (!empty($animal_id)) {
+        $query->andWhere('request.animal = :animal_id')
+              ->setParameter('animal_id', $animal_id);
+    }
+
+    if (!empty($date)) {
+        $createdAt = new \DateTime($date);
+        $formattedDate = $createdAt->format('Y-m-d');
+        $query->andWhere('request.createdAt BETWEEN :startOfDay AND :endOfDay')
+              ->setParameter('startOfDay', $formattedDate . ' 00:00:00')
+              ->setParameter('endOfDay', $formattedDate . ' 23:59:59');
+    }
+
+    return $query->getQuery()->getResult();
+}
 }
