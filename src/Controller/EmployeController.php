@@ -26,6 +26,7 @@ use PHPUnit\Util\Json;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Service\MailerService;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Service\EncryptionService;
 
 #[Route('/employe', name: 'app_employe_')]
 class EmployeController extends AbstractController
@@ -117,14 +118,15 @@ public function newRepas(Request $request, SerializerInterface $serializer):Resp
 }
 
     #[Route('/demande/repondre/{id}', name: 'repondre_demande', methods:['POST'])]
-    public function repondreDemande(Request $request, MailerService $mailerService, EntityManagerInterface $entityManager, DemandeContactRepository $demandeRepo): Response
+    public function repondreDemande(Request $request, MailerService $mailerService, EntityManagerInterface $entityManager, DemandeContactRepository $demandeRepo,
+    EncryptionService $encryptionService): Response
     {
     try {
     
         $data = json_decode($request->getContent(), true);
         $text = $data['response'];
         $id = $request->attributes->get('id');
-        $destinataire = $demandeRepo->find($id)->getMail();
+        $destinataire = $encryptionService->decrypt($demandeRepo->find($id)->getMail());
         $mailerService->sendResponseMail($destinataire, $text);
         $demande=$demandeRepo->find($request->attributes->get('id'));
         $demande->setAnsweredAt(new \DateTimeImmutable());

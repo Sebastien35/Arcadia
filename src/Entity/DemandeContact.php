@@ -5,11 +5,15 @@ namespace App\Entity;
 use App\Repository\DemandeContactRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Service\EncryptionService;
 
 #[ORM\Entity(repositoryClass: DemandeContactRepository::class)]
-class DemandeContact
-{
+class DemandeContact 
+{   
+    
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -131,4 +135,6 @@ class DemandeContact
 
         return $this;
     }
+
+
 }

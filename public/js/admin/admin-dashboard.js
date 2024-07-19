@@ -325,9 +325,6 @@ const animalSelect = document.getElementById('animal-select')
 const dateSelect = document.getElementById('date-select')
 
 
-
-
-
 const searchBtn = document.getElementById('filter-infoAnimal-btn');
 searchBtn.addEventListener('click', SearchUsingCriterias);
 
@@ -338,8 +335,6 @@ async function SearchUsingCriterias(){
     TableauARemplir.innerHTML = '';
     let selected_animal = animalSelect.value;
     let selected_date = dateSelect.value;
-    
-    console.log(selected_animal, selected_date);
 
     let url = `/admin/infoAnimal/search?animal_id=${selected_animal}&date=${selected_date}`;
 
@@ -355,7 +350,6 @@ async function SearchUsingCriterias(){
         loaderGif.classList.add('d-none');
         tableHead.classList.remove('d-none')
         let data = await response.json();
-        console.log(data);
         DisplayCRV(data);
     } else {
         loaderGif.classList.add('d-none');

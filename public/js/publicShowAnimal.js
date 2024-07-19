@@ -50,13 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
             result=JSON.parse(result);
             let gallerie = document.getElementById('gallerie');
             gallerie.innerHTML = '';
-            console.log(result, typeof result);
             let images = result;
-            if(images.length === 0 ){
-                gallerie.innerHTML = `
-                    <H2 class="text-center text-white mt-5">Aucune image disponible</H2>
-                `;
-            }
+            
             images.forEach(image => {
             let card = document.createElement('div');
             card.classList.add('card');

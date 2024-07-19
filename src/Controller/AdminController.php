@@ -73,6 +73,7 @@ use App\Exception\ServiceNotFound;
 use App\Exception\UserNotFound;
 use Symfony\Component\Validator\Constraints\Date;
 
+use App\Service\EncryptionService;
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
 {
@@ -587,6 +588,13 @@ public function dashboard(
         if ($form->isSubmitted() && $form->isValid()) {
             try{
             $additionalImage = $form->getData();
+            if(
+                imagecreatefromwebp($additionalImage->getImageFile()) === false
+            ){
+                throw new \Exception('Le fichier téléchargé n\'est pas une image au format webp');
+
+            }
+            
             $additionalImage->setAnimal($animal);
             $additionalImage->setCreatedAt(new DateTimeImmutable());
             $em->persist($additionalImage);
@@ -686,14 +694,16 @@ public function dashboard(
     public function repondreDemande(Request $request, 
     MailerService $mailerService, 
     DemandeContactRepository $demandeRepo, 
-    EntityManagerInterface $em): Response
+    EntityManagerInterface $em,
+    EncryptionService $EncryptionService
+    ): Response
     {
     try {
     
         $data = json_decode($request->getContent(), true);
         $text = $data['response'];
         $id = $request->attributes->get('id');
-        $destinataire = $demandeRepo->find($id)->getMail();
+        $destinataire = $EncryptionService->decrypt($demandeRepo->find($id)->getMail()); // Décrypter l'email du destinataire dans la base de données
         $mailerService->sendResponseMail($destinataire, $text);
         $demande=$demandeRepo->find($request->attributes->get('id'));
         $demande->setAnsweredAt(new DateTimeImmutable());
@@ -703,7 +713,7 @@ public function dashboard(
     } catch (\Exception $e) {
         $this->addFlash('error', 'Une erreur est survenue: ' . $e->getMessage());
     }
-    return new RedirectResponse($this->generateUrl('app_employe_index'));
+    return new RedirectResponse($this->generateUrl('app_admin_index'));
     }
 
     #[Route('/demande/delete/{id}', name: 'delete_demande', methods:['DELETE'])]
@@ -802,7 +812,7 @@ public function dashboard(
         $em->remove($image);
         $em->flush();
         return new JsonResponse(['message' => 'Image deleted successfully'], Response::HTTP_OK);
-        }catch(\Exception $e){
+        }catch(\Exception ){
             return new JsonResponse(['error' => 'An error occured'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 }

@@ -36,13 +36,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin,       roles: ROLE_ADMIN };
-        
         - { path: ^/employe,     roles: ROLE_EMPLOYE};
-        - { path: ^/employe,     roles: ROLE_ADMIN};
-        
         - { path: ^/veterinaire, roles: ROLE_VET};
-        - { path: ^/veterinaire, roles: ROLE_ADMIN};
-
         - { path: ^/register, roles: ROLE_ADMIN};
         
     role_hierarchy:

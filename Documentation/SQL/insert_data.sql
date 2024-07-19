@@ -85,6 +85,7 @@ INSERT INTO info_animal (id, nourriture_id, animal_id, auteur_id, etat, details,
 (9, 4, 9, 2, "Bonne santé", "Lucie creuse un terrier", 2000, NOW()),
 (10, 1, 10, 2, "Bonne santé", "Gia est enceinte", 2000, NOW());
 
+
 INSERT INTO repas (id, nourriture_id, animal_id, datetime, quantite) VALUES
 (1, 1, 1, NOW(), 200),
 (2, 2, 2, NOW(), 180),
