@@ -1,46 +1,51 @@
-# Use the official PHP 8.2 FPM image
 FROM php:8.2-fpm
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt update && apt install -y \
+    nano \
     libpng-dev \
-    libjpeg62-turbo-dev \
+    libjpeg-dev \
+    libzip-dev \
     libfreetype6-dev \
     libonig-dev \
-    libzip-dev \
+    libxslt1-dev \
     unzip \
+    build-essential \
     git \
-    curl \
-    default-mysql-client
-
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd mbstring zip pdo pdo_mysql
-
-# Install MongoDB extension
-RUN pecl install mongodb \
+    nginx \
+    libssl-dev \
+    default-mysql-client \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-enable opcache \
+    && docker-php-ext-install xsl \
+    && docker-php-ext-install zip \
+    && docker-php-ext-install intl \
+    && docker-php-ext-install soap \
+    && pecl install mongodb \
     && docker-php-ext-enable mongodb
 
-# Set working directory
-WORKDIR /var/www/html
-
-# Copy existing application directory contents
-COPY . /var/www/html
-
-# Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set environment variables to allow Composer to run as root
-ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN echo 'extension=mongodb.so' > /usr/local/etc/php/conf.d/mongodb.ini
+RUN echo 'extension=pdo_mysql.so' > /usr/local/etc/php/conf.d/pdo_mysql.ini
 
-# Install Symfony dependencies
+COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Set working directory
+WORKDIR /var/www
+
+# Copy application files
+COPY . .
+
+# Install Symfony and other PHP dependencies
+ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN composer install
 
-# Copy entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# Debug information
+RUN php -m
+RUN php -r "print_r(get_loaded_extensions());"
 
-ENTRYPOINT ["docker-entrypoint.sh"]
-
-# Expose port 9000 and start php-fpm server
+# Expose port 9000 and start PHP-FPM server
 EXPOSE 9000
 CMD ["php-fpm"]

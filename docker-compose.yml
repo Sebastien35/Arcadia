@@ -6,7 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: symfony_app
-    restart: unless-stopped
+    env_file:
+      - .env
     volumes:
       - .:/var/www/html
       - ./docker/php/conf.d:/usr/local/etc/php/conf.d
