@@ -6,7 +6,7 @@
 </div>
 <div class="darker d-flex justify-content-around">
   <div id="carouselHabitatCaptions" class="carousel slide carousel-fade">
-    <div class="carousel-indicators">
+    <div class="carousel-indicators d-none d-lg-flex">
       {% for habitat in habitats %}
         {% if loop.first %}
           <button type="button" data-bs-target="#carouselHabitatCaptions" data-bs-slide-to="{{ loop.index0 }}" class="active" aria-current="true" aria-label="Slide {{ loop.index }}"></button>

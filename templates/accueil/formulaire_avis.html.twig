@@ -2,7 +2,7 @@
   <div>
     
       {{ form_start(avisForm,{'action': path('app_avis_create'), 'method':'POST'}) }}
-        <H1 class="text-center">Donner son avis</H1>
+        <h1 class="text-center">Donner son avis</h1>
         <p> Mon avis concerne le zoo 
             
             {{ form_widget(avisForm.zoo, {'attr': {'class': 'form-control', 'required': true}}) }}
