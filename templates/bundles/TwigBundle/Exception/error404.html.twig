@@ -2,10 +2,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Page not found</h1>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-6 col-12">
+                <img src="{{asset('images/errors/404.webp')}}" alt="404" class="img-fluid" style="border-radius: 5%">
+            </div>
+            <div class="col-lg-6 col-12 text-center">
+                <h1 class="text-center">Erreur 404</h1>
+                <p class="text-center">La page que vous cherchez n'existe pas</p>
+                <btn class="btn btn-primary" onclick="window.history.back()">Retour</btn>
+            </div>
+            
 
-    <p>
-        The requested page couldn't be located. Checkout for any URL
-        misspelling or <a href="{{ path('homepage') }}">return to the homepage</a>.
-    </p>
+    
 {% endblock %}
