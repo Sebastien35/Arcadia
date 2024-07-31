@@ -16,7 +16,8 @@ RUN apt update && apt install -y \
     default-mysql-client \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install pdo_mysql \
+    # && docker-php-ext-install pdo_mysql \
+    # && docker-php-ext-enable pdo_mysql \
     && docker-php-ext-enable opcache \
     && docker-php-ext-install xsl \
     && docker-php-ext-install zip \
@@ -25,10 +26,12 @@ RUN apt update && apt install -y \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN docker-php-ext-install  pdo_mysql \
+    && docker-php-ext-enable pdo_mysql
 
-RUN echo 'extension=mongodb.so' > /usr/local/etc/php/conf.d/mongodb.ini
-RUN echo 'extension=pdo_mysql.so' > /usr/local/etc/php/conf.d/pdo_mysql.ini
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY docker/php/conf.d/* /usr/local/etc/php/conf.d/
+
 
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
@@ -45,6 +48,9 @@ RUN composer install
 # Debug information
 RUN php -m
 RUN php -r "print_r(get_loaded_extensions());"
+RUN ls -la /usr/local/etc/php/conf.d/
+RUN php -i | grep pdo_mysql
+RUN php -r "echo ini_get('extension_dir');"
 
 # Expose port 9000 and start PHP-FPM server
 EXPOSE 9000

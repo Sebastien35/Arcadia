@@ -29,16 +29,17 @@ services:
       - app
 
   mysql:
-    image: mysql:8.0
-    container_name: mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: docker1234
-      MYSQL_DATABASE: arcadia_db
-    volumes:
-      - mysql_data:/var/lib/mysql
-    ports:
-      - "8306:3306"
+      image: mysql:8.0
+      container_name: mysql
+      restart: unless-stopped
+      environment:
+        MYSQL_ROOT_PASSWORD: docker1234
+        MYSQL_DATABASE: arcadia_db
+      volumes:
+        - mysql_data:/var/lib/mysql
+        - ./mysql_data/arcadia_db.sql:/docker-entrypoint-initdb.d/arcadia_db.sql
+      ports:
+        - "8306:3306"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
