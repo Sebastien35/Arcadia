@@ -7,8 +7,8 @@
     <div class="row" id="4animaux">
       {% for animal in animaux %}
         <div class="col-sm-12 col-lg-3 d-flex mt-3 mb-3">
-          <div class="card">
-            <a href="/animal/show/{{animal.id}}"><img src="{{ asset('images/animal/' ~ animal.imageName)}}" class="card-img-top animal-image" alt="..."></a>
+          <div class="card animal-card" onClick="window.location.replace('/animal/show/{{ animal.id }}')">
+            <img src="{{ asset('images/animal/' ~ animal.imageName)}}" class="card-img-top animal-image" alt="L'image de notre {{animal.race}} {{animal.prenom }}">
             <div class="card-body">
               <h5 class="card-title text-dark text-center">{{ animal.prenom }}</h5>
             </div>

@@ -5,13 +5,13 @@
   </div>
 </div>
 <div class="darker d-flex justify-content-around">
-  <div id="carouselExampleCaptions" class="carousel slide carousel-fade">
+  <div id="carouselHabitatCaptions" class="carousel slide carousel-fade">
     <div class="carousel-indicators">
       {% for habitat in habitats %}
         {% if loop.first %}
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ loop.index0 }}" class="active" aria-current="true" aria-label="Slide {{ loop.index }}"></button>
+          <button type="button" data-bs-target="#carouselHabitatCaptions" data-bs-slide-to="{{ loop.index0 }}" class="active" aria-current="true" aria-label="Slide {{ loop.index }}"></button>
         {% else %}
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ loop.index0 }}" aria-label="Slide {{ loop.index }}"></button>
+          <button type="button" data-bs-target="#carouselHabitatCaptions" data-bs-slide-to="{{ loop.index0 }}" aria-label="Slide {{ loop.index }}"></button>
         {% endif %}
       {% endfor %}
     </div>
@@ -22,7 +22,7 @@
       {% else %}
         <div class="carousel-item">
       {% endif %}
-          <a href="/habitats/show/{{habitat.id}}"><img src="{{ asset('images/habitat/' ~ habitat.imageName)}}" class="d-block image-habitat" alt="..."></a>
+          <a href="/habitats/show/{{habitat.id}}"><img src="{{ asset('images/habitat/' ~ habitat.imageName)}}" class="d-block image-habitat" alt="Photo {{habitat.nom}}"></a>
           <div class="carousel-caption d-none d-md-block">
             <h5>{{ habitat.nom }}</h5>
           </div>
@@ -30,11 +30,11 @@
     {% endfor %}
       
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselHabitatCaptions" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselHabitatCaptions" data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
