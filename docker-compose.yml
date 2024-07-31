@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: symfony_app
+    env_file:
+      - .env
+    volumes:
+      - .:/var/www/html
+      - ./docker/php/conf.d:/usr/local/etc/php/conf.d
+    depends_on:
+      - mysql
+      - mongo
+  
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - .:/var/www/html
+    ports:
+      - "9000:80"
+    depends_on:
+      - app
+
+  mysql:
+      image: mysql:8.0
+      container_name: mysql
+      restart: unless-stopped
+      environment:
+        MYSQL_ROOT_PASSWORD: docker1234
+        MYSQL_DATABASE: arcadia_db
+      volumes:
+        - mysql_data:/var/lib/mysql
+        - ./mysql_data/arcadia_db.sql:/docker-entrypoint-initdb.d/arcadia_db.sql
+      ports:
+        - "8306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "8307:80"
+    
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mysql_data:
+  mongo_data:
