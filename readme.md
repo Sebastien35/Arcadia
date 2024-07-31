@@ -1,6 +1,8 @@
 # Projet Arcadia 
 [arcadia-zoo.online](http://arcadia-zoo.online) Le site d'un zoo fictif en bretagne.
 
+TOUT REMPLCER POUR DOCKER
+
 ## __Getting Started__
 
 Ces instructions vous permettront d'obtenir une copie du projet en cours d'exécution sur votre machine locale à des fins de développement et de test. Consultez le déploiement pour obtenir des notes sur la manière de déployer le projet sur un système en direct.
