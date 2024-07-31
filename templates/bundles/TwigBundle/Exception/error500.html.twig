@@ -1,0 +1,18 @@
+{# app/Resources/TwigBundle/views/Exception/error500.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-6 col-12">
+                <img src="{{asset('images/errors/500.webp')}}" alt="404" class="img-fluid" style="border-radius: 5%">
+            </div>
+            <div class="col-lg-6 col-12 text-center">
+                <h1 class="text-center">Erreur 500</h1>
+                <p class="text-center">Une erreur s'est produite, veuillez réessayer plus tard. Si l'erreur persiste, merci de prendre contact avec nous</p>
+                <btn class="btn btn-primary" onclick="window.location.replace('/')">Retour à l'accueil</btn>
+            </div>
+            
+
+    
+{% endblock %}
