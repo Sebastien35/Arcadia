@@ -69,7 +69,11 @@
             </div>
             {{ form_widget(avisForm.Avis_content, {'attr': {'class': 'form-control  avisInput', 'placeholder': 'Avis', 'rows': 5}}) }}
             <div class="commentaire-error-msg text-danger"></div>
-        </div>                
+        </div>   
+        <div class="mb-3 form-check mx-3">
+            <input type="checkbox" class="form-check-input" id="rgpd" required>
+            <label class="form-check-label" for="rgpd">J'accepte que mes données soient utilisées pour publier mon avis</label>
+        </div>             
         <div class="mb-5 d-flex justify-content-center">
             <button type="submit" class="btn btn-primary btnSendReview disabled">Submit</button>
         </div>

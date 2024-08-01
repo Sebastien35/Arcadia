@@ -42,10 +42,16 @@
                 </div>
                 <div class="container-footer mb-3 d-flex justify-content-center">
                     <button type="submit" class="btn btn-primary" id='submit-form-btn'>Envoyer</button>
-                    {{ form_end(form) }}
+                    
                 </div>
-                <p class="text-muted mb-5">Conformément à la réglementation relative à la protection des données, 
-                vous pouvez exercer vos droits (accès, suppression, opposition, rectification, limitation, portabilité) sur les données vous concernant en contactant le Zoo Arcadia.</p>
+                <div class="mb-3 form-check mx-3">
+                    <input type="checkbox" class="form-check-input" id="rgpd" required>
+                    <label class="form-check-label" for="rgpd">J'accepte que le zoo Arcadia conserve mon adresse mail le temps de répondre à ma demande.</label>
+                    <p class="text-muted mb-5">Conformément à la réglementation relative à la protection des données, 
+                    vous pouvez exercer vos droits (accès, suppression, opposition, rectification, limitation, portabilité) sur les données vous concernant en contactant le Zoo Arcadia.</p>
+                </div>
+                {{ form_end(form) }}
+                
             </div>
             {# Error and success messages #}
             <div>
