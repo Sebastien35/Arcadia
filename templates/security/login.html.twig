@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block body %}
 <link rel="stylesheet" href="{{asset('css/login.css')}}">
@@ -10,13 +10,13 @@
             <div class="form-title">
                 <h1 class="text-center">Connexion</h1>
             </div>
-            <div class="form-body">
+            <div class="form-body ">
                 <form method="post">
-                    <div class="mb-5 mt-5 mb-5">
+                    <div class="mb-5 mt-5 mb-5 ">
                         <label for="inputEmail" class="form-label">Email</label><br>
                         <input type="email" id="inputEmail" name="email" class="form-control" required placeholder="email@exemple.com">
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 ">
                         <label for="inputPassword" class="form-label">Mot de passe</label><br>
                         <input type="password" id="inputPassword" name="password" class="form-control" required>
                     </div>
