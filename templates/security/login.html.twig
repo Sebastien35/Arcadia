@@ -5,12 +5,13 @@
 {% block body %}
 <link rel="stylesheet" href="{{asset('css/login.css')}}">
 <div>
-    <div class="row">
-        <div class="form-container mt-5">
+    <div class="row mt-5 d-flex justify-content-center">
+    
+        <div class="form-container mt-5 col-md-6 col-12">
             <div class="form-title">
                 <h1 class="text-center">Connexion</h1>
             </div>
-            <div class="form-body ">
+            <div class="form-body d-flex justify-content-center ">
                 <form method="post">
                     <div class="mb-5 mt-5 mb-5 ">
                         <label for="inputEmail" class="form-label">Email</label><br>
@@ -24,7 +25,7 @@
                         <button type="submit" class="btn btn-primary">Se connecter</button>
                     </div>
                     <div class="mb-3 d-flex justify-content-center">
-                        <button type="button" class="btn btn-primary"><a href="{{path('app_forgot_password_request')}}">Mot de passe oublié ?</a></button>
+                        <a href="{{ path('app_forgot_password_request') }}" class="btn btn-primary">Mot de passe oublié ?</a>
                     </div>
                     {% if error_message %}
                         <div class="alert alert-danger" role="alert">
@@ -35,9 +36,9 @@
                 </form>
             </div>
         </div>
+
+        
     </div>
 </div>
-
-
 
 {% endblock %}
