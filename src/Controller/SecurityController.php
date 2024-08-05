@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 
 class SecurityController extends AbstractController
 {
@@ -21,8 +22,12 @@ class SecurityController extends AbstractController
         if ($error instanceof BadCredentialsException) {
             $errorMessage = "Adresse email ou mot de passe incorrect.";
         } else {
+        if ($error instanceof TooManyLoginAttemptsAuthenticationException) {
+            $errorMessage = "Vous avez dépassé le nombre maximum de tentatives de connexion. Veuillez réessayer plus tard.";
+        } else {
             $errorMessage = null;
         }
+    }
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error_message' => $errorMessage,
