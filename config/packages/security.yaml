@@ -1,3 +1,12 @@
+framework:
+    rate_limiter:
+        enabled: true
+        limiters:
+            login:
+                limit: 3
+                policy: sliding_window
+                interval: 60
+
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
@@ -23,6 +32,11 @@ security:
                 # where to redirect after logout
                 # target: app_any_route
                 target: app_acceuil
+            login_throttling:
+                max_attempts: 3
+        
+                
+        
 
 
 
