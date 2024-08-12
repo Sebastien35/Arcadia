@@ -1,5 +1,5 @@
 .navbar-custom{
-    background-color: #495635;
+    background-color: var(--dark);
     height:52px;
     max-width:100vw;
     overflow: hidden;
@@ -8,11 +8,14 @@
 
 @media (max-width:980px){
 
-    .nav-item{ font-size:3vh;}
     .social{
         position: relative;
         top: -1.8vh;
 
+    }
+    .navbar-brand{
+        position: relative;
+        top: -3.5vh;
     }
 }
 
@@ -28,6 +31,9 @@
 }
 .nav-item{
     font-size: 32;
+}
+.nav-link{
+    color: var(--white);
 }
 
 .nav-link:hover , .navbar-brand:hover{

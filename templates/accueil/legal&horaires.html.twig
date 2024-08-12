@@ -1,10 +1,10 @@
-<section>
+<section aria-label="Horaires">
   <div class="white d-flex justify-content-center">
     <h2 class="text-dark">Horaires</h2>
   </div>
   <div class="darker d-flex justify-content-center">
     <div class="table-responsive">
-      <table class="table table-striped">
+      <table class="table table-striped" aria-label="horaires du zoo">
         {% if horaires is empty %}
         <p>Les horaires ne sont pas encore disponibles</p>
         {% else %}
@@ -26,10 +26,10 @@
   </div>
 </section>
 
-<section>
-  <div class="darker text-center  mb-4">
-    <a href="{{ path('app_legal_mentions_legales') }}" class="text-white my-1">Mentions légales</a></br>
-    <a href="{{ path('app_legal_pdd') }}" class="text-white my-1">Politique de données personnelles</a>
+<section aria-label="Mentions Légales et politique de protection des données personnelles">
+  <div class="darker text-center  mb-4" role="complementary">
+    <a href="{{ path('app_legal_mentions_legales') }}" class="text-white my-1" aria-label="Lien vers les mentions légales">Mentions légales</a></br>
+    <a href="{{ path('app_legal_pdd') }}" class="text-white my-1" aria-label="Lien vers la politique de protection des données personelles">Politique de données personnelles</a>
     <H2> Contactez-nous</H2>
   </div>
 </section>

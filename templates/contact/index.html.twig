@@ -47,8 +47,10 @@
                 <div class="mb-3 form-check mx-3">
                     <input type="checkbox" class="form-check-input" id="rgpd" required>
                     <label class="form-check-label" for="rgpd">J'accepte que le zoo Arcadia conserve mon adresse mail le temps de répondre à ma demande.</label>
+                    <a href="{{ path('app_legal_pdd') }}" class="btn btn-info">Politique de protection des données personelles</a>
                     <p class="text-muted mb-5">Conformément à la réglementation relative à la protection des données, 
                     vous pouvez exercer vos droits (accès, suppression, opposition, rectification, limitation, portabilité) sur les données vous concernant en contactant le Zoo Arcadia.</p>
+                    
                 </div>
                 {{ form_end(form) }}
                 
@@ -70,7 +72,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-sm-6 d-lg-block d-none">
-            <img src="{{ asset('images/parc/chouette.webp') }}" class="img-fluid" alt="L'image n'a pas chargé" id="chouette">
+            <img src="{{ asset('images/parc/chouette.webp') }}" class="img-fluid" alt="Image demande de contact" id="chouette">
         </div>
     </div>   
 </div>

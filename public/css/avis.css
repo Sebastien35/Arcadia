@@ -20,11 +20,6 @@ body{
 /* -------------------------------  texte  ----------------------------- */
 
 
-H1{ 
-    color:var(--primary);
-    font-size: 4vh;
-
-}
 
 .active{
     color:var(--active);

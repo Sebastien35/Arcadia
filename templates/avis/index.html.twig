@@ -4,80 +4,97 @@
 
 {% block body %}
 <link rel="stylesheet" href="{{ asset('css/avis.css') }}">
+
 <div class="page-container">
-<div class="see-post-container d-flex justify-content-around mt-5">
-    <H1 role="button" class="see-avis-btn mt-1"> Consulter les avis</H1>
-    <H1 role="button" class="create-avis-btn mt-1"> Donner son avis</H1>
-</div>
-<div class="container custom-container mt-2 scrollable-container d-none" id="avis-list-container">
-    <div class="avis-scroll-container">
-        <div id="avisList">
-            {% for singleAvis in avisList %}
-                {% if singleAvis.isValidation == true %}
-                <div class="card my-2">
-                    <div class="card-header d-flex">
-                        <div class="stars card-title">
-                            {% for star in range(1, 5) %}
-                                {% if star <= singleAvis.note %}
-                                    <i class="fa-solid fa-star"></i>
-                                {% else %}
-                                    <i class="fa-regular fa-star"></i>
+    <div class="see-post-container d-flex justify-content-around mt-5 text-white">
+        <h1 role="button" class="see-avis-btn mt-1">Consulter les avis</h1>
+        <h1 role="button" class="create-avis-btn mt-1">Donner son avis</h1>
+    </div>
+    
+    <div class="container custom-container mt-2 scrollable-container d-none" id="avis-list-container">
+        <div class="avis-scroll-container">
+            <div id="avisList">
+                {% for singleAvis in avisList %}
+                    {% if singleAvis.isValidation == true %}
+                        <div class="card my-2">
+                            <div class="card-header d-flex">
+                                <div class="stars card-title">
+                                    {% for star in range(1, 5) %}
+                                        {% if star <= singleAvis.note %}
+                                            <i class="fa-solid fa-star"></i>
+                                        {% else %}
+                                            <i class="fa-regular fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
+                                    <button class="btn btn-danger delete-avis" data-id="{{ singleAvis.id }}" data-bs-toggle="modal" data-bs-target="#deleteAvisModal">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
                                 {% endif %}
-                            
-                            {% endfor %}
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">{{ singleAvis.getAvisContent }}</p>
+                                <p class="card-text">
+                                    <small class="text-muted">Posté par {{ singleAvis.pseudo }} le {{ singleAvis.getCreatedAt|date('d/m/Y') }}</small>
+                                </p>
+                            </div>
                         </div>
-                        {% if is_granted ('ROLE_ADMIN')  or is_granted ('ROLE_EMPLOYE') %}
-                        <btn class="btn btn-danger delete-avis" data-id = "{{ singleAvis.id }}" data-bs-toggle="modal" data-bs-target="#deleteAvisModal"><i class="fa-solid fa-trash"></i></btn>
-                        {% endif %}
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">{{ singleAvis.getAvisContent }}</p>
-                        <p class="card-text"><small class="text-muted">Posté par {{ singleAvis.pseudo }} le {{ singleAvis.getCreatedAt|date('d/m/Y') }}</small></p>
-                    </div>
-                </div>
-                {% endif %}
-            {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
     </div>
-</div>
-    <div class="custom-container container mt-2 mb-5 d-none" id="create-avis-container">
-        {{ form_start(avisForm,{'action': path('app_avis_create'), 'method':'POST'}) }}
-        <H1 class="text-center">Donner son avis</H1>
-        <p> Mon avis concerne le zoo 
-            {{ form_widget(avisForm.zoo, {'attr': {'class': 'form-control', 'required': true}}) }}
-        </p>
-        <div class="mb-3">
-            {{ form_label(avisForm.pseudo, 'Entrez un nom ou un pseudo:', {'label_attr': {'class': 'form-label pseudoInput'}}) }}
-            {{ form_widget(avisForm.pseudo, {'attr': {'class': 'pseudoInput form-control', 'placeholder': 'Pseudo', 'required': true}}) }}
-            <div class="pseudo-error-msg text-danger"></div>
-        </div>      
-        <div class="mb-3 slider">
-            {{ form_label(avisForm.note, 'Notez le parc:', {'label_attr': {'class': 'form-label'}}) }}
-            <div class="stars-container">
-                <div class="stars d-flex justify-content-around"> 
-                    {% for i in 1..5 %}  
-                        <i class="fa fa-star star" data-value={{i}}></i>
-                    {% endfor %} 
-                </div>
-                {{ form_widget(avisForm.note, {'attr': {'class': 'form-control starRating', 'placeholder': 'Note', 'required': true}}) }}
+
+    <div class="custom-container container d-none" id="create-avis-container">
+        <div class=" d-flex justify-content-center" aria-label="formulaire pour poster un avis">
+            <div class="w-75">
+                {{ form_start(avisForm, {'action': path('app_avis_create'), 'method': 'POST'}) }}
+                    <h1 class="text-center">Donner son avis</h1>
+                    {{ form_label(avisForm.zoo, 'Choisissez un zoo:', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(avisForm.zoo, {'attr': {'class': 'form-control', 'required': true, 'aria-required': 'true'}}) }}
+                    
+                    <div class="mb-3">
+                        {{ form_label(avisForm.pseudo, 'Entrez un nom ou un pseudo:', {'label_attr': {'class': 'form-label pseudoInput'}}) }}
+                        {{ form_widget(avisForm.pseudo, {'attr': {'class': 'pseudoInput form-control', 'placeholder': 'Pseudo', 'required': true, 'aria-required': 'true', 'aria-describedby': 'pseudoHelp'}}) }}
+                        <div id="pseudoHelp" class="pseudo-error-msg text-danger" aria-live="polite"></div>
+                    </div>
+                    
+                    <div class="mb-3 slider">
+                        {{ form_label(avisForm.note, 'Notez le parc:', {'label_attr': {'class': 'form-label'}}) }}
+                        <div class="stars-container">
+                            <div class="stars d-flex justify-content-around"> 
+                                {% for i in 1..5 %}
+                                    <i class="fa fa-star star" tabindex="0" role="button" aria-label="Note {{ i }} étoiles" data-value="{{ i }}"></i>
+                                {% endfor %}
+                            </div>
+                            {{ form_widget(avisForm.note, {'attr': {'class': 'form-control starRating', 'placeholder': 'Note', 'required': true, 'aria-required': 'true'}}) }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <label for="avis_Avis_content" class="form-label required">Votre commentaire:</label>
+                            <span id="avisLen" class="text-muted" aria-live="polite">0/255</span>
+                        </div>
+                        {{ form_widget(avisForm.Avis_content, {'attr': {'class': 'form-control avisInput', 'placeholder': 'Avis', 'rows': 5, 'aria-describedby': 'commentaireHelp'}}) }}
+                        <div id="commentaireHelp" class="commentaire-error-msg text-danger" aria-live="polite"></div>
+                    </div>
+                    
+                    <div class="mb-3 form-check mx-3">
+                        <input type="checkbox" class="form-check-input" id="rgpd" required aria-required="true" aria-describedby="rgpdHelp">
+                        <label class="form-check-label" for="rgpd">En cochant cette case, j'accepte que mon avis et mon pseudo soit visible sur le site.</label>
+                        <a href="{{ path('app_legal_pdd') }}" class="text-muted">Politique de protection des données personelles</a>
+                    </div>
+                    
+                    <div class="mb-5 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary btnSendReview disabled w-100" aria-disabled="true">Submit</button>
+                        
+                    </div>
+                    
+                {{ form_end(avisForm) }}
             </div>
         </div>
-        <div class="mb-3">
-            <div class="d-flex justify-content-between">
-            <label for="Avis_content" class="form-label required"> Votre commentaire: </label>
-            <span id="avisLen" class="text-muted">0/255</span>
-            </div>
-            {{ form_widget(avisForm.Avis_content, {'attr': {'class': 'form-control  avisInput', 'placeholder': 'Avis', 'rows': 5}}) }}
-            <div class="commentaire-error-msg text-danger"></div>
-        </div>   
-        <div class="mb-3 form-check mx-3">
-            <input type="checkbox" class="form-check-input" id="rgpd" required>
-            <label class="form-check-label" for="rgpd">J'accepte que mes données soient utilisées pour publier mon avis</label>
-        </div>             
-        <div class="mb-5 d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary btnSendReview disabled">Submit</button>
-        </div>
-        {{ form_end(avisForm) }}
     </div>
 </div>
 
@@ -94,13 +111,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-danger" id="btn-confirm-delete" data-bs-dismiss="modal" >Supprimer</button>
+                <button type="button" class="btn btn-danger" id="btn-confirm-delete" data-bs-dismiss="modal">Supprimer</button>
             </div>
         </div>
     </div>
 </div>
 
 <script src="{{ asset('js/avis.js') }}"></script>
-<script src="{{ asset('js/sanitizer.js') }}"> </script>
+<script src="{{ asset('js/sanitizer.js') }}"></script>
 {% endblock %}
-

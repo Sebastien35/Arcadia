@@ -1,42 +1,36 @@
-<div class="primary d-flex justify-content-around text-center">
+<div class="primary d-flex justify-content-around text-center" aria-label="Habitats au zoo">
   <div>
-    <h2> Découvrez nos habitats</h2>
+    <h2>Découvrez nos habitats</h2>
     <p class="d-none d-lg-block">Conçus pour reproduire les conditions de vie des animaux dans leur milieu naturel</p>
   </div>
 </div>
+
 <div class="darker d-flex justify-content-around">
-  <div id="carouselHabitatCaptions" class="carousel slide carousel-fade">
+  <div id="carouselHabitatCaptions" class="carousel slide carousel-fade" role="region" aria-label="Carrousel des habitats" aria-live="polite">
     <div class="carousel-indicators d-none d-lg-flex">
       {% for habitat in habitats %}
-        {% if loop.first %}
-          <button type="button" data-bs-target="#carouselHabitatCaptions" data-bs-slide-to="{{ loop.index0 }}" class="active" aria-current="true" aria-label="Slide {{ loop.index }}"></button>
-        {% else %}
-          <button type="button" data-bs-target="#carouselHabitatCaptions" data-bs-slide-to="{{ loop.index0 }}" aria-label="Slide {{ loop.index }}"></button>
-        {% endif %}
+        <button type="button" data-bs-target="#carouselHabitatCaptions" data-bs-slide-to="{{ loop.index0 }}" class="{% if loop.first %}active{% endif %}" aria-current="{% if loop.first %}true{% endif %}" aria-label="Slide {{ loop.index }}" aria-controls="carouselHabitatCaptions"></button>
       {% endfor %}
     </div>
     <div class="carousel-inner">
-    {% for habitat in habitats %}
-      {% if loop.first %}
-        <div class="carousel-item active">
-      {% else %}
-        <div class="carousel-item">
-      {% endif %}
-          <a href="/habitats/show/{{habitat.id}}"><img src="{{ asset('images/habitat/' ~ habitat.imageName)}}" class="d-block image-habitat" alt="Photo {{habitat.nom}}"></a>
+      {% for habitat in habitats %}
+        <div class="carousel-item {% if loop.first %}active{% endif %}" role="tabpanel" id="carousel-item-{{ loop.index0 }}" aria-labelledby="carousel-item-label-{{ loop.index0 }}">
+          <a href="/habitats/show/{{habitat.id}}">
+            <img src="{{ asset('images/habitat/' ~ habitat.imageName) }}" class="d-block image-habitat" alt="{{ habitat.nom }}">
+          </a>
           <div class="carousel-caption d-none d-md-block">
-            <h5>{{ habitat.nom }}</h5>
+            <h5 id="carousel-item-label-{{ loop.index0 }}" style="background-color: black">{{ habitat.nom }}</h5>
           </div>
-      </div>
-    {% endfor %}
-      
+        </div>
+      {% endfor %}
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselHabitatCaptions" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselHabitatCaptions" data-bs-slide="prev" aria-label="Précédent">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
+      <span class="visually-hidden">Précédent</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselHabitatCaptions" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselHabitatCaptions" data-bs-slide="next" aria-label="Suivant">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
+      <span class="visually-hidden">Suivant</span>
     </button>
   </div>
 </div>

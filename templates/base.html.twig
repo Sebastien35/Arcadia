@@ -23,116 +23,12 @@
     {% endblock %}
 </head>
 <body>
-    <nav class="navbar  navbar-expand-lg  fixed-top navbar-custom justify-content-between" id="navbar-custom" aria-labelledby="navbar" >
-        <div class="navbar-brand px-3">
-            <a class="nav-item" id="navbar-brand" href="/">Arcadia</a>
-        </div>
-        <div class="navbar-content px-3">
-            
-            <!-- Navbar toggler button -->
-            <button class="navbar-toggler btn btn-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Bouton menu navigation">
-                <i class="fa-solid fa-hippo"></i>
-            
-            </button>
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 text-white">
-                <li class="nav-item d-none d-lg-block mr-lg-3">
-                    <a class="nav-link" href="/services">Services</a>
-                </li>
-                <li class="nav-item d-none d-lg-block mr-lg-3">
-                    <a class="nav-link" href="/habitats">Habitats</a>
-                </li>
-                <li class="nav-item d-none d-lg-block mr-lg-3">
-                    <a class="nav-link" href="/avis">Avis</a>
-                </li> 
-                <li class="nav-item d-none d-lg-block mr-lg-3">
-                    <a class="nav-link" href="/contact">Contact</a>
-                </li>
-                {% if app.user %}
-                    <li class="nav-item d-none d-lg-block mr-lg-3">
-                        <a class="nav-link" href="/logout">Déconnexion</a>
-                    </li>
-                    {% if is_granted ('ROLE_EMPLOYE') %}
-                    <li class="nav-item d-none d-lg-block mr-lg-3">
-                        <a class="nav-link" href="/employe"><i>Espace employé</i></a>
-                    </li>
-                    {% endif %}
-                    {% if is_granted ('ROLE_VET') %}
-                    <li class="nav-item d-none d-lg-block mr-lg-3">
-                        <a class="nav-link" href="/veterinaire"><i>Espace vétérinaire</i></a>
-                    </li>
-                    {% endif %}
-                    {% if is_granted ('ROLE_ADMIN') %}
-                    <li class="nav-item d-none d-lg-block mr-lg-3">
-                        <a class="nav-link" href="/admin"><i>Admin</i></a>
-                    </li>
-                    {% endif %}
-                {% else %}
-                    <li class="nav-item d-none d-lg-block mr-lg-3">
-                        <a class="nav-link" href="/login">Connexion</a>
-                    </li>
-                {% endif %}
-            </ul>
-                <div class="offcanvas offcanvas-end text-bg-dark d-lg-none " tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Navigation</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">Acceuil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/services">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/habitats">Habitats</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/avis">Avis</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/contact">Contact</a>
-                        </li>
-                        {% if app.user %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/logout">Déconnexion</a>
-                            </li>
-                            {% if is_granted ('ROLE_EMPLOYE') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/employe"><i>Espace employé</i></a>
-                            </li>
-                            {% endif %}
-                            {% if is_granted ('ROLE_VET') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/veterinaire"><i>Espace vétérinaire</i></a>
-                            </li>
-                            {% endif %}
-                            {% if is_granted ('ROLE_ADMIN') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin"><i>Admin</i></a>
-                            </li>
-                            {% endif %}
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/login">Connexion</a>
-                            </li>
-                        {% endif %}
-                        
-                    </ul>
-                
-
-
-                </div>
-            </div>
-            
-        </div>
-    </nav>
+    {% include 'navbar.html.twig' %}
 
     {% block body %}
     {% endblock %}
 
-    <footer>
+    <footer aria-label="Pied de page">
         <nav class="navbar navbar-expand-lg navbar-dark navbar-custom-footer" aria-label="Footer Navigation">
             <div class="d-flex justify-content-around w-100 ">
                 <a href="https://twitter.com/?lang=fr" class="social"  aria-label="lien twitter"> <i class="fa-brands fa-twitter"></i></a>

@@ -8,6 +8,21 @@
     --active:#ffcb00;
     --bs-link-hover-color: var(--active);    
 }
+
+.high-contrast {
+    --primary: rgba(100,119,0,1);
+    --secondary: rgba(80,96,20,1);
+    --dark: rgba(50,60,0,1);
+    --darker: #0A1400;
+    --bg-dark: rgba(15,22,0,1);
+    --white: rgba(255,255,255,1);
+    --active: #ffcb00;
+    --bs-link-hover-color: var(--active);
+}
+
+
+
+
 .bg-dark{
     background-color:var(--bg-dark);
     color:var(--white);
