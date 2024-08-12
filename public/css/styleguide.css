@@ -18,6 +18,10 @@
     --white: rgba(255,255,255,1);
     --active: #ffcb00;
     --bs-link-hover-color: var(--active);
+
+    --bs-btn-border-width: 2px !important;
+    --bs-btn-border-color:var(--active) !important;
+    
 }
 
 

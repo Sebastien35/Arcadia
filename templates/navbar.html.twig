@@ -7,8 +7,8 @@
                 <i class="fa-solid fa-hippo"></i>
             </button>
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 text-white">
-                <li clas="nav-item d-none d-lg-block mr-lg-3">
-                    <button class="btn nav-link" id="toggleContrast">☀︎</button>
+                <li class="nav-item d-none d-lg-block mr-lg-3 toggleContrast">
+                    <button class="btn nav-link" >☀︎</button>
                 </li>
                 <li class="nav-item d-none d-lg-block mr-lg-3">
                     <a class="nav-link" href="/services" aria-label="Services">Services</a>
@@ -69,6 +69,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/contact" aria-label="contact">Contact</a>
                         </li>
+                        <li clas="nav-item d-none d-lg-block mr-lg-3 data-bs-dismiss="offcanvas"">
+                            <button class="btn nav-link toggleContrast" aria-label="Bouton contraste élevé" >Contraste élevé</button>
+                        </li>
                         {% if app.user %}
                             <li class="nav-item">
                                 <a class="nav-link" href="/logout" aria-label="déconnexion">Déconnexion</a>
@@ -100,13 +103,16 @@
     </nav>
 
 <script>
-document.getElementById('toggleContrast').addEventListener('click', function() {
-    document.documentElement.classList.toggle('high-contrast');
-    
-    if (document.documentElement.classList.contains('high-contrast')) {
-        this.textContent = '☾';
-    } else {
-        this.textContent = '☀︎';
-    }
-});
-</script>
+        const toggleButtons = document.querySelectorAll('.toggleContrast');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                console.log('click');
+                document.documentElement.classList.toggle('high-contrast');
+                if (document.documentElement.classList.contains('high-contrast')) {
+                    this.textContent = 'Contraste normal';
+                } else {
+                    this.textContent = 'Contraste élevé';
+                }
+            });
+        });
+    </script>s
