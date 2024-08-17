@@ -7,8 +7,12 @@
                 <i class="fa-solid fa-hippo"></i>
             </button>
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 text-white">
-                <li class="nav-item d-none d-lg-block mr-lg-3 toggleContrast">
-                    <button class="btn nav-link" >☀︎</button>
+
+                <li class="nav-item d-none d-lg-block ">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input toggleContrast" type="checkbox" id="toggleContrast">
+                        <label class="form-check-label" for="toggleContrast">Contraste élevé</label>
+                    </div>
                 </li>
                 <li class="nav-item d-none d-lg-block mr-lg-3">
                     <a class="nav-link" href="/services" aria-label="Services">Services</a>
@@ -69,9 +73,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/contact" aria-label="contact">Contact</a>
                         </li>
-                        <li clas="nav-item d-none d-lg-block mr-lg-3 data-bs-dismiss="offcanvas"">
-                            <button class="btn nav-link toggleContrast" aria-label="Bouton contraste élevé" >Contraste élevé</button>
-                        </li>
                         {% if app.user %}
                             <li class="nav-item">
                                 <a class="nav-link" href="/logout" aria-label="déconnexion">Déconnexion</a>
@@ -95,7 +96,13 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="/login" aria-label="connexion">Connexion</a>
                             </li>
-                        {% endif %}                       
+                        {% endif %}  
+                         <li class="nav-item mt-5">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input toggleContrast" type="checkbox" id="toggleContrast">
+                                <label class="form-check-label" for="toggleContrast">Contraste élevé</label>
+                            </div>
+                        </li>                     
                     </ul>
                 </div>
             </div>     
@@ -108,11 +115,7 @@
             button.addEventListener('click', function() {
                 console.log('click');
                 document.documentElement.classList.toggle('high-contrast');
-                if (document.documentElement.classList.contains('high-contrast')) {
-                    this.textContent = 'Contraste normal';
-                } else {
-                    this.textContent = 'Contraste élevé';
-                }
+                
             });
         });
     </script>
