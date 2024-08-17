@@ -6,8 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: symfony_app
-    env_file:
-      - .env
+    environment:
+      - DATABASE_URL=mysql://root:docker1234@mysql:3306/arcadia_db
+      - MONGODB_URL=mongodb://mongo:27017
     volumes:
       - .:/var/www/html
       - ./docker/php/conf.d:/usr/local/etc/php/conf.d

@@ -34,6 +34,7 @@ COPY docker/php/conf.d/* /usr/local/etc/php/conf.d/
 
 
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY .env.docker .env
 
 # Set working directory
 WORKDIR /var/www
@@ -43,6 +44,7 @@ COPY . .
 
 # Install Symfony and other PHP dependencies
 ENV COMPOSER_ALLOW_SUPERUSER 1
+RUN composer update
 RUN composer install
 
 # Debug information
