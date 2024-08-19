@@ -215,7 +215,6 @@ async function getAllDemandes(){
             return response.json();
         } else {
             throw new Error('Erreur');
-            window.location.reload();
         }
     })
     .then(result => {
