@@ -22,12 +22,14 @@ async function getNonAdminUsers() {
         
         let users = await response.json();
         let userTableBody = document.getElementById('userTableBody');
-        userTableBody.innerHTML = ''; // Clear the table body
+        while (userTableBody.firstChild) {
+            userTableBody.removeChild(userTableBody.firstChild);
+        }
         
         if (users.length === 0) {
             let noUsersMessage = document.createElement('p');
             noUsersMessage.classList.add('text-center');
-            noUsersMessage.innerHTML = 'Aucun utilisateur à afficher <i class="fa-solid fa-umbrella-beach"></i>';
+            noUsersMessage.innerText = 'Aucun utilisateur à afficher';
             userTableBody.appendChild(noUsersMessage);
             return;
         }
@@ -69,7 +71,11 @@ async function getNonAdminUsers() {
             deleteButton.setAttribute('data-bs-toggle', 'modal');
             deleteButton.setAttribute('data-bs-target', '#deleteUserModal');
             deleteButton.setAttribute('data-user-id', user.id);
-            deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
+            let iconDelete = document.createElement('i');
+            iconDelete.classList.add('fa-solid', 'fa-trash');
+            deleteButton.appendChild(iconDelete);
+
 
             // Edit button
             let editButton = document.createElement('li');
@@ -77,7 +83,11 @@ async function getNonAdminUsers() {
             editButton.setAttribute('data-bs-toggle', 'modal');
             editButton.setAttribute('data-bs-target', '#editUserModal');
             editButton.setAttribute('data-user-id', user.id);
-            editButton.innerHTML = '<i class="fa-solid fa-pencil"></i>';
+            
+            let iconEdit = document.createElement('i');
+            iconEdit.classList.add('fa-solid', 'fa-pencil');
+            editButton.appendChild(iconEdit);
+
 
             // Append elements
             dropdownMenu.appendChild(deleteButton);
@@ -105,7 +115,7 @@ async function getNonAdminUsers() {
         });
 
     } catch (error) {
-        console.log('Error: ', error);
+        alert('Error: ', error);
     }
 }
 
@@ -133,7 +143,7 @@ function deleteUser() {
         .then(result => {
             window.location.reload();
         })
-        .catch(error => console.log(error));
+        .catch(error => alert(error));
 }
 
 // Edit User:
@@ -184,7 +194,7 @@ function editUser(){
     .then(result => {
         window.location.reload();
     })
-    .catch(error => console.log(error));
+    .catch(error => alert(error));
 }
 
 
@@ -226,7 +236,7 @@ async function deleteHabitat() {
             throw new Error('Erreur');
         }
     } catch (error) {
-        console.log(error);
+        alert(error);
     }
 }
 
@@ -272,7 +282,7 @@ async function deleteComment($id){
     .then(result => {
         window.location.reload();
     })
-    .catch(error => console.log(error));
+    .catch(error => alert(error));
 }
             
 
@@ -297,7 +307,6 @@ document.addEventListener('DOMContentLoaded', function(){
     const deleteAnimalBtns = document.querySelectorAll('[data-animal-id]');
     deleteAnimalBtns.forEach(button=>{
         button.addEventListener('click', function(){
-            // console.log('Delete button clicked, target ID:', button.getAttribute('data-animal-id'));
             const animalId = button.getAttribute('data-animal-id');
             const animalIdContainer = document.getElementById('delete-animal-id');
             animalIdContainer.value = animalId;
@@ -315,7 +324,6 @@ async function deleteAnimal() {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         let targetId = document.getElementById('delete-animal-id').value;
-        // console.log('Target ID:', targetId); // Debug log
         const response = await fetch(`/admin/animal/delete/${targetId}`, {
             method: 'DELETE',
             headers: myHeaders,
@@ -327,7 +335,7 @@ async function deleteAnimal() {
             throw new Error('Erreur');
         }
     } catch (error) {
-        console.log(error);
+        alert(error);
     }
 }
 //Rediriger vers /animal/show/:id
@@ -379,7 +387,10 @@ searchBtn.addEventListener('click', SearchUsingCriterias);
 
 async function SearchUsingCriterias(){
     const TableauARemplir = document.getElementById('infoAnimalTableBody');
-    TableauARemplir.innerHTML = '';
+    while (TableauARemplir.firstChild) {
+        TableauARemplir.removeChild(TableauARemplir.firstChild);
+    }
+    
     let selected_animal = animalSelect.value;
     let selected_date = dateSelect.value;
 
@@ -407,12 +418,15 @@ async function SearchUsingCriterias(){
 
 function DisplayCRV(data) {
     const TableauARemplir = document.getElementById('infoAnimalTableBody');
-    TableauARemplir.innerHTML = ''; // Vider le tableau avant de le remplir
+    while (TableauARemplir.firstChild) {
+        TableauARemplir.removeChild(TableauARemplir.firstChild);
+    }
+    
 
     if (data.length === 0) {
         const noDataMessage = document.createElement('p');
         noDataMessage.classList.add('text-center');
-        noDataMessage.innerHTML = 'Aucune consultation à afficher <i class="fa-solid fa-umbrella-beach"></i>';
+        noDataMessage.innerText = 'Aucune consultation à afficher';
         TableauARemplir.appendChild(noDataMessage);
         return;
     }
@@ -455,13 +469,19 @@ function DisplayCRV(data) {
         deleteButton.classList.add('btn', 'btn-danger', 'mb-1');
         deleteButton.setAttribute('data-bs-toggle', 'modal');
         deleteButton.setAttribute('data-bs-target', '#deleteInfoAnimalModal');
-        deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+        
+        let deleteIcon = document.createElement('i');
+        deleteIcon.classList.add('fa-solid', 'fa-trash');
+        deleteButton.appendChild(deleteIcon);
 
         // Bouton pour voir les détails
         let seeButton = document.createElement('li');
         seeButton.classList.add('btn', 'btn-primary', 'mb-1');
         seeButton.setAttribute('onClick', `goSeeInfoAnimal(${crv.id})`);
-        seeButton.innerHTML = '<i class="fa-solid fa-eye"></i>';
+        
+        let iconView = document.createElement('i');
+        iconView.classList.add('fa-solid', 'fa-eye');
+        seeButton.appendChild(iconView);
 
         // Ajout des boutons au menu déroulant
         dropdownMenu.appendChild(deleteButton);
@@ -512,7 +532,7 @@ async function deleteInfoAnimal() {
             throw new Error('Erreur');
         }
     } catch (error) {
-        console.log(error);
+        alert(error);
     }
 }
 
@@ -569,11 +589,14 @@ async function getAllServices() {
         }
         const services = await response.json();
         let servicesList = document.getElementById('servicesList');
-        servicesList.innerHTML = ''; // Vider la liste avant de la remplir
+        while (servicesList.firstChild) {
+            servicesList.removeChild(servicesList.firstChild);
+        }
+        
         if (services.length === 0) {
             const noDataMessage = document.createElement('p');
             noDataMessage.classList.add('text-center');
-            noDataMessage.innerHTML = 'Aucun service à afficher <i class="fa-solid fa-umbrella-beach"></i>';
+            noDataMessage.innerText = 'Aucun service à afficher';
             servicesList.appendChild(noDataMessage);
             return;
         }
@@ -606,17 +629,25 @@ async function getAllServices() {
             deleteButton.setAttribute('data-bs-toggle', 'modal');
             deleteButton.setAttribute('data-bs-target', '#deleteServiceModal');
             deleteButton.setAttribute('data-delete-service-id', service.id);
-            deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+            
+            let iconDelete = document.createElement('i');
+            iconDelete.classList.add('fa-solid', 'fa-trash');  
+            deleteButton.appendChild(iconDelete);
 
             let editButton = document.createElement('li');
             editButton.classList.add('btn', 'btn-primary', 'mb-1');
             editButton.setAttribute('onClick', `goEditService(${service.id})`);
-            editButton.innerHTML = '<i class="fa-solid fa-pencil"></i>';
+            let iconEdit = document.createElement('i');
+            iconEdit.classList.add('fa-solid', 'fa-pencil');
+            editButton.appendChild(iconEdit);
 
             let viewButton = document.createElement('li');
             viewButton.classList.add('btn', 'btn-info', 'mb-1');
             viewButton.setAttribute('onClick', `goSeeService(${service.id})`);
-            viewButton.innerHTML = '<i class="fa-regular fa-eye"></i>';
+            
+            let iconView = document.createElement('i');
+            iconView.classList.add('fa-solid', 'fa-eye');
+            viewButton.appendChild(iconView);
 
             // Append buttons to dropdown menu
             dropdownMenu.appendChild(deleteButton);
@@ -646,7 +677,7 @@ async function getAllServices() {
         });
 
     } catch (error) {
-        console.log('Error:', error);
+        alert('Error:', error);
     }
 }
 
@@ -654,7 +685,6 @@ async function getAllServices() {
 
 const deleteServiceBtns=document.querySelectorAll('[data-delete-service-id]');
 deleteServiceBtns.forEach(button=>{
-    // console.log('deleteServiceBtns', button);
     button.addEventListener('click', function(){
         const serviceId = button.getAttribute('data-service-id');
         const serviceIdContainer = document.getElementById('service-id');
@@ -683,7 +713,7 @@ function deleteService(){
     .then(result => {
         getAllServices();
     })
-    .catch(error => console.log(error), getAllServices());
+    .catch(error => alert(error), getAllServices());
 }
 
 
@@ -747,7 +777,7 @@ function editHoraire(){
     .then(result => {
         window.location.reload();
     })
-    .catch(error => console.log('Une erreur est survenue', error));
+    .catch(error => alert('Une erreur est survenue', error));
 
 }
 
@@ -778,12 +808,14 @@ async function getAllDemandes() {
 
         const demandes = await response.json();
         let demandesList = document.getElementById('demandesList');
-        demandesList.innerHTML = ''; // Clear the list before filling it
+        while (demandesList.firstChild) {
+            demandesList.removeChild(demandesList.firstChild);
+        }
 
         if (demandes.length === 0) {
             let noDemandesMessage = document.createElement('p');
             noDemandesMessage.classList.add('text-center', 'mt-5');
-            noDemandesMessage.innerHTML = 'Aucune demande à afficher <i class="fa-solid fa-umbrella-beach"></i>';
+            noDemandesMessage.innerText = 'Aucune demande à afficher ';
             demandesList.appendChild(noDemandesMessage);
             return;
         }
@@ -840,7 +872,7 @@ async function getAllDemandes() {
                 deleteBtn.setAttribute('data-bs-toggle', 'modal');
                 deleteBtn.setAttribute('data-bs-target', '#deleteDemandeModal');
                 deleteBtn.setAttribute('data-demande-id', demande.id);
-                deleteBtn.innerHTML = 'Supprimer';
+                deleteBtn.innerText = 'Supprimer';
 
                 cardFooter.appendChild(reponseInfo);
                 cardFooter.appendChild(deleteBtn);
@@ -881,7 +913,7 @@ async function getAllDemandes() {
         });
 
     } catch (error) {
-        console.log('Error:', error);
+        alerts('Error:', error);
     }
 }
 function formatDate(dateString) {
@@ -930,7 +962,7 @@ async function sendResponse() {
         getAllDemandes();
     } catch (error) {
         // Handle error
-        console.error('Error:', error);
+        alert('Error:', error);
     }
 }
 
@@ -1032,12 +1064,14 @@ async function getNonValidatedReviews() {
         const avisContainer = document.getElementById('avisContainer');
         const avisList = document.getElementById('avisList');
         
-        avisList.innerHTML = ''; // Clear previous reviews
+        while(avisList.firstChild) {
+            avisList.removeChild(avisList.firstChild);
+        }
         
         if (result.length === 0) {
             const noReviewsMessage = document.createElement('p');
             noReviewsMessage.className = 'text-center';
-            noReviewsMessage.innerHTML = 'Aucun avis à afficher <i class="fa-solid fa-umbrella-beach"></i>';
+            noReviewsMessage.innerText = 'Aucun avis à afficher';
             avisList.appendChild(noReviewsMessage);
         } else {
             result.forEach(avis => {
@@ -1088,7 +1122,7 @@ async function getNonValidatedReviews() {
             });
         }
     } catch (error) {
-        console.error(error);
+        alert(error);
     }
 }
 
@@ -1105,11 +1139,11 @@ async function validerAvis($id) {
         if (response.status === 200) {
             getNonValidatedReviews();
         } else {
-            // console.log('Avis non validé');
+            alert('Une erreur est survenue');
         }
         const result = await response.json();
     } catch(error) {
-        console.log('error', error);
+        alert('error', error);
     }
 }
 
@@ -1126,11 +1160,11 @@ async function supprimerAvis($id) {
         if (response.status === 200) {
             getNonValidatedReviews();
         } else {
-            console.log('Avis non supprimé');
+           alert('Une erreur est survenue');
         }
         const result = await response.json();
     } catch(error) {
-        console.log('error', error);
+        alert('error', error);
     }
 }
 
