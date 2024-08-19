@@ -23,9 +23,8 @@ jobs:
       - name: Deploy application
         run: |
           sshpass -e ssh -o strictHostKeyChecking=no  ${{ secrets.SSH_USER}}@${{ secrets.SSH_IP}} "
-          cd htdocs &&
-          cd arcadia-zoo.online/ &&
-          cd Arcadia &&
+          git config --global --add safe.directory /home/arcadia-zoo/htdocs/arcadia-zoo.online
+          cd /home/arcadia-zoo/htdocs/arcadia-zoo.online &&
           git pull https://github.com/Sebastien35/Arcadia.git &&
           composer install
           "
