@@ -16,8 +16,6 @@ RUN apt update && apt install -y \
     default-mysql-client \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
-    # && docker-php-ext-install pdo_mysql \
-    # && docker-php-ext-enable pdo_mysql \
     && docker-php-ext-enable opcache \
     && docker-php-ext-install xsl \
     && docker-php-ext-install zip \
@@ -32,28 +30,15 @@ RUN docker-php-ext-install  pdo_mysql \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY docker/php/conf.d/* /usr/local/etc/php/conf.d/
 
-
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
-COPY .env.docker .env
 
-# Set working directory
 WORKDIR /var/www
 
-# Copy application files
 COPY . .
 
-# Install Symfony and other PHP dependencies
 ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN composer update
 RUN composer install
 
-# Debug information
-RUN php -m
-RUN php -r "print_r(get_loaded_extensions());"
-RUN ls -la /usr/local/etc/php/conf.d/
-RUN php -i | grep pdo_mysql
-RUN php -r "echo ini_get('extension_dir');"
-
-# Expose port 9000 and start PHP-FPM server
 EXPOSE 9000
 CMD ["php-fpm"]

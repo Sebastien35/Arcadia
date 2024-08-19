@@ -6,60 +6,107 @@ userBtns.forEach(button => button.addEventListener('click', function() {
     FlushActive();
     getNonAdminUsers() 
     userContainer.classList.remove('d-none');
-    button.classList.add('active'); // Use 'button' instead of 'userBtn' because 'button' is the current button being clicked
+    button.classList.add('active');
 }));
-//get all users
+
 async function getNonAdminUsers() {
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
-    await fetch('/admin/user/nonAdmins')
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Erreur');
-            }
-        })
-        .then(result => {
-            let userTableBody = document.getElementById('userTableBody');
-            userTableBody.innerHTML = '';
-            let users = result;
-            if (users.length === 0) {
-                userTableBody.innerHTML = '<p class="text-center">Aucun utilisateur à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
-            }
-            users.forEach(user => {
-                let row = document.createElement('tr');
-                row.classList.add('userRow');
-                row.setAttribute('data-user-id', user.id);
-                row.innerHTML = `
-                    <td>${user.id}</td>
-                    <td>${user.email}</td>
-                    <td>${user.roles}</td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            </button>
-                            <div class="dropdown-menu mb-2" >  
-                                <ul>
-                                <li class="btn btn-danger mb-1" id="delete-user" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="${user.id}"><i class="fa-solid fa-trash"></i></li>
-                                <li class="btn btn-primary  mb-1"  data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="${user.id}"><i class="fa-solid fa-pencil"></i></li>
-                                </ul>  
-                            </div> 
-                        </div>
-                    </td>
-                `;
-                userTableBody.appendChild(row);
-            });
+    
+    try {
+        let response = await fetch('/admin/user/nonAdmins', { headers: myHeaders });
+        
+        if (!response.ok) {
+            throw new Error('Erreur');
+        }
+        
+        let users = await response.json();
+        let userTableBody = document.getElementById('userTableBody');
+        userTableBody.innerHTML = ''; // Clear the table body
+        
+        if (users.length === 0) {
+            let noUsersMessage = document.createElement('p');
+            noUsersMessage.classList.add('text-center');
+            noUsersMessage.innerHTML = 'Aucun utilisateur à afficher <i class="fa-solid fa-umbrella-beach"></i>';
+            userTableBody.appendChild(noUsersMessage);
+            return;
+        }
 
-            const deleteUserBtns = document.querySelectorAll('[data-user-id]');
-            deleteUserBtns.forEach(button => {
-                button.addEventListener('click', function () {
-                    const userId = button.getAttribute('data-user-id');
-                    const userIdContainer = document.getElementById('user-id');
-                    userIdContainer.value = userId;
-                });
+        users.forEach(user => {
+            // Create table row
+            let row = document.createElement('tr');
+            row.classList.add('userRow');
+            row.setAttribute('data-user-id', user.id);
+
+            // Create cells
+            let idCell = document.createElement('td');
+            idCell.textContent = user.id;
+
+            let emailCell = document.createElement('td');
+            emailCell.textContent = user.email;
+
+            let rolesCell = document.createElement('td');
+            rolesCell.textContent = user.roles;
+
+            // Create action cell with dropdown
+            let actionCell = document.createElement('td');
+            let dropdown = document.createElement('div');
+            dropdown.classList.add('dropdown');
+
+            let dropdownButton = document.createElement('button');
+            dropdownButton.classList.add('btn', 'btn-secondary', 'dropdown-toggle');
+            dropdownButton.type = 'button';
+            dropdownButton.setAttribute('data-bs-toggle', 'dropdown');
+            dropdownButton.setAttribute('aria-haspopup', 'true');
+            dropdownButton.setAttribute('aria-expanded', 'false');
+
+            let dropdownMenu = document.createElement('div');
+            dropdownMenu.classList.add('dropdown-menu', 'mb-2');
+
+            // Delete button
+            let deleteButton = document.createElement('li');
+            deleteButton.classList.add('btn', 'btn-danger', 'mb-1');
+            deleteButton.setAttribute('data-bs-toggle', 'modal');
+            deleteButton.setAttribute('data-bs-target', '#deleteUserModal');
+            deleteButton.setAttribute('data-user-id', user.id);
+            deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
+            // Edit button
+            let editButton = document.createElement('li');
+            editButton.classList.add('btn', 'btn-primary', 'mb-1');
+            editButton.setAttribute('data-bs-toggle', 'modal');
+            editButton.setAttribute('data-bs-target', '#editUserModal');
+            editButton.setAttribute('data-user-id', user.id);
+            editButton.innerHTML = '<i class="fa-solid fa-pencil"></i>';
+
+            // Append elements
+            dropdownMenu.appendChild(deleteButton);
+            dropdownMenu.appendChild(editButton);
+            dropdown.appendChild(dropdownButton);
+            dropdown.appendChild(dropdownMenu);
+            actionCell.appendChild(dropdown);
+
+            row.appendChild(idCell);
+            row.appendChild(emailCell);
+            row.appendChild(rolesCell);
+            row.appendChild(actionCell);
+
+            userTableBody.appendChild(row);
+        });
+
+        // Add event listeners for delete buttons
+        const deleteUserBtns = document.querySelectorAll('[data-user-id]');
+        deleteUserBtns.forEach(button => {
+            button.addEventListener('click', function () {
+                const userId = button.getAttribute('data-user-id');
+                const userIdContainer = document.getElementById('user-id');
+                userIdContainer.value = userId;
             });
         });
+
+    } catch (error) {
+        console.log('Error: ', error);
+    }
 }
 
 // Delete User:
@@ -358,42 +405,85 @@ async function SearchUsingCriterias(){
     }
 }
 
-function DisplayCRV(data){
+function DisplayCRV(data) {
     const TableauARemplir = document.getElementById('infoAnimalTableBody');
-    TableauARemplir.innerHTML = '';
-    data.forEach(crv=>{
+    TableauARemplir.innerHTML = ''; // Vider le tableau avant de le remplir
+
+    if (data.length === 0) {
+        const noDataMessage = document.createElement('p');
+        noDataMessage.classList.add('text-center');
+        noDataMessage.innerHTML = 'Aucune consultation à afficher <i class="fa-solid fa-umbrella-beach"></i>';
+        TableauARemplir.appendChild(noDataMessage);
+        return;
+    }
+
+    data.forEach(crv => {
         let row = document.createElement('tr');
         let date = new Date(crv.createdAt);
-        if(crv.length === 0){
-            TableauARemplir.innerHTML = '<p class="text-center">Aucune consultation à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
-        }
-        row.innerHTML = `
-            <td>${crv.id}</td>
-            <td>${date.toLocaleDateString()}</td>
-            <td>${crv.animal.prenom}</td>
-            <td>${crv.auteur.email}</td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" 
-                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    </button>
-                    <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">
-                        <li class="btn btn-danger mb-1" id="delete-infoAnimal" data-bs-toggle="modal" data-bs-target="#deleteInfoAnimalModal"><i class="fa-solid fa-trash"></i></li>
-                        <li class="btn btn-primary  mb-1" onClick="goSeeInfoAnimal(${crv.id})"><i class="fa-solid fa-eye"></i></li>
-                    </div>
-                </div>
 
-            </td>
-            `;
-        TableauARemplir.appendChild(row)
-        
+        // Création des cellules
+        let idCell = document.createElement('td');
+        idCell.textContent = crv.id;
 
-    })
-    
-    
+        let dateCell = document.createElement('td');
+        dateCell.textContent = date.toLocaleDateString();
 
+        let prenomCell = document.createElement('td');
+        prenomCell.textContent = crv.animal.prenom;
 
+        let emailCell = document.createElement('td');
+        emailCell.textContent = crv.auteur.email;
 
+        // Création de la cellule des actions avec le dropdown
+        let actionCell = document.createElement('td');
+        let dropdown = document.createElement('div');
+        dropdown.classList.add('dropdown');
+
+        let dropdownButton = document.createElement('button');
+        dropdownButton.classList.add('btn', 'btn-secondary', 'dropdown-toggle');
+        dropdownButton.type = 'button';
+        dropdownButton.setAttribute('data-bs-toggle', 'dropdown');
+        dropdownButton.setAttribute('aria-haspopup', 'true');
+        dropdownButton.setAttribute('aria-expanded', 'false');
+
+        let dropdownMenu = document.createElement('div');
+        dropdownMenu.classList.add('dropdown-menu', 'mb-2');
+        dropdownMenu.setAttribute('aria-labelledby', 'dropdownMenuButton');
+
+        // Bouton de suppression
+        let deleteButton = document.createElement('li');
+        deleteButton.classList.add('btn', 'btn-danger', 'mb-1');
+        deleteButton.setAttribute('data-bs-toggle', 'modal');
+        deleteButton.setAttribute('data-bs-target', '#deleteInfoAnimalModal');
+        deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
+        // Bouton pour voir les détails
+        let seeButton = document.createElement('li');
+        seeButton.classList.add('btn', 'btn-primary', 'mb-1');
+        seeButton.setAttribute('onClick', `goSeeInfoAnimal(${crv.id})`);
+        seeButton.innerHTML = '<i class="fa-solid fa-eye"></i>';
+
+        // Ajout des boutons au menu déroulant
+        dropdownMenu.appendChild(deleteButton);
+        dropdownMenu.appendChild(seeButton);
+
+        // Ajout du bouton et du menu au dropdown
+        dropdown.appendChild(dropdownButton);
+        dropdown.appendChild(dropdownMenu);
+
+        // Ajout du dropdown à la cellule d'actions
+        actionCell.appendChild(dropdown);
+
+        // Ajout des cellules à la ligne
+        row.appendChild(idCell);
+        row.appendChild(dateCell);
+        row.appendChild(prenomCell);
+        row.appendChild(emailCell);
+        row.appendChild(actionCell);
+
+        // Ajout de la ligne au tableau
+        TableauARemplir.appendChild(row);
+    });
 }
 
 
@@ -469,57 +559,95 @@ servicesBtns.forEach(button => button.addEventListener('click', function(){
 }));
 
 async function getAllServices() {
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    await fetch('/services/all')
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Erreur');
-            }
-        })
-        .then(result => {
-            let servicesList = document.getElementById('servicesList');
-            servicesList.innerHTML = '';
-            let services = result;
-            if (services.length === 0) {
-                servicesList.innerHTML = '<p class="text-center">Aucun service à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
-            }
-            let serviceTableBody = document.getElementById('servicesList');
-            serviceTableBody.innerHTML = '';
-            services.forEach(service => {
-                let row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${service.id}</td>
-                    <td>${service.nom}</td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" 
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            </button>
-                            <div class="dropdown-menu mb-2" aria-labelledby="dropdownMenuButton">    
-                                <li class="btn btn-danger mb-1" id="delete-service" data-bs-toggle="modal" data-bs-target="#deleteServiceModal" 
-                                    data-delete-service-id="${service.id}"><i class="fa-solid fa-trash"></i></li>
-                                <li class="btn btn-primary  mb-1" onClick="goEditService(${service.id})"><i class="fa-solid fa-pencil"></i></li>
-                                <li class="btn btn-info  mb-1" onClick="goSeeService(${service.id})"><i class="fa-regular fa-eye"></i></li>
-                            </div> 
-                        </div>
-                    </td>
-                `;
-                serviceTableBody.appendChild(row);
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+
+        const response = await fetch('/services/all', { headers: myHeaders });
+        if (!response.ok) {
+            throw new Error('Erreur');
+        }
+        const services = await response.json();
+        let servicesList = document.getElementById('servicesList');
+        servicesList.innerHTML = ''; // Vider la liste avant de la remplir
+        if (services.length === 0) {
+            const noDataMessage = document.createElement('p');
+            noDataMessage.classList.add('text-center');
+            noDataMessage.innerHTML = 'Aucun service à afficher <i class="fa-solid fa-umbrella-beach"></i>';
+            servicesList.appendChild(noDataMessage);
+            return;
+        }
+        services.forEach(service => {
+            let row = document.createElement('tr');
+
+            let idCell = document.createElement('td');
+            idCell.textContent = service.id;
+
+            let nameCell = document.createElement('td');
+            nameCell.textContent = service.nom;
+
+            let actionCell = document.createElement('td');
+            let dropdown = document.createElement('div');
+            dropdown.classList.add('dropdown');
+
+            let dropdownButton = document.createElement('button');
+            dropdownButton.classList.add('btn', 'btn-secondary', 'dropdown-toggle');
+            dropdownButton.type = 'button';
+            dropdownButton.setAttribute('data-bs-toggle', 'dropdown');
+            dropdownButton.setAttribute('aria-haspopup', 'true');
+            dropdownButton.setAttribute('aria-expanded', 'false');
+
+            let dropdownMenu = document.createElement('div');
+            dropdownMenu.classList.add('dropdown-menu', 'mb-2');
+            dropdownMenu.setAttribute('aria-labelledby', 'dropdownMenuButton');
+
+            let deleteButton = document.createElement('li');
+            deleteButton.classList.add('btn', 'btn-danger', 'mb-1');
+            deleteButton.setAttribute('data-bs-toggle', 'modal');
+            deleteButton.setAttribute('data-bs-target', '#deleteServiceModal');
+            deleteButton.setAttribute('data-delete-service-id', service.id);
+            deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
+            let editButton = document.createElement('li');
+            editButton.classList.add('btn', 'btn-primary', 'mb-1');
+            editButton.setAttribute('onClick', `goEditService(${service.id})`);
+            editButton.innerHTML = '<i class="fa-solid fa-pencil"></i>';
+
+            let viewButton = document.createElement('li');
+            viewButton.classList.add('btn', 'btn-info', 'mb-1');
+            viewButton.setAttribute('onClick', `goSeeService(${service.id})`);
+            viewButton.innerHTML = '<i class="fa-regular fa-eye"></i>';
+
+            // Append buttons to dropdown menu
+            dropdownMenu.appendChild(deleteButton);
+            dropdownMenu.appendChild(editButton);
+            dropdownMenu.appendChild(viewButton);
+
+            // Append dropdown button and menu to dropdown
+            dropdown.appendChild(dropdownButton);
+            dropdown.appendChild(dropdownMenu);
+
+            // Append all cells to row
+            actionCell.appendChild(dropdown);
+            row.appendChild(idCell);
+            row.appendChild(nameCell);
+            row.appendChild(actionCell);
+
+            // Append row to services list
+            servicesList.appendChild(row);
+        });
+        const deleteServiceBtns = document.querySelectorAll('[data-delete-service-id]');
+        deleteServiceBtns.forEach(button => {
+            button.addEventListener('click', function () {
+                const serviceId = button.getAttribute('data-delete-service-id');
+                const serviceIdContainer = document.getElementById('service-id');
+                serviceIdContainer.value = serviceId;
             });
-            const deleteServiceBtns = document.querySelectorAll('[data-delete-service-id]');
-            deleteServiceBtns.forEach(button => {
-                button.addEventListener('click', function () {
-                    const serviceId = button.getAttribute('data-delete-service-id');
-                    const serviceIdContainer = document.getElementById('service-id');
-                    serviceIdContainer.value = serviceId;
-                });
-            });
-        })
-        .catch(error => console.log(error));
-    
+        });
+
+    } catch (error) {
+        console.log('Error:', error);
+    }
 }
 
 // Supprimer un service:
@@ -637,67 +765,125 @@ contactBtns.forEach(button => button.addEventListener('click', function(){
 }));
 
 
-async function getAllDemandes(){
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    await fetch('/contact/all')
-    .then(response => {
-        if(response.ok){
-            return response.json();
-        } else {
+async function getAllDemandes() {
+    try {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+
+        const response = await fetch('/contact/all', { headers: myHeaders });
+        if (!response.ok) {
             throw new Error('Erreur');
             window.location.reload();
         }
-    })
-    .then(result => {
+
+        const demandes = await response.json();
         let demandesList = document.getElementById('demandesList');
-        demandesList.innerHTML = '';
-        let demandes = result;
-        if(demandes.length === 0){
-            demandesList.innerHTML = '<p class="text-center mt-5">Aucune demande à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
+        demandesList.innerHTML = ''; // Clear the list before filling it
+
+        if (demandes.length === 0) {
+            let noDemandesMessage = document.createElement('p');
+            noDemandesMessage.classList.add('text-center', 'mt-5');
+            noDemandesMessage.innerHTML = 'Aucune demande à afficher <i class="fa-solid fa-umbrella-beach"></i>';
+            demandesList.appendChild(noDemandesMessage);
+            return;
         }
+
         let row = document.createElement('div');
         row.classList.add('row');
-        demandes.forEach(demande=>{
+
+        demandes.forEach(demande => {
             let card = document.createElement('div');
-            card.classList.add('col-12');
-            card.classList.add('card');
-            card.classList.add('demande-card');
-            card.classList.add('mb-5')
+            card.classList.add('col-12', 'card', 'demande-card', 'mb-5');
             card.setAttribute('data-demande-status', demande.answered);
             card.setAttribute('data-demande-date', toYMD(demande.created_at));
             card.setAttribute('data-demande-id', demande.id);
-            card.innerHTML = `
-                <div class="card-header d-flex justify-content-between">
-                <h5 class="card-title">${demande.titre}</h5>
-                <p class="text-muted">${toYMD(demande.created_at)}</p>
-            </div>
-            <div class="card-body">  
-                <p class="text-muted">${demande.mail}</p>                             
-                <p class="card-text">${demande.message}</p>
-            </div>
-            <div class="card-footer mb-5">
-                <button type="button" class="btn btn-primary actionBtn" data-bs-toggle="modal" data-bs-target="#repondreModal" data-demande-id="${demande.id}">Répondre</button>
-                <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
-            </div>
-            `;
+
+            let cardHeader = document.createElement('div');
+            cardHeader.classList.add('card-header', 'd-flex', 'justify-content-between');
+
+            let cardTitle = document.createElement('h5');
+            cardTitle.classList.add('card-title');
+            cardTitle.textContent = demande.titre;
+
+            let cardDate = document.createElement('p');
+            cardDate.classList.add('text-muted');
+            cardDate.textContent = toYMD(demande.created_at);
+
+            cardHeader.appendChild(cardTitle);
+            cardHeader.appendChild(cardDate);
+
+            let cardBody = document.createElement('div');
+            cardBody.classList.add('card-body');
+
+            let mailInfo = document.createElement('p');
+            mailInfo.classList.add('text-muted');
+            mailInfo.textContent = demande.mail;
+
+            let messageText = document.createElement('p');
+            messageText.classList.add('card-text');
+            messageText.textContent = demande.message;
+
+            cardBody.appendChild(mailInfo);
+            cardBody.appendChild(messageText);
+
+            let cardFooter = document.createElement('div');
+            cardFooter.classList.add('card-footer', 'mb-5');
+
             if (demande.answered) {
-                card.querySelector('.card-footer').innerHTML = `
-                <p class="text-muted">Répondu le ${formatDate(demande.answered_at)}</p>
-                <button type="button" class="btn btn-danger actionBtn" data-bs-toggle="modal" data-bs-target="#deleteDemandeModal" data-demande-id="${demande.id}">Supprimer</button>
-                `;               
+                let reponseInfo = document.createElement('p');
+                reponseInfo.classList.add('text-muted');
+                reponseInfo.textContent = `Répondu le ${formatDate(demande.answered_at)}`;
+
+                let deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.classList.add('btn', 'btn-danger', 'actionBtn');
+                deleteBtn.setAttribute('data-bs-toggle', 'modal');
+                deleteBtn.setAttribute('data-bs-target', '#deleteDemandeModal');
+                deleteBtn.setAttribute('data-demande-id', demande.id);
+                deleteBtn.innerHTML = 'Supprimer';
+
+                cardFooter.appendChild(reponseInfo);
+                cardFooter.appendChild(deleteBtn);
+            } else {
+                let repondreBtn = document.createElement('button');
+                repondreBtn.type = 'button';
+                repondreBtn.classList.add('btn', 'btn-primary', 'actionBtn');
+                repondreBtn.setAttribute('data-bs-toggle', 'modal');
+                repondreBtn.setAttribute('data-bs-target', '#repondreModal');
+                repondreBtn.setAttribute('data-demande-id', demande.id);
+                repondreBtn.textContent = 'Répondre';
+
+                let deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.classList.add('btn', 'btn-danger', 'actionBtn');
+                deleteBtn.setAttribute('data-bs-toggle', 'modal');
+                deleteBtn.setAttribute('data-bs-target', '#deleteDemandeModal');
+                deleteBtn.setAttribute('data-demande-id', demande.id);
+                deleteBtn.textContent = 'Supprimer';
+
+                cardFooter.appendChild(repondreBtn);
+                cardFooter.appendChild(deleteBtn);
             }
-            demandesList.appendChild(card);
+
+            card.appendChild(cardHeader);
+            card.appendChild(cardBody);
+            card.appendChild(cardFooter);
+            row.appendChild(card);
+
+            demandesList.appendChild(row);
+
             let actionBtns = card.querySelectorAll('.actionBtn');
-            actionBtns.forEach(button => button.addEventListener('click', function(){
+            actionBtns.forEach(button => button.addEventListener('click', function () {
                 const demandeId = button.getAttribute('data-demande-id');
                 const demandeIdContainer = document.getElementById('demandeId');
                 demandeIdContainer.value = demandeId;
-            }));           
+            }));
         });
-    });
-}
 
+    } catch (error) {
+        console.log('Error:', error);
+    }
+}
 function formatDate(dateString) {
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, '0');
@@ -832,50 +1018,77 @@ avisBtns.forEach(button => button.addEventListener('click', function(){
     getNonValidatedReviews();
 }));
 
-async function getNonValidatedReviews(){
+async function getNonValidatedReviews() {
     try {
-        let myHeaders = new Headers();
+        const myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
-        await fetch('/admin/avis/getNonValidated')
-        .then(response => {
-            if(response.ok){
-                return response.json();
-            } else {
-                throw new Error('Erreur');
-            }
-        })
-        .then(result => {
-            let avisContainer = document.getElementById('avisContainer');
-            let avisList = document.getElementById('avisList');
-            let avis = result;
-            avisList.innerHTML = '';
-            if(avis.length === 0){
-                avisList.innerHTML = '<p class="text-center">Aucun avis à afficher <i class="fa-solid fa-umbrella-beach"></i> </p>';
-            }
-            avis.forEach(avis=>{
-                let card = document.createElement('div');
-                card.classList.add('col-12');
-                card.classList.add('card');
-                card.innerHTML = `
-                <div class="card-header">
-                    ${avis.pseudo}
-                </div>
-                <div class="card-body">
-                    <p class="card-text">${avis.note}</p>
-                    <p class="card-text">${avis.Avis_content}</p>
-                    <p class="card-text text-muted">${formatDate(avis.createdAt)}</p>
-                </div>
-                <div class="card-footer">
-                    <button class="btn btn-success" onclick="validerAvis(${avis.id})">Valider</button>
-                    <button class="btn btn-danger" onclick="supprimerAvis(${avis.id})">Supprimer</button>
-                </div>
-                `;
+        
+        const response = await fetch('/admin/avis/getNonValidated', { headers: myHeaders });
+        if (!response.ok) {
+            throw new Error('Erreur');
+        }
+        
+        const result = await response.json();
+        const avisContainer = document.getElementById('avisContainer');
+        const avisList = document.getElementById('avisList');
+        
+        avisList.innerHTML = ''; // Clear previous reviews
+        
+        if (result.length === 0) {
+            const noReviewsMessage = document.createElement('p');
+            noReviewsMessage.className = 'text-center';
+            noReviewsMessage.innerHTML = 'Aucun avis à afficher <i class="fa-solid fa-umbrella-beach"></i>';
+            avisList.appendChild(noReviewsMessage);
+        } else {
+            result.forEach(avis => {
+                const card = document.createElement('div');
+                card.classList.add('col-12', 'card');
+                
+                // Create card header
+                const cardHeader = document.createElement('div');
+                cardHeader.classList.add('card-header');
+                cardHeader.textContent = avis.pseudo;
+                
+                // Create card body
+                const cardBody = document.createElement('div');
+                cardBody.classList.add('card-body');
+                
+                const note = document.createElement('p');
+                note.classList.add('card-text');
+                note.textContent = avis.note;
+                
+                const content = document.createElement('p');
+                content.classList.add('card-text');
+                content.textContent = avis.Avis_content;
+                
+                const createdAt = document.createElement('p');
+                createdAt.classList.add('card-text', 'text-muted');
+                createdAt.textContent = formatDate(avis.createdAt);
+                
+                cardBody.append(note, content, createdAt);
+                
+                // Create card footer
+                const cardFooter = document.createElement('div');
+                cardFooter.classList.add('card-footer');
+                
+                const validateButton = document.createElement('button');
+                validateButton.classList.add('btn', 'btn-success');
+                validateButton.textContent = 'Valider';
+                validateButton.addEventListener('click', () => validerAvis(avis.id));
+                
+                const deleteButton = document.createElement('button');
+                deleteButton.classList.add('btn', 'btn-danger');
+                deleteButton.textContent = 'Supprimer';
+                deleteButton.addEventListener('click', () => supprimerAvis(avis.id));
+                
+                cardFooter.append(validateButton, deleteButton);
+                
+                card.append(cardHeader, cardBody, cardFooter);
                 avisList.appendChild(card);
-            }
-            )
-        })
+            });
+        }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 

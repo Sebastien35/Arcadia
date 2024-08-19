@@ -18,10 +18,13 @@ class EncryptionServiceTest extends TestCase
         $data = 'Hello World';
         $encrypted = $this->encryptionService->encyrpt($data);
         $encrypted2 = $this->encryptionService->encyrpt($data);
+
         $this->assertNotEquals($data, $encrypted);
         $this->assertNotEquals($encrypted, $encrypted2);
+
         $decrypted = $this->encryptionService->decrypt($encrypted);
         $decrypted2 = $this->encryptionService->decrypt($encrypted2);
+        
         $this->assertEquals($data, $decrypted);
         $this->assertEquals($decrypted, $decrypted2);
         
