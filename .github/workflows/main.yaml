@@ -24,7 +24,7 @@ jobs:
         run: |
           sshpass -e ssh -o strictHostKeyChecking=no  ${{ secrets.SSH_USER}}@${{ secrets.SSH_IP}} "
           git config --global --add safe.directory /home/arcadia-zoo/htdocs/arcadia-zoo.online
-          cd /home/arcadia-zoo/htdocs/arcadia-zoo.online &&
+          cd /home/arcadia-zoo/htdocs/arcadia-zoo.online/Arcadia &&
           git pull https://github.com/Sebastien35/Arcadia.git &&
           composer install
           "
