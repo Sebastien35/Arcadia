@@ -25,7 +25,6 @@ class web_CommentaireHabitatTest extends WebTestCase {
               ->getManager();
         $this->passwordHasher = $this->client->getContainer()->get('security.password_hasher');
         $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityManager);
-        //Purge et recrée la base de données
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
         $schemaTool->dropSchema($metadata);
         $schemaTool->createSchema($metadata);
@@ -66,7 +65,7 @@ class web_CommentaireHabitatTest extends WebTestCase {
         }
         try{
         $this->client->request('POST', 'veterinaire/habitat/commentaire/new', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'habitat' => 1, // Assuming the ID of the habitat created by the fixture is 1
+            'habitat' => 1, 
             'commentaire' => 'Test Comment'
         ]));
         

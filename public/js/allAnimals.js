@@ -19,39 +19,90 @@ async function getAnimals(){
         let animals = result; // Assuming result directly contains the animals array
         let animalsList = document.getElementById('animalsList');
         animalsList.innerHTML = '';
+        
         animals.forEach(animal => {
-        let card = document.createElement('div');
-        card.classList.add('card');
-        card.classList.add('col-lg-3')
-        card.classList.add('col-md-12')
-        card.classList.add('col-sm-12')
-        card.classList.add('mt-1')
-        card.innerHTML = `
-            <div class="card-header">
-                <h5 class="card-title"></h5>${animal.prenom}</h5>
-            </div>
-            <div class="card-body">
-                <img src="/images/animal/${animal.imageName}" class="card-img-top animal-img" alt="photo de ${animal.prenom}">
-            </div>
-            <div class="card-footer">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li class="dropdown-item" id="show-animal-btn" data-animal-id="{{ animal.id }}" onclick="goSeeAnimal(${animal.id})">Voir</li>
-                        <li class="dropdown-item" id="delete-animal-btn" data-bs-toggle="modal" data-bs-target="#delete-animal-Modal" delete-animal-id="${animal.id}">Supprimer</li>
-                        <li class="dropdown-item" id="edit-animal-btn"  data-animal-id="{{ animal.id }}" onclick="goEditAnimal(${animal.id})">Modifier</li>
-                    </div> 
-                </div>
-            </div> 
-            `;
-        animalsList.appendChild(card);
-        let deleteAnimalBtns=document.querySelectorAll('[delete-animal-id]');  
-        deleteAnimalBtns.forEach(button=>button.addEventListener('click', function(){
-            let animalId = button.getAttribute('delete-animal-id');
-            let animalIdContainer = document.getElementById('delete-animal-id');
-            animalIdContainer.value = animalId;
-        }));
+            // Create card container
+            let card = document.createElement('div');
+            card.classList.add('card', 'col-lg-3', 'col-md-12', 'col-sm-12', 'mt-1');
+            
+            // Create card header
+            let cardHeader = document.createElement('div');
+            cardHeader.classList.add('card-header');
+            let cardTitle = document.createElement('h5');
+            cardTitle.classList.add('card-title');
+            cardTitle.textContent = animal.prenom;
+            cardHeader.appendChild(cardTitle);
+            
+            // Create card body
+            let cardBody = document.createElement('div');
+            cardBody.classList.add('card-body');
+            let cardImg = document.createElement('img');
+            cardImg.src = `/images/animal/${animal.imageName}`;
+            cardImg.classList.add('card-img-top', 'animal-img');
+            cardImg.alt = `photo de ${animal.prenom}`;
+            cardBody.appendChild(cardImg);
+            
+            // Create card footer with dropdown menu
+            let cardFooter = document.createElement('div');
+            cardFooter.classList.add('card-footer');
+            
+            let dropdown = document.createElement('div');
+            dropdown.classList.add('dropdown');
+            
+            let dropdownButton = document.createElement('button');
+            dropdownButton.classList.add('btn', 'btn-secondary', 'dropdown-toggle');
+            dropdownButton.type = 'button';
+            dropdownButton.id = 'dropdownMenuButton';
+            dropdownButton.setAttribute('data-bs-toggle', 'dropdown');
+            dropdownButton.setAttribute('aria-haspopup', 'true');
+            dropdownButton.setAttribute('aria-expanded', 'false');
+            dropdown.appendChild(dropdownButton);
+            
+            let dropdownMenu = document.createElement('div');
+            dropdownMenu.classList.add('dropdown-menu');
+            dropdownMenu.setAttribute('aria-labelledby', 'dropdownMenuButton');
+            
+            // "Voir" button
+            let seeAnimalBtn = document.createElement('li');
+            seeAnimalBtn.classList.add('dropdown-item');
+            seeAnimalBtn.textContent = 'Voir';
+            seeAnimalBtn.onclick = () => goSeeAnimal(animal.id);
+            dropdownMenu.appendChild(seeAnimalBtn);
+            
+            // "Supprimer" button
+            let deleteAnimalBtn = document.createElement('li');
+            deleteAnimalBtn.classList.add('dropdown-item');
+            deleteAnimalBtn.textContent = 'Supprimer';
+            deleteAnimalBtn.setAttribute('data-bs-toggle', 'modal');
+            deleteAnimalBtn.setAttribute('data-bs-target', '#delete-animal-Modal');
+            deleteAnimalBtn.setAttribute('delete-animal-id', animal.id);
+            dropdownMenu.appendChild(deleteAnimalBtn);
+            
+            // "Modifier" button
+            let editAnimalBtn = document.createElement('li');
+            editAnimalBtn.classList.add('dropdown-item');
+            editAnimalBtn.textContent = 'Modifier';
+            editAnimalBtn.onclick = () => goEditAnimal(animal.id);
+            dropdownMenu.appendChild(editAnimalBtn);
+            
+            dropdown.appendChild(dropdownMenu);
+            cardFooter.appendChild(dropdown);
+            
+            // Append header, body, and footer to card
+            card.appendChild(cardHeader);
+            card.appendChild(cardBody);
+            card.appendChild(cardFooter);
+            
+            // Append card to animalsList
+            animalsList.appendChild(card);
+            
+            // Handle the delete button separately to set the modal data
+            let deleteAnimalBtns = document.querySelectorAll('[delete-animal-id]');  
+            deleteAnimalBtns.forEach(button => button.addEventListener('click', function() {
+                let animalId = button.getAttribute('delete-animal-id');
+                let animalIdContainer = document.getElementById('delete-animal-id');
+                animalIdContainer.value = animalId;
+            }));
         });
     }
     catch (error) {
