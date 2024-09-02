@@ -2,7 +2,6 @@ const btnAnimals = document.querySelectorAll('.animalBtn');
 btnAnimals.forEach(button=>button.addEventListener('click', getAnimals));
 
 async function getAnimals(){
-    console.log('Fetching animals...');
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     let requestOptions = {
@@ -11,21 +10,24 @@ async function getAnimals(){
         redirect: 'follow'
     };
     try {
-        let response = await fetch('/admin/animal/all', requestOptions);
+        let response = await fetch('animal/all', requestOptions);
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error();
         }
         let result = await response.json();
-        let animals = result; // Assuming result directly contains the animals array
+        let animals = result; 
         let animalsList = document.getElementById('animalsList');
-        animalsList.innerHTML = '';
-        
+        while (animalsList.firstChild) {
+            animalsList.removeChild(animalsList.firstChild);
+        }
+
+        // Création carte pour chaque animal
         animals.forEach(animal => {
-            // Create card container
+            // Creation carte
             let card = document.createElement('div');
             card.classList.add('card', 'col-lg-3', 'col-md-12', 'col-sm-12', 'mt-1');
             
-            // Create card header
+            // Header de la carte
             let cardHeader = document.createElement('div');
             cardHeader.classList.add('card-header');
             let cardTitle = document.createElement('h5');
@@ -33,7 +35,7 @@ async function getAnimals(){
             cardTitle.textContent = animal.prenom;
             cardHeader.appendChild(cardTitle);
             
-            // Create card body
+            // Body de la carte
             let cardBody = document.createElement('div');
             cardBody.classList.add('card-body');
             let cardImg = document.createElement('img');
@@ -42,7 +44,7 @@ async function getAnimals(){
             cardImg.alt = `photo de ${animal.prenom}`;
             cardBody.appendChild(cardImg);
             
-            // Create card footer with dropdown menu
+            // Footer & Dropdown de la carte
             let cardFooter = document.createElement('div');
             cardFooter.classList.add('card-footer');
             
@@ -106,6 +108,10 @@ async function getAnimals(){
         });
     }
     catch (error) {
-        console.log('Error: ', error);
+        let errorMessage = document.createElement('div');
+        errorMessage.classList.add('alert', 'alert-danger');
+        errorMessage.textContent = 'Erreur lors de la récupération des animaux';
+        document.getElementById('animalsList').appendChild(errorMessage);
+        
     }
 }

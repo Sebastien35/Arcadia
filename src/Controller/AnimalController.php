@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityManager;
 use PHPUnit\Util\Json;
 use App\Entity\AdditionalImages;
 use App\Repository\AdditionalImagesRepository;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/animal', name: 'app_animal_')]
 class AnimalController extends AbstractController
@@ -67,6 +68,25 @@ class AnimalController extends AbstractController
             'animal' => $animal,
             'infoAnimal' => $infoAnimal,
         ]);
+    }
+
+    #[IsGranted('ROLE_USER',)]
+    #[Route('/all', name: 'getAnimals', methods: ['GET'])]
+    public function getAnimals(AnimalRepository $animalRepository): JsonResponse
+    {
+        try{
+        $animals = $animalRepository->findAll();
+        $context = ['groups' => 'animal:read'];
+        return JsonResponse::fromJsonString($this->serializer->serialize(
+            $animals, 'json', $context),
+            Response::HTTP_OK);
+        
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'error' => 'An error occurred',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     #[Route('/getImages/{id}', name: 'getImages', methods: ['GET'])]

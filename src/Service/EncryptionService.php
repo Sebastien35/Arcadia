@@ -14,7 +14,7 @@ class EncryptionService {
     }
 
     // Chiffrer
-    public function encyrpt($data){
+    public function encrypt($data){
         $iv = random_bytes(openssl_cipher_iv_length($this->cipher));  
             // IV aléatoire taille appropriée pour l'algorithme          
         $encryptedData = openssl_encrypt($data, $this->cipher, $this->key, 0, $iv);
