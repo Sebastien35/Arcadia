@@ -466,9 +466,10 @@ function DisplayCRV(data) {
 
         // Bouton de suppression
         let deleteButton = document.createElement('li');
-        deleteButton.classList.add('btn', 'btn-danger', 'mb-1');
+        deleteButton.classList.add('btn', 'btn-danger', 'mb-1', 'delete-infoAnimal-btn');
         deleteButton.setAttribute('data-bs-toggle', 'modal');
         deleteButton.setAttribute('data-bs-target', '#deleteInfoAnimalModal');
+        deleteButton.setAttribute('data-infoAnimal-id', crv.id);
         
         let deleteIcon = document.createElement('i');
         deleteIcon.classList.add('fa-solid', 'fa-trash');
@@ -508,9 +509,13 @@ function DisplayCRV(data) {
 
 
 
-
-
-
+document.addEventListener('click', function(event) {
+    if (event.target.closest('.delete-infoAnimal-btn')) {
+        let button = event.target.closest('.delete-infoAnimal-btn');
+        const infoAnimalId = button.getAttribute('data-infoAnimal-id');
+        document.getElementById('infoAnimal-id').value = infoAnimalId;
+    }
+});
 
 const confirmDeleteinfoAnimalBtn = document.getElementById('confirm-delete-infoAnimal-btn');
 confirmDeleteinfoAnimalBtn.addEventListener('click', deleteInfoAnimal);
@@ -519,14 +524,15 @@ async function deleteInfoAnimal() {
     try {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
-        let targetId = document.getElementById('infoAnimal-id').value;        
+        let targetId = document.getElementById('infoAnimal-id').value;
+        console.log(targetId);        
         const response = await fetch(`/admin/infoAnimal/delete/${targetId}`, {
             method: 'DELETE',
             headers: myHeaders,
         });
         if (response.ok) {
             const result = await response.json();
-            getAllInfoAnimals();
+            SearchUsingCriterias();
             return result;
         } else {
             throw new Error('Erreur');
