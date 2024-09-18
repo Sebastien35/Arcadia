@@ -15,8 +15,6 @@ services:
     depends_on:
       - mysql
       - mongo
-  
-
   nginx:
     image: nginx:alpine
     container_name: nginx
@@ -28,7 +26,6 @@ services:
       - "9000:80"
     depends_on:
       - app
-
   mysql:
       image: mysql:8.0
       container_name: mysql
@@ -41,7 +38,6 @@ services:
         - ./mysql_data/arcadia_db.sql:/docker-entrypoint-initdb.d/arcadia_db.sql
       ports:
         - "8306:3306"
-
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
@@ -51,7 +47,6 @@ services:
       PMA_PORT: 3306
     ports:
       - "8307:80"
-    
   mongo:
     image: mongo:latest
     container_name: mongo

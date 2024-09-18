@@ -74,6 +74,9 @@ use App\Exception\UserNotFound;
 use Symfony\Component\Validator\Constraints\Date;
 
 use App\Service\EncryptionService;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/admin', name: 'app_admin_')]
 class AdminController extends AbstractController
 {
@@ -481,8 +484,6 @@ public function dashboard(
             $animal_id = $request->query->get('animal_id');
             $date = $request->query->get('date');
             $CRVS = $infoAnimalRepository->FilterByAnimalAndOrByDate($animal_id, $date);
-            
-            
 
             $SerializedCRVS = $serializer->serialize($CRVS, 'json', ['attributes' => [
                 'id',
@@ -512,9 +513,11 @@ public function dashboard(
             $animals, 'json', $context),
             Response::HTTP_OK);
         
-        }catch (\Exception $e) {
-            return new JsonResponse(['error' => 'An error occured', $e->getMessage() ],
-                Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'error' => 'An error occurred',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

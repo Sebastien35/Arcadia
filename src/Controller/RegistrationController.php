@@ -43,8 +43,9 @@ class RegistrationController extends AbstractController
         !preg_match('/\d/', $plainPassword) || 
         !preg_match('/[^a-zA-Z0-9]/', $plainPassword) ||
         !preg_match('/([^a-zA-Z0-9].*[^a-zA-Z0-9])|([^a-zA-Z0-9]{2,})/', $plainPassword))) {
-        throw new \Exception('Password must be between 8 and 20 characters long and contain at least one digit and one special character.');
+        throw new \Exception('Le mot de passe doit contenir entre 8 et 20 caractères, au moins un chiffre, une lettre et un caractère spécial.');
     }
+
     try{
     
     $user = new User(
