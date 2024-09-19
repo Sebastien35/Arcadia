@@ -46,11 +46,8 @@
                         <a class="nav-link" href="/admin" aria-label="Espace admin"><i>Admin</i></a>
                     </li>
                     {% endif %}
-                {% else %}
-                    <li class="nav-item d-none d-lg-block mr-lg-3">
-                        <a class="nav-link" href="/login" aria-label="Connexion">Connexion</a>
-                    </li>
                 {% endif %}
+                
             </ul>
                 <div class="offcanvas offcanvas-end text-bg-dark d-lg-none " tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="Navigation ">
                     <div class="offcanvas-header">
@@ -75,29 +72,26 @@
                             <a class="nav-link" href="/contact" aria-label="contact">Contact</a>
                         </li>
                         {% if app.user %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/logout" aria-label="déconnexion">Déconnexion</a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/logout" aria-label="déconnexion">Déconnexion</a>
+                                </li>
                             {% if is_granted ('ROLE_EMPLOYE') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/employe" aria-label="esapce employé"><i>Espace employé</i></a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/employe" aria-label="esapce employé"><i>Espace employé</i></a>
+                                </li>
                             {% endif %}
                             {% if is_granted ('ROLE_VET') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/veterinaire" aria-label="vétérinaire"><i>Espace vétérinaire</i></a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/veterinaire" aria-label="vétérinaire"><i>Espace vétérinaire</i></a>
+                                </li>
                             {% endif %}
                             {% if is_granted ('ROLE_ADMIN') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin" aria-label="admin"><i>Admin</i></a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/admin" aria-label="admin"><i>Admin</i></a>
+                                </li>
                             {% endif %}
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/login" aria-label="connexion">Connexion</a>
-                            </li>
-                        {% endif %}  
+                        {% endif %}
+                        
                          <li class="nav-item mt-5">
                             <div class="form-check form-switch">
                                 <input class="form-check-input toggleContrast" type="checkbox" id="toggleContrast">

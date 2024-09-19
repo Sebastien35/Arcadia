@@ -50,7 +50,15 @@ document.addEventListener('DOMContentLoaded', function() {
             result=JSON.parse(result);
             let gallerie = document.getElementById('gallerie');
             gallerie.innerHTML = '';
+            if(result.length===0 || result === null){
+                let NoImagesText = document.createElement('h3');
+                NoImagesText.textContent='Aucune image à afficher';
+                gallerie.appendChild(NoImagesText);
+                return;
+            }
             let images = result;
+        
+
             
             images.forEach(image => {
             let card = document.createElement('div');
@@ -58,9 +66,15 @@ document.addEventListener('DOMContentLoaded', function() {
             card.classList.add('col-sm-12');
             card.classList.add('col-md-6');
             card.classList.add('col-lg-4');
-            card.innerHTML = `
-                <img src="/images/additionnal_images/${image.imageName}" class="card-img-top" alt="...">
-            `;
+            let cardImg = document.createElement('img');
+
+            // Définissez les attributs de l'image
+            cardImg.src = `/images/additionnal_images/${image.imageName}`;
+            cardImg.classList.add('card-img-top');
+            cardImg.alt = '...';
+
+            // Ajoutez l'image à la carte
+            card.appendChild(cardImg);
             gallerie.appendChild(card);
             });
         });
@@ -84,14 +98,6 @@ document.addEventListener('DOMContentLoaded', function() {
         infoBtns.forEach(button=>button.classList.add('active'));
         infoContainer.classList.remove('d-none');
     }
-
-
-
-
-
-
-
-
 
     defaultBehavior();
 

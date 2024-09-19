@@ -16,8 +16,8 @@ class EncryptionServiceTest extends TestCase
     public function testEncryptDecrypt()
     {
         $data = 'Hello World';
-        $encrypted = $this->encryptionService->encyrpt($data);
-        $encrypted2 = $this->encryptionService->encyrpt($data);
+        $encrypted = $this->encryptionService->encrypt($data);
+        $encrypted2 = $this->encryptionService->encrypt($data);
 
         $this->assertNotEquals($data, $encrypted);
         $this->assertNotEquals($encrypted, $encrypted2);

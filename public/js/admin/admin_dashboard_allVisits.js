@@ -19,18 +19,24 @@ async function getConsultations(){
         
         let visitTableBody = document.getElementById('visitTable');
         // Mettre le tableau à 0
-        visitTableBody.innerHTML = '';
+        while (visitTableBody.firstChild) {
+            visitTableBody.removeChild(visitTableBody.firstChild);
+        }
+
         // Pour chaque visite, créer une ligne dans le tableau
         visits.forEach(visit => {
             let row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${visit.animalName}</td>
-                <td>${visit.visits}</td>
-            `;
+            let animalNameCell = document.createElement('td');
+            animalNameCell.textContent = visit.animalName;
+            row.appendChild(animalNameCell);
+
+            let visitsCell = document.createElement('td');
+            visitsCell.textContent = visit.visits;
+            row.appendChild(visitsCell);
             visitTableBody.appendChild(row);
         });
     } catch (error) {
-        console.log('Error: ', error);
+        alert('Une erreur est survenue lors de la récupération des visites');
     }
 }
 

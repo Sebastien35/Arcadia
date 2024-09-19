@@ -37,7 +37,7 @@ WORKDIR /var/www
 COPY . .
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
-RUN composer update
+
 RUN composer install
 
 EXPOSE 9000

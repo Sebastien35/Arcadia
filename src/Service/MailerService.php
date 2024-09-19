@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use Symfony\Bridge\Twig\Mime\NotificationEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mime\Email;
@@ -43,3 +42,4 @@ class MailerService
     }
 
 }
+

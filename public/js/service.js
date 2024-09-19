@@ -81,9 +81,7 @@ function createService(){
 
 
 /* edit Service  02/02/2024 */
-function testDeleteService(){
-    alert("Would delete service with id: "+serviceId.value);
-}
+
 
 function editService() {
     let dataForm = new FormData(serviceUpdateForm);
